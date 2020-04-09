@@ -314,6 +314,31 @@ func Test_GetItemsByName(t *testing.T) {
 			}
 			return client, check(verifyError)
 		},
+		"bad entity": func(t *testing.T) (*client, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.osrsbox.com/test?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D", nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_items.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					items: "test",
+				},
+			}
+			return client, check(verifyError)
+		},
 		"type error": func(t *testing.T) (*client, []checkFn) {
 			ctrl := gomock.NewController(t)
 
