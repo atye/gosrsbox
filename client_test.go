@@ -319,7 +319,7 @@ func Test_GetItemsByName(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D", nil)
+			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22abyssal+Whip%22%2C+%22abyssal+Dagger%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D", nil)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -349,7 +349,8 @@ func Test_GetItemsByName(t *testing.T) {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			items, err := client.GetItemsByName(context.Background(), "Abyssal whip", "Abyssal dagger")
+			//Funky capitalization to test name validator
+			items, err := client.GetItemsByName(context.Background(), "abyssal Whip", "abyssal Dagger")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, items, err)
@@ -973,7 +974,7 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			monsters, err := client.GetMonstersThatDrop(context.Background(), "Grimy ranarr weed", "Grimy avantoe")
+			monsters, err := client.GetMonstersThatDrop(context.Background(), "grimy Ranarr weed", "grimy avantoe")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
@@ -1368,7 +1369,7 @@ func Test_GetPrayersByName(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D", nil)
+			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+skin%22%2C+%22Burst+of+strength%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D", nil)
 			if err != nil {
 				t.Fatal(err)
 			}

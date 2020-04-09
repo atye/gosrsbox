@@ -30,6 +30,7 @@ func getAll(ctx context.Context, client HTTPClient, entity string) (interface{},
 
 	switch entity {
 	case "items":
+
 		var itemsMap map[string]*Item
 		err = json.NewDecoder(resp.Body).Decode(&itemsMap)
 		if err != nil {
@@ -42,7 +43,9 @@ func getAll(ctx context.Context, client HTTPClient, entity string) (interface{},
 		}
 
 		return items, nil
+
 	case "monsters":
+
 		var monstersMap map[string]*Monster
 		err = json.NewDecoder(resp.Body).Decode(&monstersMap)
 		if err != nil {
@@ -55,7 +58,9 @@ func getAll(ctx context.Context, client HTTPClient, entity string) (interface{},
 		}
 
 		return monsters, nil
+
 	case "prayers":
+
 		var prayersMap map[string]*Prayer
 		err = json.NewDecoder(resp.Body).Decode(&prayersMap)
 		if err != nil {
@@ -68,6 +73,7 @@ func getAll(ctx context.Context, client HTTPClient, entity string) (interface{},
 		}
 
 		return prayers, nil
+
 	default:
 		return nil, fmt.Errorf("Entity %s not supported", entity)
 	}
@@ -79,17 +85,32 @@ func getByName(ctx context.Context, client HTTPClient, endpoint string, names ..
 	}
 
 	var nameData []string
-	for _, name := range names {
-		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
-	}
-
 	var query string
 
 	switch endpoint {
-	case "prayers":
-		query = fmt.Sprintf(`{ "name": { "$in": [%s] } }`, strings.Join(nameData, ", "))
-	default:
+	case "items":
+
+		for _, name := range names {
+			nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
+		}
 		query = fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
+
+	case "monsters":
+
+		for _, name := range names {
+			nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+		}
+		query = fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
+
+	case "prayers":
+
+		for _, name := range names {
+			nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+		}
+		query = fmt.Sprintf(`{ "name": { "$in": [%s] } }`, strings.Join(nameData, ", "))
+
+	default:
+		return nil, fmt.Errorf("Entity %s not supported", endpoint)
 	}
 
 	return getWhere(ctx, client, endpoint, query)
@@ -103,7 +124,7 @@ func getThatDrop(ctx context.Context, client HTTPClient, endpoint string, names 
 
 	var nameData []string
 	for _, name := range names {
-		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
 	}
 
 	query := fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(nameData, ", "))
@@ -158,4 +179,19 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 	default:
 		return nil, fmt.Errorf("Entity %s not supported", endpoint)
 	}
+}
+
+func makeValidItemName(name string) string {
+	words := strings.Split(name, " ")
+
+	if len(words) > 0 {
+		words[0] = strings.Title(words[0])
+		if len(words) > 1 {
+			for i := 1; i < len(words); i++ {
+				words[i] = strings.ToLower(words[i])
+			}
+		}
+	}
+
+	return strings.Join(words, " ")
 }
