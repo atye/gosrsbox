@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"gosrsbox/mocks"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"testing"
+
+	"github.com/atye/gosrsbox/mocks"
 
 	"github.com/golang/mock/gomock"
 )
