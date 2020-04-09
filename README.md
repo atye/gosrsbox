@@ -9,6 +9,7 @@ https://godoc.org/github.com/atye/gosrsbox
 - Get all items, monsters, and prayers
 - Get items, monsters, and prayers by name
 - Get items, monsters, and prayers by custom MongoDB query
+- Get monsters that drop specific items
 
 ### Development
 I will continue to think of common use cases, such as getting entities by name, that this client could wrap.

@@ -808,6 +808,180 @@ func Test_GetMonstersByName(t *testing.T) {
 	}
 }
 
+func Test_GetMonstersThatDrop(t *testing.T) {
+	type checkFn func(*testing.T, []*Monster, error)
+	check := func(fns ...checkFn) []checkFn { return fns }
+
+	verifyMonsterNames := func(t *testing.T, monsters []*Monster, err error) {
+		if len(monsters) != 2 {
+			t.Errorf("expected items, got zero length slice")
+		}
+
+		for i := range monsters {
+			if i == 0 && monsters[i].Name != "Molanisk" {
+				t.Errorf("expected Molanisk, got %s", monsters[i].Name)
+			}
+
+			if i == 1 && monsters[i].Name != "Aberrant spectre" {
+				t.Errorf("expected Aberrant spectre, got %s", monsters[i].Name)
+			}
+		}
+	}
+
+	verifyNoError := func(t *testing.T, items []*Monster, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %#v", err)
+		}
+	}
+
+	verifyError := func(t *testing.T, items []*Monster, err error) {
+		if err == nil {
+			t.Errorf("expected an error, got nil")
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, []checkFn){
+		"success": func(t *testing.T) (*client, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_monsters.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					monsters: monsters,
+				},
+			}
+			return client, check(verifyNoError, verifyMonsterNames)
+		},
+		"http error": func(t *testing.T) (*client, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					monsters: monsters,
+				},
+			}
+			return client, check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					monsters: monsters,
+				},
+			}
+			return client, check(verifyError)
+		},
+		"nil client": func(t *testing.T) (*client, []checkFn) {
+			client := &client{
+				client: nil,
+				endpoints: &endpoints{
+					monsters: monsters,
+				},
+			}
+			return client, check(verifyError)
+		},
+		"type error": func(t *testing.T) (*client, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_items.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					monsters: items,
+				},
+			}
+			return client, check(verifyError)
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			client, checkFns := tc(t)
+
+			if len(checkFns) == 0 {
+				t.Skipf("Skipping %s because there are no checks in place", name)
+			}
+
+			monsters, err := client.GetMonstersThatDrop(context.Background(), "Grimy ranarr weed", "Grimy avantoe")
+
+			for _, checkFn := range checkFns {
+				checkFn(t, monsters, err)
+			}
+		})
+	}
+}
+
 func Test_GetMonstersWhere(t *testing.T) {
 	type checkFn func(*testing.T, []*Monster, error)
 	check := func(fns ...checkFn) []checkFn { return fns }
