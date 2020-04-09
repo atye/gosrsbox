@@ -18,7 +18,8 @@ type OSRSBoxClient interface {
 	GetAllMonsters(ctx context.Context) ([]*Monster, error)
 	// GetMonstersByName returns a slice of monsters specified by name.
 	GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error)
-	// GetMonstersThatDrop returns a slice of monsters that drop the supplied item names
+	// GetMonstersThatDrop returns a slice of monsters that drop the supplied item names.
+	// It returns monsters that drop any of the item names, not monsters that drop all of them.
 	GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error)
 	// GetMonstersWhere returns a slice of monsters from the supplied MongoDB query.
 	GetMonstersWhere(ctx context.Context, query string) ([]*Monster, error)
