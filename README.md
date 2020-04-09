@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/atye/gosrsbox.svg?branch=master)](https://travis-ci.org/atye/gosrsbox) [![Coverage Status](https://coveralls.io/repos/github/atye/gosrsbox/badge.svg?branch=add-travis-ci)](https://coveralls.io/github/atye/gosrsbox?branch=add-travis-ci)
+
 gosrsbox is a client for the osrsbox-api; https://api.osrsbox.com.
 
 The client supports getting items, monsters, and prayers. The API has /equipment and /weapons endpoints but those datasets are subsets of items.
