@@ -18,6 +18,8 @@ type OSRSBoxClient interface {
 	GetAllMonsters(ctx context.Context) ([]*Monster, error)
 	// GetMonstersByName returns a slice of monsters specified by name.
 	GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error)
+	// GetMonstersThatDrop returns a slice of monsters that drop the supplied item names
+	GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error)
 	// GetMonstersWhere returns a slice of monsters from the supplied MongoDB query.
 	GetMonstersWhere(ctx context.Context, query string) ([]*Monster, error)
 	// GetAllPrayers returns a slice of all prayers.
@@ -123,6 +125,19 @@ func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
 
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error) {
 	monstersI, err := getByName(ctx, c.client, c.endpoints.monsters, names...)
+	if err != nil {
+		return nil, err
+	}
+
+	if monsters, ok := monstersI.([]*Monster); ok {
+		return monsters, nil
+	}
+
+	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Monster but got %T", monstersI)
+}
+
+func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error) {
+	monstersI, err := getThatDrop(ctx, c.client, c.endpoints.monsters, names...)
 	if err != nil {
 		return nil, err
 	}

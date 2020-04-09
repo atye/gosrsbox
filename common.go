@@ -96,6 +96,22 @@ func getByName(ctx context.Context, client HTTPClient, endpoint string, names ..
 
 }
 
+func getThatDrop(ctx context.Context, client HTTPClient, endpoint string, names ...string) (interface{}, error) {
+	if client == nil {
+		return nil, errors.New("no client configured")
+	}
+
+	var nameData []string
+	for _, name := range names {
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+	}
+
+	query := fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(nameData, ", "))
+
+	return getWhere(ctx, client, endpoint, query)
+
+}
+
 func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (interface{}, error) {
 	if client == nil {
 		return nil, errors.New("no client configured")
