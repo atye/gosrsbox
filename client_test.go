@@ -812,18 +812,18 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 	type checkFn func(*testing.T, []*Monster, error)
 	check := func(fns ...checkFn) []checkFn { return fns }
 
-	verifyMonsterNames := func(t *testing.T, monsters []*Monster, err error) {
+	verifyMonsterDrops := func(t *testing.T, monsters []*Monster, err error) {
 		if len(monsters) != 2 {
-			t.Errorf("expected items, got zero length slice")
+			t.Errorf("expected two monsters, got %d length slice", len(monsters))
 		}
 
-		for i := range monsters {
-			if i == 0 && monsters[i].Name != "Molanisk" {
-				t.Errorf("expected Molanisk, got %s", monsters[i].Name)
+		for _, monster := range monsters {
+			if !inDrops("Grimy ranarr weed", monster.Drops) {
+				t.Errorf("expected %s in drops, got drops %v", "Grimy ranarr weed", monster.Drops)
 			}
 
-			if i == 1 && monsters[i].Name != "Aberrant spectre" {
-				t.Errorf("expected Aberrant spectre, got %s", monsters[i].Name)
+			if !inDrops("Grimy avantoe", monster.Drops) {
+				t.Errorf("expected %s in drops, got drops %v", "Grimy avantoe", monster.Drops)
 			}
 		}
 	}
@@ -868,7 +868,7 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyNoError, verifyMonsterNames)
+			return client, check(verifyNoError, verifyMonsterDrops)
 		},
 		"http error": func(t *testing.T) (*client, []checkFn) {
 			ctrl := gomock.NewController(t)
@@ -1526,4 +1526,13 @@ func getJSON(t *testing.T, file string) io.ReadCloser {
 		t.Fatal(err)
 	}
 	return json
+}
+
+func inDrops(name string, drops []*Drop) bool {
+	for _, drop := range drops {
+		if name == drop.Name {
+			return true
+		}
+	}
+	return false
 }
