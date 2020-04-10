@@ -263,14 +263,14 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 				return nil, err
 			}
 
-			var pryaersEndTemp *prayersEndpoint
-			err = json.NewDecoder(resp.Body).Decode(&pryaersEndTemp)
+			var prayersEndTemp *prayersEndpoint
+			err = json.NewDecoder(resp.Body).Decode(&prayersEndTemp)
 			if err != nil {
 				return nil, err
 			}
 			resp.Body.Close()
 
-			prayers = append(prayers, pryaersEndTemp.Prayers...)
+			prayers = append(prayers, prayersEndTemp.Prayers...)
 		}
 
 		return prayers, nil

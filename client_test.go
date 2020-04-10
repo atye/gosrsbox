@@ -48,8 +48,8 @@ func Test_GetAllItems(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -72,9 +72,9 @@ func Test_GetAllItems(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyNoError, verifyItems)
+			return client, context.Background(), check(verifyNoError, verifyItems)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -94,9 +94,9 @@ func Test_GetAllItems(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -119,18 +119,18 @@ func Test_GetAllItems(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"bad entity": func(t *testing.T) (*client, []checkFn) {
+		"bad entity": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -153,9 +153,9 @@ func Test_GetAllItems(t *testing.T) {
 					items: "test",
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -178,19 +178,28 @@ func Test_GetAllItems(t *testing.T) {
 					items: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			items, err := client.GetAllItems(context.TODO())
+			items, err := client.GetAllItems(ctx)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, items, err)
@@ -240,8 +249,8 @@ func Test_GetItemsByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -284,9 +293,9 @@ func Test_GetItemsByName(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyNoError, verifyItemNames)
+			return client, context.Background(), check(verifyNoError, verifyItemNames)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -310,9 +319,51 @@ func Test_GetItemsByName(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_items_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					items: items,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -339,18 +390,18 @@ func Test_GetItemsByName(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"bad entity": func(t *testing.T) (*client, []checkFn) {
+		"bad entity": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -377,9 +428,9 @@ func Test_GetItemsByName(t *testing.T) {
 					items: "test",
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -420,19 +471,28 @@ func Test_GetItemsByName(t *testing.T) {
 					items: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			items, err := client.GetItemsByName(context.Background(), "abyssal Whip", "abyssal Dagger", "Dragon Scimitar", "Rune Platebody")
+			items, err := client.GetItemsByName(ctx, "abyssal Whip", "abyssal Dagger", "Dragon Scimitar", "Rune Platebody")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, items, err)
@@ -481,8 +541,8 @@ func Test_GetItemsWhere(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -500,7 +560,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -525,9 +586,9 @@ func Test_GetItemsWhere(t *testing.T) {
 					items: items,
 				},
 			}
-			return client, check(verifyNoError, verifyItemNames)
+			return client, context.Background(), check(verifyNoError, verifyItemNames)
 		},
-		"bad entity": func(t *testing.T) (*client, []checkFn) {
+		"bad entity": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -536,7 +597,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/test?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -554,23 +616,24 @@ func Test_GetItemsWhere(t *testing.T) {
 					items: "test",
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					items: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(context.Background(),
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
 				nil)
@@ -606,19 +669,28 @@ func Test_GetItemsWhere(t *testing.T) {
 					items: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			items, err := client.GetItemsWhere(context.Background(), `{ "name": { "$in": ["Abyssal whip", "Abyssal dagger", "Dragon scimitar", "Rune platebody"] }, "duplicate": false }`)
+			items, err := client.GetItemsWhere(ctx, `{ "name": { "$in": ["Abyssal whip", "Abyssal dagger", "Dragon scimitar", "Rune platebody"] }, "duplicate": false }`)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, items, err)
@@ -656,8 +728,8 @@ func Test_GetAllMonsters(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -680,9 +752,9 @@ func Test_GetAllMonsters(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyNoError, verifyMonsters)
+			return client, context.Background(), check(verifyNoError, verifyMonsters)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -702,9 +774,9 @@ func Test_GetAllMonsters(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -727,18 +799,18 @@ func Test_GetAllMonsters(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -761,19 +833,28 @@ func Test_GetAllMonsters(t *testing.T) {
 					monsters: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			monsters, err := client.GetAllMonsters(context.Background())
+			monsters, err := client.GetAllMonsters(ctx)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
@@ -823,8 +904,8 @@ func Test_GetMonstersByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -867,9 +948,9 @@ func Test_GetMonstersByName(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyNoError, verifyMonsterNames)
+			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -893,9 +974,51 @@ func Test_GetMonstersByName(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					monsters: monsters,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -922,18 +1045,18 @@ func Test_GetMonstersByName(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -976,19 +1099,28 @@ func Test_GetMonstersByName(t *testing.T) {
 					monsters: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			monsters, err := client.GetMonstersByName(context.Background(), "Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis")
+			monsters, err := client.GetMonstersByName(ctx, "Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
@@ -1029,8 +1161,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1073,9 +1205,9 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyNoError, verifyMonsterDrops)
+			return client, context.Background(), check(verifyNoError, verifyMonsterDrops)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1099,9 +1231,9 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1128,18 +1260,18 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1182,19 +1314,28 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 					monsters: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			monsters, err := client.GetMonstersThatDrop(context.Background(), "grimy Ranarr weed", "grimy avantoe", "Grimy Snapdragon")
+			monsters, err := client.GetMonstersThatDrop(ctx, "grimy Ranarr weed", "grimy avantoe", "Grimy Snapdragon")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
@@ -1243,8 +1384,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1287,18 +1428,18 @@ func Test_GetMonstersWhere(t *testing.T) {
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyNoError, verifyMonsterNames)
+			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					monsters: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1341,19 +1482,28 @@ func Test_GetMonstersWhere(t *testing.T) {
 					monsters: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			monsters, err := client.GetMonstersWhere(context.Background(), `{ "name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis"] }, "duplicate": false }`)
+			monsters, err := client.GetMonstersWhere(ctx, `{ "name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis"] }, "duplicate": false }`)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
@@ -1391,8 +1541,8 @@ func Test_GetAllPrayers(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1415,9 +1565,9 @@ func Test_GetAllPrayers(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyNoError, verifyPrayers)
+			return client, context.Background(), check(verifyNoError, verifyPrayers)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1437,9 +1587,9 @@ func Test_GetAllPrayers(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1462,18 +1612,18 @@ func Test_GetAllPrayers(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1496,19 +1646,28 @@ func Test_GetAllPrayers(t *testing.T) {
 					prayers: items,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			prayers, err := client.GetAllPrayers(context.Background())
+			prayers, err := client.GetAllPrayers(ctx)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, prayers, err)
@@ -1558,8 +1717,8 @@ func Test_GetPrayersByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1602,9 +1761,9 @@ func Test_GetPrayersByName(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyNoError, verifyPrayerNames)
+			return client, context.Background(), check(verifyNoError, verifyPrayerNames)
 		},
-		"http error": func(t *testing.T) (*client, []checkFn) {
+		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1628,9 +1787,51 @@ func Test_GetPrayersByName(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"json error": func(t *testing.T) (*client, []checkFn) {
+		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					prayers: prayers,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1657,18 +1858,18 @@ func Test_GetPrayersByName(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1711,19 +1912,28 @@ func Test_GetPrayersByName(t *testing.T) {
 					prayers: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			prayers, err := client.GetPrayersByName(context.Background(), "Thick Skin", "Burst of Strength", "Smite", "Rigour")
+			prayers, err := client.GetPrayersByName(ctx, "Thick Skin", "Burst of Strength", "Smite", "Rigour")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, prayers, err)
@@ -1772,8 +1982,8 @@ func Test_GetPrayersWhere(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []checkFn){
-		"success": func(t *testing.T) (*client, []checkFn) {
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1816,18 +2026,18 @@ func Test_GetPrayersWhere(t *testing.T) {
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyNoError, verifyPrayerNames)
+			return client, context.Background(), check(verifyNoError, verifyPrayerNames)
 		},
-		"nil client": func(t *testing.T) (*client, []checkFn) {
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,
 				endpoints: &endpoints{
 					prayers: prayers,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
 		},
-		"type error": func(t *testing.T) (*client, []checkFn) {
+		"type error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1870,19 +2080,28 @@ func Test_GetPrayersWhere(t *testing.T) {
 					prayers: monsters,
 				},
 			}
-			return client, check(verifyError)
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+				endpoints: &endpoints{
+					items: monsters,
+				},
+			}
+			return client, nil, check(verifyError)
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			client, checkFns := tc(t)
+			client, ctx, checkFns := tc(t)
 
 			if len(checkFns) == 0 {
 				t.Skipf("Skipping %s because there are no checks in place", name)
 			}
 
-			prayers, err := client.GetPrayersWhere(context.Background(), `{ "name": { "$in": ["Thick Skin", "Burst of Strength", "Smite", "Rigour"] } }`)
+			prayers, err := client.GetPrayersWhere(ctx, `{ "name": { "$in": ["Thick Skin", "Burst of Strength", "Smite", "Rigour"] } }`)
 
 			for _, checkFn := range checkFns {
 				checkFn(t, prayers, err)
