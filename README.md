@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/atye/gosrsbox.svg?branch=master)](https://travis-ci.org/atye/gosrsbox) [![Coverage Status](https://coveralls.io/repos/github/atye/gosrsbox/badge.svg?branch=add-travis-ci)](https://coveralls.io/github/atye/gosrsbox?branch=add-travis-ci)
+[![Build Status](https://travis-ci.org/atye/gosrsbox.svg?branch=master)](https://travis-ci.org/atye/gosrsbox) [![Coverage Status](https://coveralls.io/repos/github/atye/gosrsbox/badge.svg?branch=master)](https://coveralls.io/github/atye/gosrsbox?branch=master)
 
 gosrsbox is a client for the osrsbox-api; https://api.osrsbox.com.
 
