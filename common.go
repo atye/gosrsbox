@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"strings"
@@ -149,33 +150,131 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	switch endpoint {
 	case "items":
-		var items *itemsEndpoint
-		err = json.NewDecoder(resp.Body).Decode(&items)
+
+		var items []*Item
+
+		var itemsEnd *itemsEndpoint
+		err = json.NewDecoder(resp.Body).Decode(&itemsEnd)
 		if err != nil {
 			return nil, err
 		}
+		resp.Body.Close()
 
-		return items.Items, nil
+		items = append(items, itemsEnd.Items...)
+
+		var pages int
+		if itemsEnd.Meta.MaxResults != 0 {
+			pages = int(math.Ceil(float64(itemsEnd.Meta.Total) / float64(itemsEnd.Meta.MaxResults)))
+		}
+
+		for i := 2; i <= pages; i++ {
+			req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, i), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			resp, err := client.Do(req)
+			if err != nil {
+				return nil, err
+			}
+
+			var itemsEndTemp *itemsEndpoint
+			err = json.NewDecoder(resp.Body).Decode(&itemsEndTemp)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body.Close()
+
+			items = append(items, itemsEndTemp.Items...)
+		}
+
+		return items, nil
+
 	case "monsters":
-		var monsters *monstersEndpoint
-		err = json.NewDecoder(resp.Body).Decode(&monsters)
+
+		var monsters []*Monster
+
+		var monstersEnd *monstersEndpoint
+		err = json.NewDecoder(resp.Body).Decode(&monstersEnd)
 		if err != nil {
 			return nil, err
 		}
+		resp.Body.Close()
 
-		return monsters.Monsters, nil
+		monsters = append(monsters, monstersEnd.Monsters...)
+
+		var pages int
+		if monstersEnd.Meta.MaxResults != 0 {
+			pages = int(math.Ceil(float64(monstersEnd.Meta.Total) / float64(monstersEnd.Meta.MaxResults)))
+		}
+
+		for i := 2; i <= pages; i++ {
+			req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, i), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			resp, err := client.Do(req)
+			if err != nil {
+				return nil, err
+			}
+
+			var monstersEndTemp *monstersEndpoint
+			err = json.NewDecoder(resp.Body).Decode(&monstersEndTemp)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body.Close()
+
+			monsters = append(monsters, monstersEndTemp.Monsters...)
+		}
+
+		return monsters, nil
+
 	case "prayers":
-		var prayers *prayersEndpoint
-		err = json.NewDecoder(resp.Body).Decode(&prayers)
+
+		var prayers []*Prayer
+
+		var prayersEnd *prayersEndpoint
+		err = json.NewDecoder(resp.Body).Decode(&prayersEnd)
 		if err != nil {
 			return nil, err
 		}
+		resp.Body.Close()
 
-		return prayers.Prayers, nil
+		prayers = append(prayers, prayersEnd.Prayers...)
+
+		var pages int
+		if prayersEnd.Meta.MaxResults != 0 {
+			pages = int(math.Ceil(float64(prayersEnd.Meta.Total) / float64(prayersEnd.Meta.MaxResults)))
+		}
+
+		for i := 2; i <= pages; i++ {
+			req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, i), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			resp, err := client.Do(req)
+			if err != nil {
+				return nil, err
+			}
+
+			var pryaersEndTemp *prayersEndpoint
+			err = json.NewDecoder(resp.Body).Decode(&pryaersEndTemp)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body.Close()
+
+			prayers = append(prayers, pryaersEndTemp.Prayers...)
+		}
+
+		return prayers, nil
+
 	default:
 		return nil, fmt.Errorf("Entity %s not supported", endpoint)
 	}
