@@ -2,6 +2,11 @@ package gosrsbox
 
 type itemsEndpoint struct {
 	Items []*Item `json:"_items"`
+	Meta  struct {
+		Page       int `json:"page"`
+		MaxResults int `json:"max_results"`
+		Total      int `json:"total"`
+	} `json:"_meta"`
 }
 
 // Item is an osrsbox item.
@@ -80,6 +85,11 @@ type Stance struct {
 
 type monstersEndpoint struct {
 	Monsters []*Monster `json:"_items"`
+	Meta     struct {
+		Page       int `json:"page"`
+		MaxResults int `json:"max_results"`
+		Total      int `json:"total"`
+	} `json:"_meta"`
 }
 
 // Monster is an osrsbox monster.
@@ -146,6 +156,11 @@ type Drop struct {
 
 type prayersEndpoint struct {
 	Prayers []*Prayer `json:"_items"`
+	Meta    struct {
+		Page       int `json:"page"`
+		MaxResults int `json:"max_results"`
+		Total      int `json:"total"`
+	} `json:"_meta"`
 }
 
 // Prayer is an osrsbox prayer.
