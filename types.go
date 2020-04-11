@@ -1,5 +1,16 @@
 package gosrsbox
 
+import "fmt"
+
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (err *Error) Error() string {
+	return fmt.Sprintf("code: %d, message: %s", err.Code, err.Message)
+}
+
 type itemsEndpoint struct {
 	Items []*Item `json:"_items"`
 	Meta  struct {
@@ -7,6 +18,7 @@ type itemsEndpoint struct {
 		MaxResults int `json:"max_results"`
 		Total      int `json:"total"`
 	} `json:"_meta"`
+	Error *Error `json:"_error"`
 }
 
 // Item is an osrsbox item.
@@ -90,6 +102,7 @@ type monstersEndpoint struct {
 		MaxResults int `json:"max_results"`
 		Total      int `json:"total"`
 	} `json:"_meta"`
+	Error *Error `json:"_error"`
 }
 
 // Monster is an osrsbox monster.
@@ -161,6 +174,7 @@ type prayersEndpoint struct {
 		MaxResults int `json:"max_results"`
 		Total      int `json:"total"`
 	} `json:"_meta"`
+	Error *Error `json:"_error"`
 }
 
 // Prayer is an osrsbox prayer.
