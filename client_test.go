@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/atye/gosrsbox/mocks"
@@ -372,7 +373,7 @@ func Test_GetItemsWhere(t *testing.T) {
 
 	verifyItemNames := func(t *testing.T, items []*Item, err error) {
 		if len(items) != 4 {
-			t.Errorf("expected four items, got zero length slice")
+			t.Errorf("expected four items, got %d length slice", len(items))
 		}
 
 		for i := range items {
@@ -448,8 +449,39 @@ func Test_GetItemsWhere(t *testing.T) {
 
 			client := &client{
 				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyNoError, verifyItemNames)
+		},
+		"success one page": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       getJSON(t, "testdata/where_items_one_page.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
+			}
+			return client, context.Background(), check(verifyItemNames, verifyNoError)
 		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
@@ -487,6 +519,8 @@ func Test_GetItemsWhere(t *testing.T) {
 
 			client := &client{
 				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyError)
 		},
@@ -531,6 +565,8 @@ func Test_GetItemsWhere(t *testing.T) {
 
 			client := &client{
 				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyError)
 		},
@@ -575,6 +611,8 @@ func Test_GetItemsWhere(t *testing.T) {
 
 			client := &client{
 				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyError)
 		},

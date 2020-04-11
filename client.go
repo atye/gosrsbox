@@ -3,6 +3,7 @@ package gosrsbox
 import (
 	"context"
 	"net/http"
+	"sync"
 )
 
 // OSRSBoxClient is the osrsbox-api client. Cancellation should be controlled through the passed in context.
@@ -37,6 +38,8 @@ type HTTPClient interface {
 
 type client struct {
 	client HTTPClient
+	wg     sync.WaitGroup
+	mu     sync.Mutex
 }
 
 // New returns an OSRSBoxClient.
@@ -55,15 +58,15 @@ func New(c HTTPClient) OSRSBoxClient {
 }
 
 func (c *client) GetAllItems(ctx context.Context) ([]*Item, error) {
-	return getAllItems(ctx, c.client)
+	return getAllItems(ctx, c)
 }
 
 func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]*Item, error) {
-	return getItemsByName(ctx, c.client, names...)
+	return getItemsByName(ctx, c, names...)
 }
 
 func (c *client) GetItemsWhere(ctx context.Context, query string) ([]*Item, error) {
-	return getItemsWhere(ctx, c.client, query)
+	return getItemsWhere(ctx, c, query)
 }
 
 func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
