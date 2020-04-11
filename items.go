@@ -226,7 +226,6 @@ func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error
 
 				}(page)
 			}
-
 			c.wg.Wait()
 			close(waitChan)
 		}()

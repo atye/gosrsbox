@@ -1227,6 +1227,33 @@ func Test_GetMonstersWhere(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
 		},
+		"success one page": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_monsters_one_page.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
+		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,

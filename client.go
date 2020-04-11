@@ -70,19 +70,19 @@ func (c *client) GetItemsWhere(ctx context.Context, query string) ([]*Item, erro
 }
 
 func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
-	return getAllMonsters(ctx, c.client)
+	return getAllMonsters(ctx, c)
 }
 
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error) {
-	return getMonstersByName(ctx, c.client, names...)
+	return getMonstersByName(ctx, c, names...)
 }
 
 func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error) {
-	return getMonstersThatDrop(ctx, c.client, names...)
+	return getMonstersThatDrop(ctx, c, names...)
 }
 
 func (c *client) GetMonstersWhere(ctx context.Context, query string) ([]*Monster, error) {
-	return getMonstersWhere(ctx, c.client, query)
+	return getMonstersWhere(ctx, c, query)
 }
 
 func (c *client) GetAllPrayers(ctx context.Context) ([]*Prayer, error) {
