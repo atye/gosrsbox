@@ -163,6 +163,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 		}
 		resp.Body.Close()
 
+		if itemsEnd.Error != nil {
+			return nil, itemsEnd.Error
+		}
+
 		items = append(items, itemsEnd.Items...)
 
 		var pages int
@@ -188,6 +192,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 			}
 			resp.Body.Close()
 
+			if itemsEndTemp.Error != nil {
+				return nil, itemsEndTemp.Error
+			}
+
 			items = append(items, itemsEndTemp.Items...)
 		}
 
@@ -203,6 +211,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 			return nil, err
 		}
 		resp.Body.Close()
+
+		if monstersEnd.Error != nil {
+			return nil, monstersEnd.Error
+		}
 
 		monsters = append(monsters, monstersEnd.Monsters...)
 
@@ -229,6 +241,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 			}
 			resp.Body.Close()
 
+			if monstersEndTemp.Error != nil {
+				return nil, monstersEndTemp.Error
+			}
+
 			monsters = append(monsters, monstersEndTemp.Monsters...)
 		}
 
@@ -244,6 +260,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 			return nil, err
 		}
 		resp.Body.Close()
+
+		if prayersEnd.Error != nil {
+			return nil, prayersEnd.Error
+		}
 
 		prayers = append(prayers, prayersEnd.Prayers...)
 
@@ -269,6 +289,10 @@ func getWhere(ctx context.Context, client HTTPClient, endpoint, query string) (i
 				return nil, err
 			}
 			resp.Body.Close()
+
+			if prayersEndTemp.Error != nil {
+				return nil, prayersEndTemp.Error
+			}
 
 			prayers = append(prayers, prayersEndTemp.Prayers...)
 		}
