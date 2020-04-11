@@ -1,0 +1,120 @@
+{
+    "_items": [
+      {
+        "_id": "5e865e3528d93c7e7b26bfb5",
+        "id": "1",
+        "name": "Thick Skin",
+        "members": false,
+        "description": "Increases your defence by 5%.",
+        "drain_per_minute": 5.0,
+        "wiki_url": "https://oldschool.runescape.wiki/w/Thick_Skin",
+        "requirements": {
+          "prayer": 1
+        },
+        "bonuses": {
+          "defence": 5
+        },
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAAtklEQVR42u2WPQ6AMAiF64Ec3V09gPfwLm6e0FvUaNIIrRT6w2Jo8raGL/AK1LmiM/hvqRwquAoUB12m0d9ShGLYsc6PUmizN9inADv37RGGymIUlSMPFNuSesMpAKX3o7K/5YL+5AQz5IShERAG66XUZ+IFctlJsyRKKvORAsr9K3ipHLBiSrH9I2gLPkbVlMkDO401WUn/AoQtYkADGtCA/YDUglYa3vSCVvoMc8FUv/ttC/YCI4qmpw2ro6AAAAAASUVORK5CYII=",
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "1ec58132e3fe8bed3afad4dfb11e473d3f442b7a",
+        "_links": {
+          "self": {
+            "title": "Prayer",
+            "href": "prayers/5e865e3528d93c7e7b26bfb5"
+          }
+        }
+      },
+      {
+        "_id": "5e865e3528d93c7e7b26bfb6",
+        "id": "2",
+        "name": "Burst of Strength",
+        "members": false,
+        "description": "Increases your strength by 5%.",
+        "drain_per_minute": 5.0,
+        "wiki_url": "https://oldschool.runescape.wiki/w/Burst_of_Strength",
+        "requirements": {
+          "prayer": 4
+        },
+        "bonuses": {
+          "strength": 5
+        },
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAABkAAAAbCAYAAACJISRoAAABIklEQVR42q2W0RHCMAiGk4F8dAgHcQUXcQMfHcMRfHUX7WGPhsAPSdP07r9W6vEBSaApdV3552vKFTmbAtMOPKfDEAx43K6gXEMQH/B53v/3AhuCtAF0Jx2ElGcdvdQgRNc5b4DL+bQ5p2cShoRb3JZJZsGOpSwEZVTZLOD7flXR4yhR1HDn1UYGcBbtA1cDwKawUdCfLKSn5iVAALHrwNK7SNr1utBvAgSQNTLOwB668p4l3+ngXAiXSYK0JATJOUMxRDpAEB2E3SgKolP2QEicQV0qAJGnWspzjNoNPkNwNuRqQSPJwJwsWtNttctWovuXtoMsojmO7bh/lVLv6MxxZqh/DUCaLbvjo2J4WrY+iw7P/T3jejrEW8PpkGhTpLQAGLqok6ZcIioAAAAASUVORK5CYII=",
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "c6b6279636386554638034b78d538d9a37ac9d7b",
+        "_links": {
+          "self": {
+            "title": "Prayer",
+            "href": "prayers/5e865e3528d93c7e7b26bfb6"
+          }
+        }
+      },
+      {
+        "_id": "5e865e3528d93c7e7b26bfcc",
+        "id": "24",
+        "name": "Smite",
+        "members": true,
+        "description": "1/4 of damage dealt is also removed from opponent's Prayer.",
+        "drain_per_minute": 40,
+        "wiki_url": "https://oldschool.runescape.wiki/w/Smite",
+        "requirements": {
+          "prayer": 52
+        },
+        "bonuses": {},
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAA4klEQVR42u2VUQ4CIQxElzvon/fzHB7IG3gBr2JM9ghrQkK2NjNlamS/IJkPEspjaCnLIo+y5fS3UbbT9SFpCLjndCj4cntVnZ/3qjaf4Ame4Ak+Gtxr9L+ApQ+kgEaP+7AG3mM6H8gehBfnwFG89PvYYBWMbk1ybDdCmyngFotTEDhm8AxYrHYc5OGZ4sK3QJ4TAlu4CuaVLjaJSAiMUpUCR856YH9TuC8Ez8cDLMjP/YHYqzC55g0DubN6r2sVOwzrZF9g7zzKaQN69XJOwQzEnDIwS4HkeJTCHI8WrOqj9AHYLIZjfD316gAAAABJRU5ErkJggg==",
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "6d12d5d1c2b2e667f2142325b369001b5a4b6bb0",
+        "_links": {
+          "self": {
+            "title": "Prayer",
+            "href": "prayers/5e865e3528d93c7e7b26bfcc"
+          }
+        }
+      },
+      {
+        "_id": "5e865e3528d93c7e7b26bfd0",
+        "id": "28",
+        "name": "Rigour",
+        "members": true,
+        "description": "Increases your Ranged attack by 20% and damage by 23%, and your defence by 25%.",
+        "drain_per_minute": 40,
+        "wiki_url": "https://oldschool.runescape.wiki/w/Rigour",
+        "requirements": {
+          "prayer": 74,
+          "defence": 70
+        },
+        "bonuses": {
+          "ranged": 20,
+          "ranged_strength": 25,
+          "defence": 23
+        },
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAYAAADpnJ2CAAABMklEQVR42rWW3Q0CIRCEjwJ8tgBrMPHZFmzAIny0gOvA+izAGjCYcMwNswucSrLJHT/7McvyM02bSojTfwo7Tv8h3h/PqKFfTSTEYqUuwTRQ9R8Erp0XdV79ANBWw7Y/7Mw2W7mhqDSGxTkC0vf5eqqg2I99CKAOVXZ0mY+Lw/SdgFjHk7DD3xE+hLZsINR2+BQMlXG7Gu8Cc2jyt4KketWWw22HWYTUWqcMsYzVcmIBMFQZqBSxmvl1+xj2Z7XdQByQHbKSDET1qNCB1uuHs1ZhY2NgQ2W9fpbCEaAT0jpLeZAKaQvmJI3OUs5QhHoZqoDuWcr7jDe4lURqL3bcIOsTxwJbxmvdcV0FeQPgPmydpZ3KJvcg904bVNi+GwegCPYgG2D1g6nXfvCu4cdRy9rlDXGzl98mKbMMAAAAAElFTkSuQmCC",
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "0fcd2cfe346e5c44a61750ec8c286c8af91c1c58",
+        "_links": {
+          "self": {
+            "title": "Prayer",
+            "href": "prayers/5e865e3528d93c7e7b26bfd0"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "parent": {
+        "title": "home",
+        "href": "/"
+      },
+      "self": {
+        "title": "prayers",
+        "href": "prayers?where={\"name\":{\"$in\":[\"Thick Skin\", \"Burst of Strength\"]}}"
+      }
+    },
+    "_meta": {
+      "page": 1,
+      "max_results": 4,
+      "total": 4
+    }
+  }

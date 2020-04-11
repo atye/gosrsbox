@@ -3,6 +3,7 @@ package gosrsbox
 import (
 	"context"
 	"net/http"
+	"sync"
 )
 
 // OSRSBoxClient is the osrsbox-api client. Cancellation should be controlled through the passed in context.
@@ -37,6 +38,8 @@ type HTTPClient interface {
 
 type client struct {
 	client HTTPClient
+	wg     sync.WaitGroup
+	mu     sync.Mutex
 }
 
 // New returns an OSRSBoxClient.
@@ -55,41 +58,41 @@ func New(c HTTPClient) OSRSBoxClient {
 }
 
 func (c *client) GetAllItems(ctx context.Context) ([]*Item, error) {
-	return getAllItems(ctx, c.client)
+	return getAllItems(ctx, c)
 }
 
 func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]*Item, error) {
-	return getItemsByName(ctx, c.client, names...)
+	return getItemsByName(ctx, c, names...)
 }
 
 func (c *client) GetItemsWhere(ctx context.Context, query string) ([]*Item, error) {
-	return getItemsWhere(ctx, c.client, query)
+	return getItemsWhere(ctx, c, query)
 }
 
 func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
-	return getAllMonsters(ctx, c.client)
+	return getAllMonsters(ctx, c)
 }
 
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error) {
-	return getMonstersByName(ctx, c.client, names...)
+	return getMonstersByName(ctx, c, names...)
 }
 
 func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error) {
-	return getMonstersThatDrop(ctx, c.client, names...)
+	return getMonstersThatDrop(ctx, c, names...)
 }
 
 func (c *client) GetMonstersWhere(ctx context.Context, query string) ([]*Monster, error) {
-	return getMonstersWhere(ctx, c.client, query)
+	return getMonstersWhere(ctx, c, query)
 }
 
 func (c *client) GetAllPrayers(ctx context.Context) ([]*Prayer, error) {
-	return getAllPrayers(ctx, c.client)
+	return getAllPrayers(ctx, c)
 }
 
 func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]*Prayer, error) {
-	return getPrayersByName(ctx, c.client, names...)
+	return getPrayersByName(ctx, c, names...)
 }
 
 func (c *client) GetPrayersWhere(ctx context.Context, query string) ([]*Prayer, error) {
-	return getPrayersWhere(ctx, c.client, query)
+	return getPrayersWhere(ctx, c, query)
 }

@@ -1,0 +1,359 @@
+{
+    "_items": [
+      {
+        "_id": "5e865e2d28d93c7e7b2668af",
+        "id": "4151",
+        "name": "Abyssal whip",
+        "incomplete": false,
+        "members": true,
+        "tradeable": true,
+        "tradeable_on_ge": true,
+        "stackable": false,
+        "stacked": null,
+        "noted": false,
+        "noteable": true,
+        "linked_id_item": null,
+        "linked_id_noted": 4152,
+        "linked_id_placeholder": 14032,
+        "placeholder": false,
+        "equipable": true,
+        "equipable_by_player": true,
+        "equipable_weapon": true,
+        "cost": 120001,
+        "lowalch": 48000,
+        "highalch": 72000,
+        "weight": 0.453,
+        "buy_limit": 70,
+        "quest_item": false,
+        "release_date": "2005-01-26",
+        "duplicate": false,
+        "examine": "A weapon from the abyss.",
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAABvUlEQVR4Xu2Xv26DMBDG4QEyZECKIkVCKIoyVR26dOrQpUOHDn3/V3F7nL7689kGAo6z9JNuiH1wP+6PIU3zr2Jq3bRVkQ/Y7feBvfcn93o8upfDwT11XQKwOGQMwfYx9O7rcnaf52GEezuFgNdfn4JQ7RjAQojZLAAMcPJbAOH73PcloBTIQiEAG8MB7Pt6MQ+wSW1QAs6Kh1A/NgtnHyKMcZMUCP3AIBw0XcqmgU9qb4W0JwTIwuRAYHETF4FSIMkORjn1xCnjayy8lN/vLVY7TglfvBRGTJpZrpXM+my1f6DhPRdJs8M3nAPibGDseY9hVgHxzbh3chC22dkPQ8EnufddpBgI69Lk3B8hnPrwOsPEw7FYqUzoOsqBUtps8XUASh0bYbxZxUCcJZzCNnjOBGgDDBRD8d4tQAVgRAqEs2jusLOGEhaCgTQTgApLp/s5A0RBGMg3shx2YZb0fZUz9issD4VpsR4PkJ+uYbczJQr94rW7KT3yDJcegLtqeuRlAFa+0bdoeuTxPV2538Ixt1D86Vutr8IR16CSndzfoSpQLIDh09dmscL5lJICMUClw3JKD8tGXiVgfgACr1tEhnw7UAAAAABJRU5ErkJggg==",
+        "wiki_name": "Abyssal whip",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Abyssal_whip",
+        "equipment": {
+          "attack_stab": 0,
+          "attack_slash": 82,
+          "attack_crush": 0,
+          "attack_magic": 0,
+          "attack_ranged": 0,
+          "defence_stab": 0,
+          "defence_slash": 0,
+          "defence_crush": 0,
+          "defence_magic": 0,
+          "defence_ranged": 0,
+          "melee_strength": 82,
+          "ranged_strength": 0,
+          "magic_damage": 0,
+          "prayer": 0,
+          "slot": "weapon",
+          "requirements": {
+            "attack": 70
+          }
+        },
+        "weapon": {
+          "attack_speed": 4,
+          "weapon_type": "whips",
+          "stances": [
+            {
+              "combat_style": "flick",
+              "attack_type": "slash",
+              "attack_style": "accurate",
+              "experience": "attack",
+              "boosts": null
+            },
+            {
+              "combat_style": "lash",
+              "attack_type": "slash",
+              "attack_style": "controlled",
+              "experience": "shared",
+              "boosts": null
+            },
+            {
+              "combat_style": "deflect",
+              "attack_type": "slash",
+              "attack_style": "defensive",
+              "experience": "defence",
+              "boosts": null
+            }
+          ]
+        },
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "01bf27f3a0dedb46921f5b8b03383d659e4c484b",
+        "_links": {
+          "self": {
+            "title": "Item",
+            "href": "items/5e865e2d28d93c7e7b2668af"
+          }
+        }
+      },
+      {
+        "_id": "5e865e2f28d93c7e7b268a55",
+        "id": "13265",
+        "name": "Abyssal dagger",
+        "incomplete": false,
+        "members": true,
+        "tradeable": true,
+        "tradeable_on_ge": true,
+        "stackable": false,
+        "stacked": null,
+        "noted": false,
+        "noteable": true,
+        "linked_id_item": null,
+        "linked_id_noted": 13266,
+        "linked_id_placeholder": 18629,
+        "placeholder": false,
+        "equipable": true,
+        "equipable_by_player": true,
+        "equipable_weapon": true,
+        "cost": 115001,
+        "lowalch": 46000,
+        "highalch": 69000,
+        "weight": 0.453,
+        "buy_limit": 8,
+        "quest_item": false,
+        "release_date": "2015-10-01",
+        "duplicate": false,
+        "examine": "Something sharp from the body of a defeated Abyssal Sire.",
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAABNElEQVR4Xu2WPQvCQAyGr2MHhw5CKRSKiKM46CAIgv/AxcXVxc2f4789+7bmcobzY7CJgw8EOvTahzdJqXN/zMn881Klf2nt3NNSknotMi6KkNCiabqST/gSaZHZXSIlMqiMFCEJZRHwXkZJBHwuI09+GV5dmpPUvKjJxIlAYp47X5VlJ9LUtaYMyEIiMpXpZKItA7hNVAZtAo+ffUihVSiTNlEKNDOrqGIheXJA+mQgtW0FaGY2NkKc0KHI/aUc+XVVhfYpC7EMCutNIjwzavOTlqGXxwIDytA/Cs+M0VqDXkCKyGTkqQF5FDFMhsi6NSYRXGPFSUjerUAvhDqNc39sV3zf1jJsljoshITOrdS1KYKQQUqZ341YiDbNdIZoduQwG8gQvGlGbUph2qY0PyXzJ+IGkmlDupvU/MQAAAAASUVORK5CYII=",
+        "wiki_name": "Abyssal dagger (Unpoisoned)",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Abyssal_dagger#Unpoisoned",
+        "equipment": {
+          "attack_stab": 75,
+          "attack_slash": 40,
+          "attack_crush": -4,
+          "attack_magic": 1,
+          "attack_ranged": 0,
+          "defence_stab": 0,
+          "defence_slash": 0,
+          "defence_crush": 0,
+          "defence_magic": 1,
+          "defence_ranged": 0,
+          "melee_strength": 75,
+          "ranged_strength": 0,
+          "magic_damage": 0,
+          "prayer": 0,
+          "slot": "weapon",
+          "requirements": {
+            "attack": 70
+          }
+        },
+        "weapon": {
+          "attack_speed": 4,
+          "weapon_type": "stabbing_swords",
+          "stances": [
+            {
+              "combat_style": "stab",
+              "attack_type": "stab",
+              "attack_style": "accurate",
+              "experience": "attack",
+              "boosts": null
+            },
+            {
+              "combat_style": "lunge",
+              "attack_type": "stab",
+              "attack_style": "aggressive",
+              "experience": "strength",
+              "boosts": null
+            },
+            {
+              "combat_style": "slash",
+              "attack_type": "slash",
+              "attack_style": "aggressive",
+              "experience": "strength",
+              "boosts": null
+            },
+            {
+              "combat_style": "block",
+              "attack_type": "stab",
+              "attack_style": "defensive",
+              "experience": "defence",
+              "boosts": null
+            }
+          ]
+        },
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "6ea50f11ad96e7b6b599fcc570a930d4dd1d1ebf",
+        "_links": {
+          "self": {
+            "title": "Item",
+            "href": "items/5e865e2f28d93c7e7b268a55"
+          }
+        }
+      },
+      {
+        "_id": "5e865e2c28d93c7e7b265dca",
+        "id": "1127",
+        "name": "Rune platebody",
+        "incomplete": false,
+        "members": false,
+        "tradeable": true,
+        "tradeable_on_ge": true,
+        "stackable": false,
+        "stacked": null,
+        "noted": false,
+        "noteable": true,
+        "linked_id_item": null,
+        "linked_id_noted": 1128,
+        "linked_id_placeholder": 14106,
+        "placeholder": false,
+        "equipable": true,
+        "equipable_by_player": true,
+        "equipable_weapon": false,
+        "cost": 65000,
+        "lowalch": 26000,
+        "highalch": 39000,
+        "weight": 9.979,
+        "buy_limit": 70,
+        "quest_item": false,
+        "release_date": "2001-09-23",
+        "duplicate": false,
+        "examine": "Provides excellent protection.",
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAACm0lEQVR4Xu2Wb2sTQRDGex/AF74IhIBwlBBCKKEEg7SkNDQosaQSQxsDVRGlFBT/UQoFEQQ/+Oizy3M3u7eb3IW0rzIwlNzuzvz22dnZ7uxsbWsPYonk7v+Ofb8Xs8HrzT1ptHvG8fvZ6Uz2h2Np9weSdrpSazwx3x/V6plvGMwG2+0NCj6cv5fBdCH98SvpHo1kt/tUGq1OAagItjZcIu3BWFoHI2n2jx0YjAHoaPbWUQlQSP64kRr3oVy4SpZI53higDQU/WTxMQPSKnUOh9LqHWRAMTDE30/TslCJ7J1MDRChAETHuA90eDY3UFAKUEhaS1sFMA1XQSULFIMaXV4VgHwoqAUg7SGgEiol0n1+bjwEhXENRCitFGqqN5rYW+dBEaykSv+JX74xroE01It31waIUD6YhoJaaBP0GNASlVygENTpp28y/vAlCgYoDYR68qH8Il+pEvzs+sYkRhIkwBHw++TqRxDMV4lAOLqLn79l+vnWrMNcjDMXFFqiEswmRjIkwW65+PXXOxPYB6NS/rEBCOvmN38yIMwDbEkYWGIWA4iNj0DY6ez7LwNGKCoVOjYNhDUAwjhuIoH87AHLgdj0CLS4/ZtBUallKqF7ayDMw3eClgbiYgRm/VChskBaWR4Z5mCD6OaVgLRCGgig9FVAuk7wF3NZP5WBsJi3oZ42MyB8J8iqwuZGNgKEROHb4F59wtw7EHsQ3iQdNASCo2U/4k1jDenjhrJrAyEBAqKpMSAKU4OEYPyrj+R5N7bv4FpACIxe4b43ViHWkYbR6rDPIDE7MtdzoxWA7GuPf8Lw9hQfQLtTBodKPEIAAQBAep6uv1BsN3/Q8mBuQGs6Qcw5x18bm5ePRywe0DV/3jpr/PGtbW1T9g8wc+9TwenlAwAAAABJRU5ErkJggg==",
+        "wiki_name": "Rune platebody",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Rune_platebody",
+        "equipment": {
+          "attack_stab": 0,
+          "attack_slash": 0,
+          "attack_crush": 0,
+          "attack_magic": -30,
+          "attack_ranged": -10,
+          "defence_stab": 82,
+          "defence_slash": 80,
+          "defence_crush": 72,
+          "defence_magic": -6,
+          "defence_ranged": 80,
+          "melee_strength": 0,
+          "ranged_strength": 0,
+          "magic_damage": 0,
+          "prayer": 0,
+          "slot": "body",
+          "requirements": {
+            "defence": 40
+          }
+        },
+        "weapon": null,
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "1e19b9b4b146ef9277778084d6595ee93e0015c0",
+        "_links": {
+          "self": {
+            "title": "Item",
+            "href": "items/5e865e2c28d93c7e7b265dca"
+          }
+        }
+      },
+      {
+        "_id": "5e865e2d28d93c7e7b266a57",
+        "id": "4587",
+        "name": "Dragon scimitar",
+        "incomplete": false,
+        "members": true,
+        "tradeable": true,
+        "tradeable_on_ge": true,
+        "stackable": false,
+        "stacked": null,
+        "noted": false,
+        "noteable": true,
+        "linked_id_item": null,
+        "linked_id_noted": 4588,
+        "linked_id_placeholder": 14759,
+        "placeholder": false,
+        "equipable": true,
+        "equipable_by_player": true,
+        "equipable_weapon": true,
+        "cost": 100000,
+        "lowalch": 40000,
+        "highalch": 60000,
+        "weight": 1.814,
+        "buy_limit": 70,
+        "quest_item": false,
+        "release_date": "2005-03-29",
+        "duplicate": false,
+        "examine": "A vicious, curved sword.",
+        "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAABXklEQVR4XuWWP0sDQRDFMx8gvVilClbhkEgwGAyCQYORGIxIYiNCSrGwsLCw8HuP7K7vdndydtmZgA8eHHu3Nz9m3v1ptf6viINNBQjij4M2fx22raAiBAyYqtPxljsKqRkEBpDcVUg5CGA+f63cne2uOAjZGRMYdCS14qgCDAq/izEpA1FW1IEACFYEIv4WMCkQnja4cH4CDIBSGOcUILW8yw4VgdLxSBi5q5Cau2PwaEN5dhDYvYJRy0lwvgaQN928EN9Np3w5HidQ8fdBdibfW0TED/N5XRQw6Zc7nlMR8cvTmk+qyhd2uQEQRqnYHYj4fDjko243g1EKcJOIHxcLn6PjXi8Dklcqifh5tfJeL5d82u/bA91eX9WZed1s6mN5pYKI72czP6rYFeKL0cjnygAqFE9DjPXtNRUR30wmjZkxgHEKIzsbDCzGIxXe0gi0UUekzLLyt/YKxlo/OMJ0k+y5ga4AAAAASUVORK5CYII=",
+        "wiki_name": "Dragon scimitar",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dragon_scimitar",
+        "equipment": {
+          "attack_stab": 8,
+          "attack_slash": 67,
+          "attack_crush": -2,
+          "attack_magic": 0,
+          "attack_ranged": 0,
+          "defence_stab": 0,
+          "defence_slash": 1,
+          "defence_crush": 0,
+          "defence_magic": 0,
+          "defence_ranged": 0,
+          "melee_strength": 66,
+          "ranged_strength": 0,
+          "magic_damage": 0,
+          "prayer": 0,
+          "slot": "weapon",
+          "requirements": {
+            "attack": 60
+          }
+        },
+        "weapon": {
+          "attack_speed": 4,
+          "weapon_type": "slashing_swords",
+          "stances": [
+            {
+              "combat_style": "chop",
+              "attack_type": "slash",
+              "attack_style": "accurate",
+              "experience": "attack",
+              "boosts": null
+            },
+            {
+              "combat_style": "slash",
+              "attack_type": "slash",
+              "attack_style": "aggressive",
+              "experience": "strength",
+              "boosts": null
+            },
+            {
+              "combat_style": "lunge",
+              "attack_type": "stab",
+              "attack_style": "controlled",
+              "experience": "shared",
+              "boosts": null
+            },
+            {
+              "combat_style": "block",
+              "attack_type": "slash",
+              "attack_style": "defensive",
+              "experience": "defence",
+              "boosts": null
+            }
+          ]
+        },
+        "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+        "_etag": "41d40214f0ca9b7ec3053009fd0da8d9e4c43c33",
+        "_links": {
+          "self": {
+            "title": "Item",
+            "href": "items/5e865e2d28d93c7e7b266a57"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "parent": {
+        "title": "home",
+        "href": "/"
+      },
+      "self": {
+        "title": "items",
+        "href": "items?where={\"name\":{\"$in\":[\"Abyssal whip\",\"Abyssal dagger\"]},\"duplicate\":false}"
+      }
+    },
+    "_meta": {
+      "page": 1,
+      "max_results": 25,
+      "total": 4
+    }
+  }

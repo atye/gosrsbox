@@ -97,8 +97,8 @@ type itemsResponse struct {
 	Error *serverError `json:"_error"`
 }
 
-func getAllItems(ctx context.Context, client HTTPClient) ([]*Item, error) {
-	if client == nil {
+func getAllItems(ctx context.Context, c *client) ([]*Item, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -107,7 +107,7 @@ func getAllItems(ctx context.Context, client HTTPClient) ([]*Item, error) {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
-	resp, err := client.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error doing request: %w", err)
 	}
@@ -127,8 +127,8 @@ func getAllItems(ctx context.Context, client HTTPClient) ([]*Item, error) {
 	return items, nil
 }
 
-func getItemsByName(ctx context.Context, client HTTPClient, names ...string) ([]*Item, error) {
-	if client == nil {
+func getItemsByName(ctx context.Context, c *client, names ...string) ([]*Item, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -140,11 +140,11 @@ func getItemsByName(ctx context.Context, client HTTPClient, names ...string) ([]
 	}
 	query = fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
 
-	return getItemsWhere(ctx, client, query)
+	return getItemsWhere(ctx, c, query)
 }
 
-func getItemsWhere(ctx context.Context, client HTTPClient, query string) ([]*Item, error) {
-	if client == nil {
+func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -155,54 +155,87 @@ func getItemsWhere(ctx context.Context, client HTTPClient, query string) ([]*Ite
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
-	resp, err := client.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error doing request: %w", err)
 	}
-
-	var items []*Item
 
 	var itemsResp *itemsResponse
 	err = json.NewDecoder(resp.Body).Decode(&itemsResp)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding json response: %w", err)
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
 
 	if itemsResp.Error != nil {
 		return nil, fmt.Errorf("error from server: %w", itemsResp.Error)
 	}
 
-	items = append(items, itemsResp.Items...)
+	items := make([]*Item, itemsResp.Meta.Total)
+
+	for i, item := range itemsResp.Items {
+		items[i] = item
+	}
 
 	var pages int
 	if itemsResp.Meta.MaxResults != 0 {
 		pages = int(math.Ceil(float64(itemsResp.Meta.Total) / float64(itemsResp.Meta.MaxResults)))
 	}
 
-	for i := 2; i <= pages; i++ {
-		req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, i), nil)
-		if err != nil {
-			return nil, fmt.Errorf("error creating request: %w", err)
-		}
+	if pages > 1 {
 
-		resp, err := client.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("error doing request: %w", err)
-		}
+		errChan := make(chan error)
+		waitChan := make(chan struct{})
 
-		var itemsRespTemp *itemsResponse
-		err = json.NewDecoder(resp.Body).Decode(&itemsRespTemp)
-		if err != nil {
-			return nil, fmt.Errorf("error decoding json response: %w", err)
-		}
-		resp.Body.Close()
+		go func() {
+			for page := 2; page <= pages; page++ {
+				c.wg.Add(1)
+				go func(page int) {
+					defer c.wg.Done()
 
-		if itemsRespTemp.Error != nil {
-			return nil, fmt.Errorf("error from server: %w", itemsRespTemp.Error)
-		}
+					req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, page), nil)
+					if err != nil {
+						errChan <- fmt.Errorf("error creating request: %w", err)
+						return
+					}
 
-		items = append(items, itemsRespTemp.Items...)
+					resp, err := c.client.Do(req)
+					if err != nil {
+						errChan <- fmt.Errorf("error doing request: %w", err)
+						return
+					}
+
+					var itemsRespTemp *itemsResponse
+					err = json.NewDecoder(resp.Body).Decode(&itemsRespTemp)
+					if err != nil {
+						errChan <- fmt.Errorf("error decoding json response: %w", err)
+						return
+					}
+					defer resp.Body.Close()
+
+					if itemsRespTemp.Error != nil {
+						errChan <- fmt.Errorf("error from server: %w", itemsRespTemp.Error)
+						return
+					}
+
+					for i, item := range itemsRespTemp.Items {
+						c.mu.Lock()
+						items[itemsResp.Meta.MaxResults*(page-1)+i] = item
+						c.mu.Unlock()
+					}
+
+				}(page)
+			}
+			c.wg.Wait()
+			close(waitChan)
+		}()
+
+		select {
+		case <-waitChan:
+			return items, nil
+		case err := <-errChan:
+			return nil, err
+		}
 	}
 
 	return items, nil
