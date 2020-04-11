@@ -680,6 +680,128 @@ func Test_GetItemsWhere(t *testing.T) {
 			}
 			return client, nil, check(verifyError)
 		},
+		"first bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					items: items,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"second bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_items_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					items: items,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"second bad json": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_items_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					items: items,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
 	}
 
 	for name, tc := range tests {
