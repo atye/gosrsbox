@@ -2,7 +2,6 @@ package gosrsbox
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -37,167 +36,60 @@ type HTTPClient interface {
 }
 
 type client struct {
-	client    HTTPClient
-	endpoints *endpoints
+	client HTTPClient
 }
 
-type endpoints struct {
-	items    string
-	monsters string
-	prayers  string
-}
-
-// New returns an OSRSBoxWrapper.
+// New returns an OSRSBoxClient.
 // Pass in nil to use the default http client.
 // Pass in an HTTPClient to use your own.
 func New(c HTTPClient) OSRSBoxClient {
 	if c != nil {
 		return &client{
 			client: c,
-			endpoints: &endpoints{
-				items:    items,
-				monsters: monsters,
-				prayers:  prayers,
-			},
 		}
 	}
 
 	return &client{
 		client: &http.Client{},
-		endpoints: &endpoints{
-			items:    items,
-			monsters: monsters,
-			prayers:  prayers,
-		},
 	}
 }
 
 func (c *client) GetAllItems(ctx context.Context) ([]*Item, error) {
-	itemsI, err := getAll(ctx, c.client, c.endpoints.items)
-	if err != nil {
-		return nil, err
-	}
-
-	if items, ok := itemsI.([]*Item); ok {
-		return items, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Item but got %T", itemsI)
+	return getAllItems(ctx, c.client)
 }
 
 func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]*Item, error) {
-	itemsI, err := getByName(ctx, c.client, c.endpoints.items, names...)
-	if err != nil {
-		return nil, err
-	}
-
-	if items, ok := itemsI.([]*Item); ok {
-		return items, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Item but got %T", itemsI)
+	return getItemsByName(ctx, c.client, names...)
 }
 
 func (c *client) GetItemsWhere(ctx context.Context, query string) ([]*Item, error) {
-	itemsI, err := getWhere(ctx, c.client, c.endpoints.items, query)
-	if err != nil {
-		return nil, err
-	}
-
-	if items, ok := itemsI.([]*Item); ok {
-		return items, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Item but got %T", itemsI)
+	return getItemsWhere(ctx, c.client, query)
 }
 
 func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
-	monstersI, err := getAll(ctx, c.client, c.endpoints.monsters)
-	if err != nil {
-		return nil, err
-	}
-
-	if monsters, ok := monstersI.([]*Monster); ok {
-		return monsters, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Monster but got %T", monstersI)
+	return getAllMonsters(ctx, c.client)
 }
 
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error) {
-	monstersI, err := getByName(ctx, c.client, c.endpoints.monsters, names...)
-	if err != nil {
-		return nil, err
-	}
-
-	if monsters, ok := monstersI.([]*Monster); ok {
-		return monsters, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Monster but got %T", monstersI)
+	return getMonstersByName(ctx, c.client, names...)
 }
 
 func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error) {
-	monstersI, err := getThatDrop(ctx, c.client, c.endpoints.monsters, names...)
-	if err != nil {
-		return nil, err
-	}
-
-	if monsters, ok := monstersI.([]*Monster); ok {
-		return monsters, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Monster but got %T", monstersI)
+	return getMonstersThatDrop(ctx, c.client, names...)
 }
 
 func (c *client) GetMonstersWhere(ctx context.Context, query string) ([]*Monster, error) {
-	monstersI, err := getWhere(ctx, c.client, c.endpoints.monsters, query)
-	if err != nil {
-		return nil, err
-	}
-
-	if monsters, ok := monstersI.([]*Monster); ok {
-		return monsters, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Monster but got %T", monstersI)
+	return getMonstersWhere(ctx, c.client, query)
 }
 
 func (c *client) GetAllPrayers(ctx context.Context) ([]*Prayer, error) {
-	prayersI, err := getAll(ctx, c.client, c.endpoints.prayers)
-	if err != nil {
-		return nil, err
-	}
-
-	if prayers, ok := prayersI.([]*Prayer); ok {
-		return prayers, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Prayer but got %T", prayersI)
+	return getAllPrayers(ctx, c.client)
 }
 
 func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]*Prayer, error) {
-	prayersI, err := getByName(ctx, c.client, c.endpoints.prayers, names...)
-	if err != nil {
-		return nil, err
-	}
-
-	if prayers, ok := prayersI.([]*Prayer); ok {
-		return prayers, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Prayer but got %T", prayersI)
+	return getPrayersByName(ctx, c.client, names...)
 }
 
 func (c *client) GetPrayersWhere(ctx context.Context, query string) ([]*Prayer, error) {
-	prayersI, err := getWhere(ctx, c.client, c.endpoints.prayers, query)
-	if err != nil {
-		return nil, err
-	}
-
-	if prayers, ok := prayersI.([]*Prayer); ok {
-		return prayers, nil
-	}
-
-	return nil, fmt.Errorf("Error with type conversion: expected []*gosrsbox.Prayer but got %T", prayersI)
+	return getPrayersWhere(ctx, c.client, query)
 }
