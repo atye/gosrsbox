@@ -54,7 +54,12 @@ func Test_GetAllItems(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -79,7 +84,12 @@ func Test_GetAllItems(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -101,7 +111,12 @@ func Test_GetAllItems(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -135,7 +150,12 @@ func Test_GetAllItems(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/test-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/test-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -160,7 +180,12 @@ func Test_GetAllItems(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -259,7 +284,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -268,7 +294,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -304,7 +331,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -330,7 +358,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -339,7 +368,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -372,7 +402,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -410,7 +441,8 @@ func Test_GetItemsByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/test?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -438,7 +470,8 @@ func Test_GetItemsByName(t *testing.T) {
 			firstReq, err := http.NewRequestWithContext(context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22abyssal+Whip%22%2C+%22abyssal+Dagger%22%2C+%22Dragon+Scimitar%22%2C+%22Rune+Platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -446,7 +479,8 @@ func Test_GetItemsByName(t *testing.T) {
 			secondReq, err := http.NewRequestWithContext(context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22abyssal+Whip%22%2C+%22abyssal+Dagger%22%2C+%22Dragon+Scimitar%22%2C+%22Rune+Platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -551,7 +585,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -636,7 +671,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -644,7 +680,8 @@ func Test_GetItemsWhere(t *testing.T) {
 			secondReq, err := http.NewRequestWithContext(context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -719,7 +756,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -765,7 +803,8 @@ func Test_GetItemsWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -856,7 +895,12 @@ func Test_GetAllMonsters(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -881,7 +925,12 @@ func Test_GetAllMonsters(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -903,7 +952,12 @@ func Test_GetAllMonsters(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -937,7 +991,12 @@ func Test_GetAllMonsters(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1036,7 +1095,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1045,7 +1105,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1081,7 +1142,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1107,7 +1169,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1116,7 +1179,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1149,7 +1213,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1187,7 +1252,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1196,7 +1262,8 @@ func Test_GetMonstersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1293,7 +1360,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1302,7 +1370,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1338,7 +1407,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1364,7 +1434,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1402,7 +1473,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1411,7 +1483,8 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1516,7 +1589,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1525,7 +1599,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1570,7 +1645,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1579,7 +1655,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1624,7 +1701,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1653,7 +1731,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1662,7 +1741,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1698,7 +1778,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1707,7 +1788,8 @@ func Test_GetMonstersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1788,7 +1870,12 @@ func Test_GetAllPrayers(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1813,7 +1900,12 @@ func Test_GetAllPrayers(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1835,7 +1927,12 @@ func Test_GetAllPrayers(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1869,7 +1966,12 @@ func Test_GetAllPrayers(t *testing.T) {
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			req, err := http.NewRequestWithContext(context.Background(), "GET", "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json", nil)
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1968,7 +2070,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -1977,7 +2080,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2013,7 +2117,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2039,7 +2144,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2048,7 +2154,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2081,7 +2188,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2119,7 +2227,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2128,7 +2237,8 @@ func Test_GetPrayersByName(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2233,7 +2343,8 @@ func Test_GetPrayersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2242,7 +2353,8 @@ func Test_GetPrayersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2287,7 +2399,8 @@ func Test_GetPrayersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2296,7 +2409,8 @@ func Test_GetPrayersWhere(t *testing.T) {
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
-				nil)
+				nil,
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -2331,6 +2445,130 @@ func Test_GetPrayersWhere(t *testing.T) {
 				},
 			}
 			return client, nil, check(verifyError)
+		},
+		"first bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					prayers: prayers,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"second bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					prayers: prayers,
+				},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"second bad json": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: 400,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				endpoints: &endpoints{
+					prayers: prayers,
+				},
+			}
+			return client, context.Background(), check(verifyError)
 		},
 	}
 
