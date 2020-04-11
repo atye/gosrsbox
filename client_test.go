@@ -1833,6 +1833,33 @@ func Test_GetPrayersWhere(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyNoError, verifyPrayerNames)
 		},
+		"success one page": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: 200,
+					Body:       getJSON(t, "testdata/where_prayers_one_page.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyNoError, verifyPrayerNames)
+		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
 				client: nil,

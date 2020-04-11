@@ -35,8 +35,8 @@ type prayersResponse struct {
 	Error *serverError `json:"_error"`
 }
 
-func getAllPrayers(ctx context.Context, client HTTPClient) ([]*Prayer, error) {
-	if client == nil {
+func getAllPrayers(ctx context.Context, c *client) ([]*Prayer, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -45,7 +45,7 @@ func getAllPrayers(ctx context.Context, client HTTPClient) ([]*Prayer, error) {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
-	resp, err := client.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error doing request: %w", err)
 	}
@@ -65,8 +65,8 @@ func getAllPrayers(ctx context.Context, client HTTPClient) ([]*Prayer, error) {
 	return prayers, nil
 }
 
-func getPrayersByName(ctx context.Context, client HTTPClient, names ...string) ([]*Prayer, error) {
-	if client == nil {
+func getPrayersByName(ctx context.Context, c *client, names ...string) ([]*Prayer, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -78,11 +78,11 @@ func getPrayersByName(ctx context.Context, client HTTPClient, names ...string) (
 	}
 	query = fmt.Sprintf(`{ "name": { "$in": [%s] } }`, strings.Join(nameData, ", "))
 
-	return getPrayersWhere(ctx, client, query)
+	return getPrayersWhere(ctx, c, query)
 }
 
-func getPrayersWhere(ctx context.Context, client HTTPClient, query string) ([]*Prayer, error) {
-	if client == nil {
+func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, error) {
+	if c.client == nil {
 		return nil, errors.New("no client configured")
 	}
 
@@ -93,12 +93,10 @@ func getPrayersWhere(ctx context.Context, client HTTPClient, query string) ([]*P
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
 
-	resp, err := client.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error doing request: %w", err)
 	}
-
-	var prayers []*Prayer
 
 	var prayersResp *prayersResponse
 	err = json.NewDecoder(resp.Body).Decode(&prayersResp)
@@ -111,36 +109,71 @@ func getPrayersWhere(ctx context.Context, client HTTPClient, query string) ([]*P
 		return nil, fmt.Errorf("error from server: %w", prayersResp.Error)
 	}
 
-	prayers = append(prayers, prayersResp.Prayers...)
+	prayers := make([]*Prayer, prayersResp.Meta.Total)
+
+	for i, prayer := range prayersResp.Prayers {
+		prayers[i] = prayer
+	}
 
 	var pages int
 	if prayersResp.Meta.MaxResults != 0 {
 		pages = int(math.Ceil(float64(prayersResp.Meta.Total) / float64(prayersResp.Meta.MaxResults)))
 	}
 
-	for i := 2; i <= pages; i++ {
-		req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, i), nil)
-		if err != nil {
-			return nil, fmt.Errorf("error creating request: %w", err)
-		}
+	if pages > 1 {
 
-		resp, err := client.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("error doing request: %w", err)
-		}
+		errChan := make(chan error)
+		waitChan := make(chan struct{})
 
-		var prayersRespTemp *prayersResponse
-		err = json.NewDecoder(resp.Body).Decode(&prayersRespTemp)
-		if err != nil {
-			return nil, fmt.Errorf("error decoding json response: %w", err)
-		}
-		resp.Body.Close()
+		go func() {
+			for page := 2; page <= pages; page++ {
+				c.wg.Add(1)
+				go func(page int) {
+					defer c.wg.Done()
 
-		if prayersRespTemp.Error != nil {
-			return nil, fmt.Errorf("error from server: %w", prayersRespTemp.Error)
-		}
+					req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, page), nil)
+					if err != nil {
+						errChan <- fmt.Errorf("error creating request: %w", err)
+						return
+					}
 
-		prayers = append(prayers, prayersRespTemp.Prayers...)
+					resp, err := c.client.Do(req)
+					if err != nil {
+						errChan <- fmt.Errorf("error doing request: %w", err)
+						return
+					}
+
+					var prayersRespTemp *prayersResponse
+					err = json.NewDecoder(resp.Body).Decode(&prayersRespTemp)
+					if err != nil {
+						errChan <- fmt.Errorf("error decoding json response: %w", err)
+						return
+					}
+					resp.Body.Close()
+
+					if prayersRespTemp.Error != nil {
+						errChan <- fmt.Errorf("error from server: %w", prayersRespTemp.Error)
+						return
+					}
+
+					for i, prayer := range prayersRespTemp.Prayers {
+						c.mu.Lock()
+						prayers[prayersRespTemp.Meta.MaxResults*(page-1)+i] = prayer
+						c.mu.Unlock()
+					}
+
+				}(page)
+			}
+			c.wg.Wait()
+			close(waitChan)
+		}()
+
+		select {
+		case <-waitChan:
+			return prayers, nil
+		case err := <-errChan:
+			return nil, err
+		}
 	}
 
 	return prayers, nil

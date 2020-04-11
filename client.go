@@ -86,13 +86,13 @@ func (c *client) GetMonstersWhere(ctx context.Context, query string) ([]*Monster
 }
 
 func (c *client) GetAllPrayers(ctx context.Context) ([]*Prayer, error) {
-	return getAllPrayers(ctx, c.client)
+	return getAllPrayers(ctx, c)
 }
 
 func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]*Prayer, error) {
-	return getPrayersByName(ctx, c.client, names...)
+	return getPrayersByName(ctx, c, names...)
 }
 
 func (c *client) GetPrayersWhere(ctx context.Context, query string) ([]*Prayer, error) {
-	return getPrayersWhere(ctx, c.client, query)
+	return getPrayersWhere(ctx, c, query)
 }
