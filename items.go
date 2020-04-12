@@ -113,6 +113,13 @@ func getAllItems(ctx context.Context, c *client) ([]*Item, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error from server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
 	var itemsMap map[string]*Item
 	err = json.NewDecoder(resp.Body).Decode(&itemsMap)
 	if err != nil {
@@ -150,25 +157,9 @@ func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error
 
 	url := fmt.Sprintf("%s/%s?where=%s", api, itemsEndpoint, url.QueryEscape(query))
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	itemsResp, err := doItemsRespRequest(ctx, c, url)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error doing request: %w", err)
-	}
-
-	var itemsResp *itemsResponse
-	err = json.NewDecoder(resp.Body).Decode(&itemsResp)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if itemsResp.Error != nil {
-		return nil, fmt.Errorf("error from server: %w", itemsResp.Error)
+		return nil, err
 	}
 
 	items := make([]*Item, itemsResp.Meta.Total)
@@ -193,28 +184,9 @@ func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error
 				go func(page int) {
 					defer c.wg.Done()
 
-					req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, page), nil)
+					itemsRespTemp, err := doItemsRespRequest(ctx, c, fmt.Sprintf("%s&page=%d", url, page))
 					if err != nil {
-						errChan <- fmt.Errorf("error creating request: %w", err)
-						return
-					}
-
-					resp, err := c.client.Do(req)
-					if err != nil {
-						errChan <- fmt.Errorf("error doing request: %w", err)
-						return
-					}
-
-					var itemsRespTemp *itemsResponse
-					err = json.NewDecoder(resp.Body).Decode(&itemsRespTemp)
-					if err != nil {
-						errChan <- fmt.Errorf("error decoding json response: %w", err)
-						return
-					}
-					defer resp.Body.Close()
-
-					if itemsRespTemp.Error != nil {
-						errChan <- fmt.Errorf("error from server: %w", itemsRespTemp.Error)
+						errChan <- err
 						return
 					}
 
@@ -239,4 +211,40 @@ func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error
 	}
 
 	return items, nil
+}
+
+func doItemsRespRequest(ctx context.Context, c *client, url string) (*itemsResponse, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error doing request: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		var itemsResp *itemsResponse
+		_ = json.NewDecoder(resp.Body).Decode(&itemsResp)
+		defer resp.Body.Close()
+
+		if itemsResp != nil && itemsResp.Error != nil {
+			return nil, fmt.Errorf("error from server: %w", itemsResp.Error)
+		}
+
+		return nil, fmt.Errorf("error some server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
+	var itemsResp *itemsResponse
+	err = json.NewDecoder(resp.Body).Decode(&itemsResp)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding json response: %w", err)
+	}
+	defer resp.Body.Close()
+
+	return itemsResp, nil
 }

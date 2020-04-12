@@ -67,7 +67,7 @@ func Test_GetAllItems(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/all_items.json"),
 				}, nil)
 
@@ -100,6 +100,33 @@ func Test_GetAllItems(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyError)
 		},
+		"status not ok": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: 500,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyError)
+		},
 		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
@@ -118,7 +145,7 @@ func Test_GetAllItems(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 
@@ -228,14 +255,14 @@ func Test_GetItemsByName(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_items_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_items_page2.json"),
 				}, nil)
 
@@ -243,98 +270,6 @@ func Test_GetItemsByName(t *testing.T) {
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyNoError, verifyItemNames)
-		},
-		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			firstReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			secondReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(firstReq).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_items_page1.json"),
-				}, nil)
-
-			mockHTTPClient.EXPECT().
-				Do(secondReq).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
-				}, nil)
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
 		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
@@ -436,14 +371,14 @@ func Test_GetItemsWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_items_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_items_page2.json"),
 				}, nil)
 
@@ -472,7 +407,7 @@ func Test_GetItemsWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 400,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_items_one_page.json"),
 				}, nil)
 
@@ -495,7 +430,72 @@ func Test_GetItemsWhere(t *testing.T) {
 			}
 			return client, nil, check(verifyError)
 		},
-		"first bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"request error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"second request error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: http.StatusOK,
+					Body:       getJSON(t, "testdata/where_items_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(nil, errors.New("http error"))
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"formatted error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -513,7 +513,7 @@ func Test_GetItemsWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 400,
+					StatusCode: http.StatusBadRequest,
 					Body:       getJSON(t, "testdata/bad_request_error.json"),
 				}, nil)
 
@@ -524,12 +524,12 @@ func Test_GetItemsWhere(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"other error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
@@ -539,28 +539,11 @@ func Test_GetItemsWhere(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			secondReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_items_page1.json"),
-				}, nil)
-
-			mockHTTPClient.EXPECT().
-				Do(secondReq).
-				Return(&http.Response{
-					StatusCode: 400,
-					Body:       getJSON(t, "testdata/bad_request_error.json"),
+					StatusCode: http.StatusInternalServerError,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
 				}, nil)
 
 			client := &client{
@@ -570,12 +553,12 @@ func Test_GetItemsWhere(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad json": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
@@ -585,34 +568,15 @@ func Test_GetItemsWhere(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			secondReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/items?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_items_page1.json"),
-				}, nil)
-
-			mockHTTPClient.EXPECT().
-				Do(secondReq).
-				Return(&http.Response{
-					StatusCode: 400,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 
 			client := &client{
 				client: mockHTTPClient,
-				wg:     sync.WaitGroup{},
-				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyError)
 		},
@@ -683,7 +647,7 @@ func Test_GetAllMonsters(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/all_monsters.json"),
 				}, nil)
 
@@ -716,6 +680,33 @@ func Test_GetAllMonsters(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyError)
 		},
+		"status not ok": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/monsters-complete.json",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: http.StatusInternalServerError,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyError)
+		},
 		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
@@ -734,7 +725,7 @@ func Test_GetAllMonsters(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 
@@ -844,14 +835,14 @@ func Test_GetMonstersByName(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page2.json"),
 				}, nil)
 
@@ -859,98 +850,6 @@ func Test_GetMonstersByName(t *testing.T) {
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
-		},
-		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			firstReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			secondReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(firstReq).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
-				}, nil)
-
-			mockHTTPClient.EXPECT().
-				Do(secondReq).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
-				}, nil)
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
 		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
@@ -1044,14 +943,14 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page2.json"),
 				}, nil)
 
@@ -1059,57 +958,6 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyNoError, verifyMonsterDrops)
-		},
-		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22drops%22%3A+%7B+%22%24elemMatch%22%3A+%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Grimy+ranarr+weed%22%2C+%22Grimy+avantoe%22%2C+%22Grimy+snapdragon%22%5D+%7D+%7D+%7D%2C+%22duplicate%22%3A+false+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
-				}, nil)
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
 		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
@@ -1211,19 +1059,21 @@ func Test_GetMonstersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page2.json"),
 				}, nil)
 
 			client := &client{
 				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
 			}
 			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
 		},
@@ -1245,7 +1095,7 @@ func Test_GetMonstersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_one_page.json"),
 				}, nil)
 
@@ -1266,12 +1116,12 @@ func Test_GetMonstersWhere(t *testing.T) {
 			}
 			return client, nil, check(verifyError)
 		},
-		"first bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"request error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
@@ -1282,18 +1132,15 @@ func Test_GetMonstersWhere(t *testing.T) {
 			}
 
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
-				Return(&http.Response{
-					StatusCode: 400,
-					Body:       getJSON(t, "testdata/bad_request_error.json"),
-				}, nil)
+				Do(req).
+				Return(nil, errors.New("http error"))
 
 			client := &client{
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"second request error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1321,28 +1168,25 @@ func Test_GetMonstersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
-				Return(&http.Response{
-					StatusCode: 400,
-					Body:       getJSON(t, "testdata/bad_request_error.json"),
-				}, nil)
+				Return(nil, errors.New("http error"))
 
 			client := &client{
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad json": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"formatted error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
@@ -1352,10 +1196,29 @@ func Test_GetMonstersWhere(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			secondReq, err := http.NewRequestWithContext(
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: http.StatusBadRequest,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"other error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
-				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
 				nil,
 			)
 			if err != nil {
@@ -1363,16 +1226,38 @@ func Test_GetMonstersWhere(t *testing.T) {
 			}
 
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
+					StatusCode: http.StatusInternalServerError,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
 				}, nil)
 
+			client := &client{
+				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			mockHTTPClient.EXPECT().
-				Do(secondReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 400,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 
@@ -1392,7 +1277,6 @@ func Test_GetMonstersWhere(t *testing.T) {
 			}
 
 			monsters, err := client.GetMonstersWhere(ctx, `{ "name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis"] }, "duplicate": false }`)
-
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
 			}
@@ -1448,7 +1332,7 @@ func Test_GetAllPrayers(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/all_monsters.json"),
 				}, nil)
 
@@ -1481,6 +1365,33 @@ func Test_GetAllPrayers(t *testing.T) {
 			}
 			return client, context.Background(), check(verifyError)
 		},
+		"status not ok": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: http.StatusInternalServerError,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyError)
+		},
 		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
@@ -1499,7 +1410,7 @@ func Test_GetAllPrayers(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 
@@ -1609,14 +1520,14 @@ func Test_GetPrayersByName(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_page2.json"),
 				}, nil)
 
@@ -1624,98 +1535,6 @@ func Test_GetPrayersByName(t *testing.T) {
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyNoError, verifyPrayerNames)
-		},
-		"http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"second http error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			firstReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			secondReq, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(firstReq).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
-				}, nil)
-
-			mockHTTPClient.EXPECT().
-				Do(secondReq).
-				Return(nil, errors.New("http error"))
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
-		},
-		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
-			ctrl := gomock.NewController(t)
-
-			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-
-			req, err := http.NewRequestWithContext(
-				context.Background(),
-				"GET",
-				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
-				nil,
-			)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			mockHTTPClient.EXPECT().
-				Do(req).
-				Return(&http.Response{
-					StatusCode: 200,
-					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
-				}, nil)
-
-			client := &client{
-				client: mockHTTPClient,
-			}
-			return client, context.Background(), check(verifyError)
 		},
 		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
 			client := &client{
@@ -1817,14 +1636,14 @@ func Test_GetPrayersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_page2.json"),
 				}, nil)
 
@@ -1851,7 +1670,7 @@ func Test_GetPrayersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_one_page.json"),
 				}, nil)
 
@@ -1872,12 +1691,12 @@ func Test_GetPrayersWhere(t *testing.T) {
 			}
 			return client, nil, check(verifyError)
 		},
-		"first bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"request error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
@@ -1888,18 +1707,15 @@ func Test_GetPrayersWhere(t *testing.T) {
 			}
 
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
-				Return(&http.Response{
-					StatusCode: 400,
-					Body:       getJSON(t, "testdata/bad_request_error.json"),
-				}, nil)
+				Do(req).
+				Return(nil, errors.New("http error"))
 
 			client := &client{
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad request": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"second request error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
@@ -1927,28 +1743,25 @@ func Test_GetPrayersWhere(t *testing.T) {
 			mockHTTPClient.EXPECT().
 				Do(firstReq).
 				Return(&http.Response{
-					StatusCode: 200,
+					StatusCode: http.StatusOK,
 					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
 				}, nil)
 
 			mockHTTPClient.EXPECT().
 				Do(secondReq).
-				Return(&http.Response{
-					StatusCode: 400,
-					Body:       getJSON(t, "testdata/bad_request_error.json"),
-				}, nil)
+				Return(nil, errors.New("http error"))
 
 			client := &client{
 				client: mockHTTPClient,
 			}
 			return client, context.Background(), check(verifyError)
 		},
-		"second bad json": func(t *testing.T) (*client, context.Context, []checkFn) {
+		"formatted error": func(t *testing.T) (*client, context.Context, []checkFn) {
 			ctrl := gomock.NewController(t)
 
 			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
 
-			firstReq, err := http.NewRequestWithContext(
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
 				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
@@ -1958,10 +1771,29 @@ func Test_GetPrayersWhere(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			secondReq, err := http.NewRequestWithContext(
+			mockHTTPClient.EXPECT().
+				Do(req).
+				Return(&http.Response{
+					StatusCode: http.StatusBadRequest,
+					Body:       getJSON(t, "testdata/bad_request_error.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"other error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
 				context.Background(),
 				"GET",
-				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D&page=2",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
 				nil,
 			)
 			if err != nil {
@@ -1969,16 +1801,38 @@ func Test_GetPrayersWhere(t *testing.T) {
 			}
 
 			mockHTTPClient.EXPECT().
-				Do(firstReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 200,
-					Body:       getJSON(t, "testdata/where_prayers_page1.json"),
+					StatusCode: http.StatusInternalServerError,
+					Body:       ioutil.NopCloser(bytes.NewBufferString("{}")),
 				}, nil)
 
+			client := &client{
+				client: mockHTTPClient,
+				wg:     sync.WaitGroup{},
+				mu:     sync.Mutex{},
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"json error": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			req, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/prayers?where=%7B+%22name%22%3A+%7B+%22%24in%22%3A+%5B%22Thick+Skin%22%2C+%22Burst+of+Strength%22%2C+%22Smite%22%2C+%22Rigour%22%5D+%7D+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			mockHTTPClient.EXPECT().
-				Do(secondReq).
+				Do(req).
 				Return(&http.Response{
-					StatusCode: 400,
+					StatusCode: http.StatusOK,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("bad json")),
 				}, nil)
 

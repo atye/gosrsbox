@@ -101,6 +101,13 @@ func getAllMonsters(ctx context.Context, c *client) ([]*Monster, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error from server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
 	var monstersMap map[string]*Monster
 	err = json.NewDecoder(resp.Body).Decode(&monstersMap)
 	if err != nil {
@@ -154,25 +161,9 @@ func getMonstersWhere(ctx context.Context, c *client, query string) ([]*Monster,
 
 	url := fmt.Sprintf("%s/%s?where=%s", api, monstersEndpoint, url.QueryEscape(query))
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	monstersResp, err := doMonstersRespRequest(ctx, c, url)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error doing request: %w", err)
-	}
-
-	var monstersResp *monstersResponse
-	err = json.NewDecoder(resp.Body).Decode(&monstersResp)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
-	}
-	resp.Body.Close()
-
-	if monstersResp.Error != nil {
-		return nil, fmt.Errorf("error from server: %w", monstersResp.Error)
+		return nil, err
 	}
 
 	monsters := make([]*Monster, monstersResp.Meta.Total)
@@ -197,28 +188,9 @@ func getMonstersWhere(ctx context.Context, c *client, query string) ([]*Monster,
 				go func(page int) {
 					defer c.wg.Done()
 
-					req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, page), nil)
+					monstersRespTemp, err := doMonstersRespRequest(ctx, c, fmt.Sprintf("%s&page=%d", url, page))
 					if err != nil {
-						errChan <- fmt.Errorf("error creating request: %w", err)
-						return
-					}
-
-					resp, err := c.client.Do(req)
-					if err != nil {
-						errChan <- fmt.Errorf("error doing request: %w", err)
-						return
-					}
-
-					var monstersRespTemp *monstersResponse
-					err = json.NewDecoder(resp.Body).Decode(&monstersRespTemp)
-					if err != nil {
-						errChan <- fmt.Errorf("error decoding json response: %w", err)
-						return
-					}
-					resp.Body.Close()
-
-					if monstersRespTemp.Error != nil {
-						errChan <- monstersRespTemp.Error
+						errChan <- err
 						return
 					}
 
@@ -243,4 +215,40 @@ func getMonstersWhere(ctx context.Context, c *client, query string) ([]*Monster,
 	}
 
 	return monsters, nil
+}
+
+func doMonstersRespRequest(ctx context.Context, c *client, url string) (*monstersResponse, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error doing request: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		var monstersResp *monstersResponse
+		_ = json.NewDecoder(resp.Body).Decode(&monstersResp)
+		defer resp.Body.Close()
+
+		if monstersResp != nil && monstersResp.Error != nil {
+			return nil, fmt.Errorf("error from server: %w", monstersResp.Error)
+		}
+
+		return nil, fmt.Errorf("error some server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
+	var monstersResp *monstersResponse
+	err = json.NewDecoder(resp.Body).Decode(&monstersResp)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding json response: %w", err)
+	}
+	defer resp.Body.Close()
+
+	return monstersResp, nil
 }

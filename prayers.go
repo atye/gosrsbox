@@ -51,6 +51,13 @@ func getAllPrayers(ctx context.Context, c *client) ([]*Prayer, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error from server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
 	var prayersMap map[string]*Prayer
 	err = json.NewDecoder(resp.Body).Decode(&prayersMap)
 	if err != nil {
@@ -88,25 +95,9 @@ func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, e
 
 	url := fmt.Sprintf("%s/%s?where=%s", api, prayersEndpoint, url.QueryEscape(query))
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	prayersResp, err := doPrayersRespRequest(ctx, c, url)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error doing request: %w", err)
-	}
-
-	var prayersResp *prayersResponse
-	err = json.NewDecoder(resp.Body).Decode(&prayersResp)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
-	}
-	resp.Body.Close()
-
-	if prayersResp.Error != nil {
-		return nil, fmt.Errorf("error from server: %w", prayersResp.Error)
+		return nil, err
 	}
 
 	prayers := make([]*Prayer, prayersResp.Meta.Total)
@@ -131,31 +122,11 @@ func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, e
 				go func(page int) {
 					defer c.wg.Done()
 
-					req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s&page=%d", url, page), nil)
+					prayersRespTemp, err := doPrayersRespRequest(ctx, c, fmt.Sprintf("%s&page=%d", url, page))
 					if err != nil {
-						errChan <- fmt.Errorf("error creating request: %w", err)
+						errChan <- err
 						return
 					}
-
-					resp, err := c.client.Do(req)
-					if err != nil {
-						errChan <- fmt.Errorf("error doing request: %w", err)
-						return
-					}
-
-					var prayersRespTemp *prayersResponse
-					err = json.NewDecoder(resp.Body).Decode(&prayersRespTemp)
-					if err != nil {
-						errChan <- fmt.Errorf("error decoding json response: %w", err)
-						return
-					}
-					resp.Body.Close()
-
-					if prayersRespTemp.Error != nil {
-						errChan <- fmt.Errorf("error from server: %w", prayersRespTemp.Error)
-						return
-					}
-
 					for i, prayer := range prayersRespTemp.Prayers {
 						c.mu.Lock()
 						prayers[prayersRespTemp.Meta.MaxResults*(page-1)+i] = prayer
@@ -177,4 +148,40 @@ func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, e
 	}
 
 	return prayers, nil
+}
+
+func doPrayersRespRequest(ctx context.Context, c *client, url string) (*prayersResponse, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error doing request: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		var prayersResp *prayersResponse
+		_ = json.NewDecoder(resp.Body).Decode(&prayersResp)
+		defer resp.Body.Close()
+
+		if prayersResp != nil && prayersResp.Error != nil {
+			return nil, fmt.Errorf("error from server: %w", prayersResp.Error)
+		}
+
+		return nil, fmt.Errorf("error some server: %w", &serverError{
+			Code:    resp.StatusCode,
+			Message: "something went wrong",
+		})
+	}
+
+	var prayersResp *prayersResponse
+	err = json.NewDecoder(resp.Body).Decode(&prayersResp)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding json response: %w", err)
+	}
+	defer resp.Body.Close()
+
+	return prayersResp, nil
 }
