@@ -12,12 +12,16 @@ type OSRSBoxClient interface {
 	GetAllItems(ctx context.Context) ([]*Item, error)
 	// GetItemsByName returns a slice of items specified by name.
 	GetItemsByName(ctx context.Context, names ...string) ([]*Item, error)
+	// GetItemsByWikiName returns a slice of items specified by OSRS Wiki name.
+	GetItemsByWikiName(ctx context.Context, names ...string) ([]*Item, error)
 	// GetItemsWhere returns a slice of items from the supplied MongoDB query.
 	GetItemsWhere(ctx context.Context, query string) ([]*Item, error)
 	// GetAllMonsters returns a slice of all monsters.
 	GetAllMonsters(ctx context.Context) ([]*Monster, error)
 	// GetMonstersByName returns a slice of monsters specified by name.
 	GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error)
+	// GetMonstersByWikiName returns a slice of monsters specified by OSRS Wiki name.
+	GetMonstersByWikiName(ctx context.Context, names ...string) ([]*Monster, error)
 	// GetMonstersThatDrop returns a slice of monsters that drop the supplied item names.
 	// It returns monsters that drop any of the item names, not monsters that drop all of them.
 	GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error)
@@ -65,6 +69,10 @@ func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]*Item, 
 	return getItemsByName(ctx, c, names...)
 }
 
+func (c *client) GetItemsByWikiName(ctx context.Context, names ...string) ([]*Item, error) {
+	return getItemsByWikiName(ctx, c, names...)
+}
+
 func (c *client) GetItemsWhere(ctx context.Context, query string) ([]*Item, error) {
 	return getItemsWhere(ctx, c, query)
 }
@@ -75,6 +83,10 @@ func (c *client) GetAllMonsters(ctx context.Context) ([]*Monster, error) {
 
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]*Monster, error) {
 	return getMonstersByName(ctx, c, names...)
+}
+
+func (c *client) GetMonstersByWikiName(ctx context.Context, names ...string) ([]*Monster, error) {
+	return getMonstersByWikiName(ctx, c, names...)
 }
 
 func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]*Monster, error) {

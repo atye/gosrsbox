@@ -302,6 +302,122 @@ func Test_GetItemsByName(t *testing.T) {
 	}
 }
 
+func Test_GetItemsByWikiName(t *testing.T) {
+	type checkFn func(*testing.T, []*Item, error)
+	check := func(fns ...checkFn) []checkFn { return fns }
+
+	verifyItemNames := func(t *testing.T, items []*Item, err error) {
+		if len(items) != 4 {
+			t.Errorf("expected four items, got zero length slice")
+		}
+
+		for i := range items {
+			if i == 0 && items[i].WikiName != "Abyssal whip" {
+				t.Errorf("expected Abyssal whip, got %s", items[i].WikiName)
+			}
+
+			if i == 1 && items[i].WikiName != "Abyssal dagger (Unpoisoned)" {
+				t.Errorf("expected Abyssal dagger, got %s", items[i].WikiName)
+			}
+
+			if i == 2 && items[i].WikiName != "Rune platebody" {
+				t.Errorf("expected Rune platebody, got %s", items[i].WikiName)
+			}
+
+			if i == 3 && items[i].WikiName != "Dragon scimitar" {
+				t.Errorf("expected Dragon scimitar, got %s", items[i].WikiName)
+			}
+		}
+	}
+
+	verifyNoError := func(t *testing.T, items []*Item, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %#v", err)
+		}
+	}
+
+	verifyError := func(t *testing.T, items []*Item, err error) {
+		if err == nil {
+			t.Errorf("expected an error, got nil")
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22wiki_name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger+%28Unpoisoned%29%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/items?where=%7B+%22wiki_name%22%3A+%7B+%22%24in%22%3A+%5B%22Abyssal+whip%22%2C+%22Abyssal+dagger+%28Unpoisoned%29%22%2C+%22Dragon+scimitar%22%2C+%22Rune+platebody%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: http.StatusOK,
+					Body:       getJSON(t, "testdata/where_items_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: http.StatusOK,
+					Body:       getJSON(t, "testdata/where_items_page2.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyNoError, verifyItemNames)
+		},
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: nil,
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+			}
+			return client, nil, check(verifyError)
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			client, ctx, checkFns := tc(t)
+
+			if len(checkFns) == 0 {
+				t.Skipf("Skipping %s because there are no checks in place", name)
+			}
+
+			items, err := client.GetItemsByWikiName(ctx, "Abyssal whip", "Abyssal dagger (Unpoisoned)", "Dragon scimitar", "Rune platebody")
+
+			for _, checkFn := range checkFns {
+				checkFn(t, items, err)
+			}
+		})
+	}
+}
+
 func Test_GetItemsWhere(t *testing.T) {
 	type checkFn func(*testing.T, []*Item, error)
 	check := func(fns ...checkFn) []checkFn { return fns }
@@ -874,6 +990,122 @@ func Test_GetMonstersByName(t *testing.T) {
 			}
 
 			monsters, err := client.GetMonstersByName(ctx, "Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis")
+
+			for _, checkFn := range checkFns {
+				checkFn(t, monsters, err)
+			}
+		})
+	}
+}
+
+func Test_GetMonstersByWikiName(t *testing.T) {
+	type checkFn func(*testing.T, []*Monster, error)
+	check := func(fns ...checkFn) []checkFn { return fns }
+
+	verifyMonsterNames := func(t *testing.T, monsters []*Monster, err error) {
+		if len(monsters) != 4 {
+			t.Errorf("expected four monsters, got zero length slice")
+		}
+
+		for i := range monsters {
+			if i == 0 && monsters[i].WikiName != "Molanisk" {
+				t.Errorf("expected Molanisk, got %s", monsters[i].WikiName)
+			}
+
+			if i == 1 && monsters[i].WikiName != "Aberrant spectre" {
+				t.Errorf("expected Aberrant spectre, got %s", monsters[i].WikiName)
+			}
+
+			if i == 2 && monsters[i].WikiName != "Chaos Elemental" {
+				t.Errorf("expected Molanisk, got %s", monsters[i].WikiName)
+			}
+
+			if i == 3 && monsters[i].WikiName != "Venenatis" {
+				t.Errorf("expected Aberrant spectre, got %s", monsters[i].WikiName)
+			}
+		}
+	}
+
+	verifyNoError := func(t *testing.T, items []*Monster, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %#v", err)
+		}
+	}
+
+	verifyError := func(t *testing.T, items []*Monster, err error) {
+		if err == nil {
+			t.Errorf("expected an error, got nil")
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, context.Context, []checkFn){
+		"success": func(t *testing.T) (*client, context.Context, []checkFn) {
+			ctrl := gomock.NewController(t)
+
+			mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+
+			firstReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22wiki_name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			secondReq, err := http.NewRequestWithContext(
+				context.Background(),
+				"GET",
+				"https://api.osrsbox.com/monsters?where=%7B+%22wiki_name%22%3A+%7B+%22%24in%22%3A+%5B%22Molanisk%22%2C+%22Aberrant+spectre%22%2C+%22Chaos+Elemental%22%2C+%22Venenatis%22%5D+%7D%2C+%22duplicate%22%3A+false+%7D&page=2",
+				nil,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			mockHTTPClient.EXPECT().
+				Do(firstReq).
+				Return(&http.Response{
+					StatusCode: http.StatusOK,
+					Body:       getJSON(t, "testdata/where_monsters_page1.json"),
+				}, nil)
+
+			mockHTTPClient.EXPECT().
+				Do(secondReq).
+				Return(&http.Response{
+					StatusCode: http.StatusOK,
+					Body:       getJSON(t, "testdata/where_monsters_page2.json"),
+				}, nil)
+
+			client := &client{
+				client: mockHTTPClient,
+			}
+			return client, context.Background(), check(verifyNoError, verifyMonsterNames)
+		},
+		"nil client": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: nil,
+			}
+			return client, context.Background(), check(verifyError)
+		},
+		"no context": func(t *testing.T) (*client, context.Context, []checkFn) {
+			client := &client{
+				client: &http.Client{},
+			}
+			return client, nil, check(verifyError)
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			client, ctx, checkFns := tc(t)
+
+			if len(checkFns) == 0 {
+				t.Skipf("Skipping %s because there are no checks in place", name)
+			}
+
+			monsters, err := client.GetMonstersByWikiName(ctx, "Molanisk", "Aberrant spectre", "Chaos Elemental", "Venenatis")
 
 			for _, checkFn := range checkFns {
 				checkFn(t, monsters, err)
