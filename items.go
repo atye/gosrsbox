@@ -140,13 +140,25 @@ func getItemsByName(ctx context.Context, c *client, names ...string) ([]*Item, e
 	}
 
 	var nameData []string
-	var query string
-
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, lib.MakeValidItemName(name)))
 	}
-	query = fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
 
+	query := fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
+	return getItemsWhere(ctx, c, query)
+}
+
+func getItemsByWikiName(ctx context.Context, c *client, names ...string) ([]*Item, error) {
+	if c.client == nil {
+		return nil, errors.New("no client configured")
+	}
+
+	var nameData []string
+	for _, name := range names {
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+	}
+
+	query := fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
 	return getItemsWhere(ctx, c, query)
 }
 

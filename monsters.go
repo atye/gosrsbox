@@ -128,15 +128,26 @@ func getMonstersByName(ctx context.Context, c *client, names ...string) ([]*Mons
 	}
 
 	var nameData []string
-	var query string
-
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
 	}
-	query = fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
 
+	query := fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
 	return getMonstersWhere(ctx, c, query)
+}
 
+func getMonstersByWikiName(ctx context.Context, c *client, names ...string) ([]*Monster, error) {
+	if c.client == nil {
+		return nil, errors.New("no client configured")
+	}
+
+	var nameData []string
+	for _, name := range names {
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
+	}
+
+	query := fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))
+	return getMonstersWhere(ctx, c, query)
 }
 
 func getMonstersThatDrop(ctx context.Context, c *client, names ...string) ([]*Monster, error) {
