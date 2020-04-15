@@ -1,5 +1,5 @@
 /*
-Package gosrsbox provides a client for the osrsbox-api (https://api.osrsbox.com).
+Package osrsbox provides a client for the osrsbox-api (https://api.osrsbox.com).
 
 The API has /equipment and /weapons endpoints but those datasets are subsets of /items. So as far as this client is concerned, those entities are items.
 
@@ -8,7 +8,7 @@ See the example below to find equipment with prayer bonuses of less than 0.
 Example:
 
 	// New osrsbox client
-	client := gosrsbox.New(&http.Client{})
+	client := osrsbox.New(&http.Client{})
 
 	//Get items by name
 	items, err := client.GetItemsByName(context.TODO(), "Dragon scimitar", "Rune platebody")
