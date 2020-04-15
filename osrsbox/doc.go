@@ -42,4 +42,4 @@ Example:
 
 
 */
-package gosrsbox
+package osrsbox

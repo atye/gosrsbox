@@ -1,4 +1,4 @@
-package gosrsbox
+package osrsbox
 
 const (
 	api                 = "https://api.osrsbox.com"

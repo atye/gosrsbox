@@ -1,4 +1,4 @@
-package gosrsbox
+package osrsbox
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/atye/gosrsbox/mocks"
+	"github.com/atye/gosrsbox/osrsbox/mocks"
 	"github.com/golang/mock/gomock"
 )
 
