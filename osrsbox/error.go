@@ -1,4 +1,4 @@
-package gosrsbox
+package osrsbox
 
 import "fmt"
 

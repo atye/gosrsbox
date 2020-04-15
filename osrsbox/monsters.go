@@ -1,4 +1,4 @@
-package gosrsbox
+package osrsbox
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/internal/lib"
+	"github.com/atye/gosrsbox/osrsbox/internal/lib"
 )
 
 // Monster is an osrsbox monster.
