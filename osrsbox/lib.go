@@ -1,9 +1,8 @@
-package lib
+package osrsbox
 
 import "strings"
 
-// MakeValidItemName returns the first word in the string titled and the rest toLower
-func MakeValidItemName(name string) string {
+func makeValidItemName(name string) string {
 	words := strings.Split(name, " ")
 
 	if len(words) > 0 {

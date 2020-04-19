@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/atye/gosrsbox/osrsbox/internal/lib"
 )
 
 // Item is an osrsbox item.
@@ -141,7 +139,7 @@ func getItemsByName(ctx context.Context, c *client, names ...string) ([]*Item, e
 
 	var nameData []string
 	for _, name := range names {
-		nameData = append(nameData, fmt.Sprintf(`"%s"`, lib.MakeValidItemName(name)))
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
 	}
 
 	query := fmt.Sprintf(`{ "name": { "$in": [%s] }, "duplicate": false }`, strings.Join(nameData, ", "))

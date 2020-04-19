@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/atye/gosrsbox/osrsbox/internal/lib"
 )
 
 // Monster is an osrsbox monster.
@@ -157,7 +155,7 @@ func getMonstersThatDrop(ctx context.Context, c *client, names ...string) ([]*Mo
 
 	var nameData []string
 	for _, name := range names {
-		nameData = append(nameData, fmt.Sprintf(`"%s"`, lib.MakeValidItemName(name)))
+		nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
 	}
 
 	query := fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(nameData, ", "))
