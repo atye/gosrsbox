@@ -6,8 +6,8 @@ import (
 	"sync"
 )
 
-// OSRSBoxClient is the osrsbox-api client. Cancellation should be controlled through the passed in context.
-type OSRSBoxClient interface {
+// Client is the osrsbox-api client. Cancellation should be controlled through the passed in context.
+type Client interface {
 	// GetAllItems returns a slice of all items.
 	GetAllItems(ctx context.Context) ([]*Item, error)
 	// GetItemsByName returns a slice of items specified by name.
@@ -46,10 +46,10 @@ type client struct {
 	mu     sync.Mutex
 }
 
-// New returns an OSRSBoxClient.
+// New returns an osrsbox Client.
 // Pass in nil to use the default http client.
 // Pass in an HTTPClient to use your own.
-func New(c HTTPClient) OSRSBoxClient {
+func New(c HTTPClient) Client {
 	if c != nil {
 		return &client{
 			client: c,
