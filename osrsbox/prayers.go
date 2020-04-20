@@ -3,7 +3,6 @@ package osrsbox
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -36,10 +35,6 @@ type prayersResponse struct {
 }
 
 func getAllPrayers(ctx context.Context, c *client) ([]*Prayer, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	req, err := http.NewRequestWithContext(ctx, "GET", prayersCompleteURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
@@ -73,10 +68,6 @@ func getAllPrayers(ctx context.Context, c *client) ([]*Prayer, error) {
 }
 
 func getPrayersByName(ctx context.Context, c *client, names ...string) ([]*Prayer, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	var query string
 
@@ -89,10 +80,6 @@ func getPrayersByName(ctx context.Context, c *client, names ...string) ([]*Praye
 }
 
 func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	url := fmt.Sprintf("%s/%s?where=%s", api, prayersEndpoint, url.QueryEscape(query))
 
 	prayersResp, err := doPrayersRespRequest(ctx, c, url)

@@ -3,7 +3,6 @@ package osrsbox
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -96,10 +95,6 @@ type itemsResponse struct {
 }
 
 func getAllItems(ctx context.Context, c *client) ([]*Item, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	req, err := http.NewRequestWithContext(ctx, "GET", itemsCompleteURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
@@ -133,10 +128,6 @@ func getAllItems(ctx context.Context, c *client) ([]*Item, error) {
 }
 
 func getItemsByName(ctx context.Context, c *client, names ...string) ([]*Item, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
@@ -147,10 +138,6 @@ func getItemsByName(ctx context.Context, c *client, names ...string) ([]*Item, e
 }
 
 func getItemsByWikiName(ctx context.Context, c *client, names ...string) ([]*Item, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
@@ -161,10 +148,6 @@ func getItemsByWikiName(ctx context.Context, c *client, names ...string) ([]*Ite
 }
 
 func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	url := fmt.Sprintf("%s/%s?where=%s", api, itemsEndpoint, url.QueryEscape(query))
 
 	itemsResp, err := doItemsRespRequest(ctx, c, url)

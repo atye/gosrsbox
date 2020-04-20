@@ -53,11 +53,15 @@ func New(c HTTPClient) Client {
 	if c != nil {
 		return &client{
 			client: c,
+			wg:     sync.WaitGroup{},
+			mu:     sync.Mutex{},
 		}
 	}
 
 	return &client{
 		client: &http.Client{},
+		wg:     sync.WaitGroup{},
+		mu:     sync.Mutex{},
 	}
 }
 

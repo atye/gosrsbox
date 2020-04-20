@@ -3,7 +3,6 @@ package osrsbox
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -84,10 +83,6 @@ type monstersResponse struct {
 }
 
 func getAllMonsters(ctx context.Context, c *client) ([]*Monster, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	req, err := http.NewRequestWithContext(ctx, "GET", monstersCompleteURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
@@ -121,10 +116,6 @@ func getAllMonsters(ctx context.Context, c *client) ([]*Monster, error) {
 }
 
 func getMonstersByName(ctx context.Context, c *client, names ...string) ([]*Monster, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
@@ -135,10 +126,6 @@ func getMonstersByName(ctx context.Context, c *client, names ...string) ([]*Mons
 }
 
 func getMonstersByWikiName(ctx context.Context, c *client, names ...string) ([]*Monster, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, name))
@@ -149,10 +136,6 @@ func getMonstersByWikiName(ctx context.Context, c *client, names ...string) ([]*
 }
 
 func getMonstersThatDrop(ctx context.Context, c *client, names ...string) ([]*Monster, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	var nameData []string
 	for _, name := range names {
 		nameData = append(nameData, fmt.Sprintf(`"%s"`, makeValidItemName(name)))
@@ -164,10 +147,6 @@ func getMonstersThatDrop(ctx context.Context, c *client, names ...string) ([]*Mo
 }
 
 func getMonstersWhere(ctx context.Context, c *client, query string) ([]*Monster, error) {
-	if c.client == nil {
-		return nil, errors.New("no client configured")
-	}
-
 	url := fmt.Sprintf("%s/%s?where=%s", api, monstersEndpoint, url.QueryEscape(query))
 
 	monstersResp, err := doMonstersRespRequest(ctx, c, url)
