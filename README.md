@@ -5,7 +5,10 @@ gosrsbox is a client for the osrsbox-api; https://api.osrsbox.com.
 The client supports getting items, monsters, and prayers. The API has /equipment and /weapons endpoints but those datasets are subsets of items.
 So as far as this client is concerned, those entities are items. See the godoc example for this in action.
 
-https://godoc.org/github.com/atye/gosrsbox
+https://godoc.org/github.com/atye/gosrsbox/osrsbox
+
+### Install
+```go get github.com/atye/gosrsbox/osrsbox```
 
 ### Features
 - Get all items, monsters, and prayers
