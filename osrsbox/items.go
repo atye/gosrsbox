@@ -209,35 +209,24 @@ func getItemsWhere(ctx context.Context, c *client, query string) ([]*Item, error
 func doItemsRespRequest(ctx context.Context, c *client, url string) (*itemsResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
+		return nil, err
 	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error doing request: %w", err)
+		return nil, err
 	}
-
-	if resp.StatusCode != http.StatusOK {
-		var itemsResp *itemsResponse
-		_ = json.NewDecoder(resp.Body).Decode(&itemsResp)
-		defer resp.Body.Close()
-
-		if itemsResp != nil && itemsResp.Error != nil {
-			return nil, fmt.Errorf("error from server: %w", itemsResp.Error)
-		}
-
-		return nil, fmt.Errorf("error some server: %w", &serverError{
-			Code:    resp.StatusCode,
-			Message: "something went wrong",
-		})
-	}
+	defer resp.Body.Close()
 
 	var itemsResp *itemsResponse
 	err = json.NewDecoder(resp.Body).Decode(&itemsResp)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
+		return nil, err
 	}
-	defer resp.Body.Close()
+
+	if itemsResp.Error != nil {
+		return nil, itemsResp.Error
+	}
 
 	return itemsResp, nil
 }

@@ -140,35 +140,24 @@ func getPrayersWhere(ctx context.Context, c *client, query string) ([]*Prayer, e
 func doPrayersRespRequest(ctx context.Context, c *client, url string) (*prayersResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
+		return nil, err
 	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error doing request: %w", err)
+		return nil, err
 	}
-
-	if resp.StatusCode != http.StatusOK {
-		var prayersResp *prayersResponse
-		_ = json.NewDecoder(resp.Body).Decode(&prayersResp)
-		defer resp.Body.Close()
-
-		if prayersResp != nil && prayersResp.Error != nil {
-			return nil, fmt.Errorf("error from server: %w", prayersResp.Error)
-		}
-
-		return nil, fmt.Errorf("error some server: %w", &serverError{
-			Code:    resp.StatusCode,
-			Message: "something went wrong",
-		})
-	}
+	defer resp.Body.Close()
 
 	var prayersResp *prayersResponse
 	err = json.NewDecoder(resp.Body).Decode(&prayersResp)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
+		return nil, err
 	}
-	defer resp.Body.Close()
+
+	if prayersResp.Error != nil {
+		return nil, prayersResp.Error
+	}
 
 	return prayersResp, nil
 }
