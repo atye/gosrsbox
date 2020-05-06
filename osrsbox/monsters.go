@@ -208,35 +208,24 @@ func getMonstersWhere(ctx context.Context, c *client, query string) ([]*Monster,
 func doMonstersRespRequest(ctx context.Context, c *client, url string) (*monstersResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
+		return nil, err
 	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error doing request: %w", err)
 	}
-
-	if resp.StatusCode != http.StatusOK {
-		var monstersResp *monstersResponse
-		_ = json.NewDecoder(resp.Body).Decode(&monstersResp)
-		defer resp.Body.Close()
-
-		if monstersResp != nil && monstersResp.Error != nil {
-			return nil, fmt.Errorf("error from server: %w", monstersResp.Error)
-		}
-
-		return nil, fmt.Errorf("error some server: %w", &serverError{
-			Code:    resp.StatusCode,
-			Message: "something went wrong",
-		})
-	}
+	defer resp.Body.Close()
 
 	var monstersResp *monstersResponse
 	err = json.NewDecoder(resp.Body).Decode(&monstersResp)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding json response: %w", err)
+		return nil, err
 	}
-	defer resp.Body.Close()
+
+	if monstersResp.Error != nil {
+		return nil, monstersResp.Error
+	}
 
 	return monstersResp, nil
 }
