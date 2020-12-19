@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"context"
@@ -35,9 +35,9 @@ func Test_GetPrayersByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*APIClient, []string, checkFn){
-		"success": func(t *testing.T) (*APIClient, []string, checkFn) {
-			api := NewAPIClient()
+	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI()
 			api.address = apiSvr.URL
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
@@ -62,7 +62,7 @@ func setupPrayersAPISvr() *httptest.Server {
 			}
 			w.WriteHeader(http.StatusOK)
 			w.Write(data)
-		case fmt.Sprintf("/prayers?where=%s", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }&page=2`)):
+		case fmt.Sprintf("/prayers?where=%s&page=2", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "prayers_page2.json"))
 			if err != nil {
 				panic(err)

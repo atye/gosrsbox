@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *APIClient) GetMonstersByName(ctx context.Context, names ...string) ([]db.Monster, error) {
+func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]db.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -27,7 +27,7 @@ func (c *APIClient) GetMonstersByName(ctx context.Context, names ...string) ([]d
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *APIClient) GetMonstersThatDrop(ctx context.Context, names ...string) ([]db.Monster, error) {
+func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]db.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -42,10 +42,10 @@ func (c *APIClient) GetMonstersThatDrop(ctx context.Context, names ...string) ([
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *APIClient) GetMonstersByQuery(ctx context.Context, query string) ([]db.Monster, error) {
+func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]db.Monster, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, monstersEndpoint, url.QueryEscape(query))
 
-	var monstersResp MonstersResponse
+	var monstersResp monstersResponse
 	err := c.doRequest(ctx, apiURL, &monstersResp)
 	if monstersResp.Error != nil {
 		return nil, monstersResp.Error
@@ -69,8 +69,8 @@ func (c *APIClient) GetMonstersByQuery(ctx context.Context, query string) ([]db.
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				var temp MonstersResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, url.QueryEscape(fmt.Sprintf("&page=%d", page))), &temp)
+				var temp monstersResponse
+				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}
@@ -78,9 +78,7 @@ func (c *APIClient) GetMonstersByQuery(ctx context.Context, query string) ([]db.
 					return err
 				}
 				for i, monster := range temp.Monsters {
-					c.mu.Lock()
-					monsters[monstersResp.Meta.MaxResults*(page-1)+i] = monster
-					c.mu.Unlock()
+					monsters[temp.Meta.MaxResults*(page-1)+i] = monster
 				}
 				return nil
 			})

@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"context"
@@ -35,9 +35,9 @@ func Test_GetMonstersByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*APIClient, []string, checkFn){
-		"success": func(t *testing.T) (*APIClient, []string, checkFn) {
-			api := NewAPIClient()
+	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI()
 			api.address = apiSvr.URL
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
@@ -74,9 +74,9 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*APIClient, []string, []string, checkFn){
-		"success": func(t *testing.T) (*APIClient, []string, []string, checkFn) {
-			api := NewAPIClient()
+	tests := map[string]func(t *testing.T) (*client, []string, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, []string, checkFn) {
+			api := NewAPI()
 			api.address = apiSvr.URL
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
@@ -101,7 +101,7 @@ func setupMonstersAPISvr() *httptest.Server {
 			}
 			w.WriteHeader(http.StatusOK)
 			w.Write(data)
-		case fmt.Sprintf("/monsters?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }&page=2`)):
+		case fmt.Sprintf("/monsters?where=%s&page=2", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "monsters_page2.json"))
 			if err != nil {
 				panic(err)

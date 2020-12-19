@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/atye/gosrsbox/osrsbox/db"
+	"github.com/atye/gosrsbox/osrsbox/db/sets"
 )
 
 func (c *InMemoryClient) GetItemsByName(ctx context.Context, names ...string) ([]db.Item, error) {
@@ -25,22 +26,24 @@ func (c *InMemoryClient) GetItemsByName(ctx context.Context, names ...string) ([
 	return items, nil
 }
 
+func (c *InMemoryClient) GetItemSet(ctx context.Context, setName sets.SetName) ([]db.Item, error) {
+	if setName == nil || len(setName) == 0 {
+		return nil, errors.New("no set provided")
+	}
+	return c.GetItemsByName(ctx, setName...)
+}
+
 func (c *InMemoryClient) GetItemsByQuery(ctx context.Context, query string) ([]db.Item, error) {
-	gjResult, err := c.getByQuery(ctx, "items", query)
-	if err != nil {
-		return nil, err
-	}
-	if items, ok := gjResult.([]db.Item); ok {
-		return items, nil
-	}
-	return nil, fmt.Errorf("query result %T is not a valid slice of items", gjResult)
+	var items []db.Item
+	err := gjsonQuery(ctx, c.items, query, &items)
+	return items, err
 }
 
 func (c *InMemoryClient) UpdateItems() error {
-	items, err := c.Updater.Items()
+	items, err := c.source.Items()
 	if err != nil {
 		return err
 	}
-	c.Items = items
+	c.items = items
 	return nil
 }

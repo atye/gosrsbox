@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *APIClient) GetPrayersByName(ctx context.Context, names ...string) ([]db.Prayer, error) {
+func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]db.Prayer, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -27,10 +27,10 @@ func (c *APIClient) GetPrayersByName(ctx context.Context, names ...string) ([]db
 	return c.GetPrayersByQuery(ctx, query)
 }
 
-func (c *APIClient) GetPrayersByQuery(ctx context.Context, query string) ([]db.Prayer, error) {
+func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]db.Prayer, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, prayersEndpoint, url.QueryEscape(query))
 
-	var prayersResp PrayersResponse
+	var prayersResp prayersResponse
 	err := c.doRequest(ctx, apiURL, &prayersResp)
 	if prayersResp.Error != nil {
 		return nil, prayersResp.Error
@@ -54,8 +54,8 @@ func (c *APIClient) GetPrayersByQuery(ctx context.Context, query string) ([]db.P
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				var temp PrayersResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, url.QueryEscape(fmt.Sprintf("&page=%d", page))), &temp)
+				var temp prayersResponse
+				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}
@@ -63,9 +63,7 @@ func (c *APIClient) GetPrayersByQuery(ctx context.Context, query string) ([]db.P
 					return err
 				}
 				for i, prayer := range temp.Prayers {
-					c.mu.Lock()
-					prayers[prayersResp.Meta.MaxResults*(page-1)+i] = prayer
-					c.mu.Unlock()
+					prayers[temp.Meta.MaxResults*(page-1)+i] = prayer
 				}
 				return nil
 			})

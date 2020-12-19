@@ -1,4 +1,4 @@
-package update
+package inmemory
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/atye/gosrsbox/osrsbox/db"
 )
 
-type HttpGet func(string) (*http.Response, error)
+type httpGet func(string) (*http.Response, error)
 
 const (
 	itemsCompleteURL    = "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/items-complete.json"
@@ -16,7 +16,11 @@ const (
 	prayersCompleteURL  = "https://raw.githubusercontent.com/osrsbox/osrsbox-db/master/osrsbox/docs/prayers-complete.json"
 )
 
-func (f HttpGet) Items() ([]byte, error) {
+func FromRawGithub() httpGet {
+	return httpGet(http.Get)
+}
+
+func (f httpGet) Items() ([]byte, error) {
 	resp, err := f(itemsCompleteURL)
 	if err != nil {
 		return nil, err
@@ -28,6 +32,7 @@ func (f HttpGet) Items() ([]byte, error) {
 		return nil, err
 	}
 
+	//itemMap can be in any order
 	var itemMap map[string]db.Item
 	err = json.Unmarshal(body, &itemMap)
 	if err != nil {
@@ -47,7 +52,7 @@ func (f HttpGet) Items() ([]byte, error) {
 	return items, nil
 }
 
-func (f HttpGet) Monsters() ([]byte, error) {
+func (f httpGet) Monsters() ([]byte, error) {
 	resp, err := f(monstersCompleteURL)
 	if err != nil {
 		return nil, err
@@ -79,7 +84,7 @@ func (f HttpGet) Monsters() ([]byte, error) {
 	return monsters, nil
 }
 
-func (f HttpGet) Prayers() ([]byte, error) {
+func (f httpGet) Prayers() ([]byte, error) {
 	resp, err := f(prayersCompleteURL)
 	if err != nil {
 		return nil, err

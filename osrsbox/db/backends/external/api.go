@@ -1,15 +1,18 @@
-package api
+package external
 
 import (
 	"context"
 	"encoding/json"
 	"net/http"
 	"sync"
+
+	"golang.org/x/sync/semaphore"
 )
 
-type APIClient struct {
+type client struct {
 	address string
 	client  *http.Client
+	sem     *semaphore.Weighted
 	mu      sync.Mutex
 }
 
@@ -20,15 +23,21 @@ const (
 	prayersEndpoint  = "prayers"
 )
 
-func NewAPIClient() *APIClient {
-	return &APIClient{
+func NewAPI() *client {
+	return &client{
 		address: api,
 		client:  http.DefaultClient,
+		sem:     semaphore.NewWeighted(int64(10)),
 		mu:      sync.Mutex{},
 	}
 }
 
-func (c *APIClient) doRequest(ctx context.Context, url string, v interface{}) error {
+func (c *client) doRequest(ctx context.Context, url string, v interface{}) error {
+	err := c.sem.Acquire(ctx, 1)
+	if err != nil {
+		return err
+	}
+	defer c.sem.Release(1)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return err

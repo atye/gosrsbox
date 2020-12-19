@@ -1,45 +1,47 @@
 /*
-Package osrsbox provides a client for the osrsbox-api (https://api.osrsbox.com).
+Package osrsbox provides a wrapper for osrsbox-api (https://api.osrsbox.com).
 
-The API has /equipment and /weapons endpoints but those datasets are subsets of /items. So as far as this client is concerned, those entities are items.
+An InMemoryAPI downloads all entities from the osrsbox-db project at once and stores them in memory in JSON. gjson is used to query the InMemoryAPI.
 
-See the example below to find equipment with prayer bonuses of less than 0.
+An ExternalAPI uses the default http client to make all queries to osrsbox-api.
 
-Example:
+Example InMemoryAPI:
 
-	// New osrsbox client
-	client := osrsbox.New(&http.Client{})
-
-	//Get items by name
-	items, err := client.GetItemsByName(context.TODO(), "Dragon scimitar", "Rune platebody")
+	log.Println("Creating in-memory client...")
+	api, err := osrsbox.NewInMemoryClient(nil)
 	if err != nil {
-		//
+		log.Fatal(err)
 	}
+	log.Println("Done")
 
-	for _, item := range items {
-		fmt.Printf("%s: %d\n", item.Name, item.Highalch)
-	}
-
-	//Find items with a prayer bonus of less than 0 with a MongoDB query
-	items, err = client.GetItemsWhere(context.TODO(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
+	items, err := api.GetItemSet(context.Background(), sets.RuneGoldTrimmedLg)
 	if err != nil {
-		//
+		log.Fatal(err)
 	}
+	log.Println(len(items))
 
-	for _, item := range items {
-		fmt.Printf("%s: %d\n", item.Name, item.Equipment.Prayer)
-	}
-
-	//Find monsters that drop the Smoke battlestaff
-	monsters, err := client.GetMonstersThatDrop(context.TODO(), "Smoke battlestaff")
+	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
 	if err != nil {
-		//
+		log.Fatal(err)
 	}
+	log.Println(len(monsters))
 
-	for _, monster := range monsters {
-		fmt.Printf("%s\n", monster.Name)
+
+Example ExternalAPI:
+
+	api := osrsbox.NewAPIClient(nil)
+
+	items, err := api.GetItemSet(context.Background(), sets.RuneGoldTrimmedLg)
+	if err != nil {
+		log.Fatal(err)
 	}
+	log.Println(len(items))
 
-
+	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(len(monsters))
+}
 */
 package osrsbox

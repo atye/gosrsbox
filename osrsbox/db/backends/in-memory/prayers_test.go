@@ -28,15 +28,13 @@ func Test_GetPrayersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*InMemoryClient, []string, checkFn){
 		"success": func(t *testing.T) (*InMemoryClient, []string, checkFn) {
-			c, err := NewInMemoryClient(WithUpdater(&TestDataUpdater{}))
+			api := NewAPI()
+			api.RunOptions(WithSource(&TestDataUpdater{}))
+			err := api.UpdatePrayers()
 			if err != nil {
 				t.Fatal(err)
 			}
-			err = c.UpdatePrayers()
-			if err != nil {
-				t.Fatal(err)
-			}
-			return c, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
+			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
 	}
 

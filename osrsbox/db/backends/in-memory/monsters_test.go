@@ -19,26 +19,22 @@ func Test_GetMonstersByName(t *testing.T) {
 			t.Errorf("expected %d items, got %d", len(expectedNames), len(monsters))
 		}
 
-		if monsters[0].Name != expectedNames[0] {
-			t.Errorf("expected name %s, got %s", monsters[0].Name, expectedNames[0])
-		}
-
-		if monsters[1].Name != expectedNames[1] {
-			t.Errorf("expected name %s, got %s", monsters[1].Name, expectedNames[1])
+		for _, monster := range monsters {
+			if !contains(monster.Name, expectedNames) {
+				t.Errorf("monster name %s doesn't exist in %s", monster.Name, expectedNames)
+			}
 		}
 	}
 
 	tests := map[string]func(t *testing.T) (*InMemoryClient, []string, checkFn){
 		"success": func(t *testing.T) (*InMemoryClient, []string, checkFn) {
-			c, err := NewInMemoryClient(WithUpdater(&TestDataUpdater{}))
+			api := NewAPI()
+			api.RunOptions(WithSource(&TestDataUpdater{}))
+			err := api.UpdateMonsters()
 			if err != nil {
 				t.Fatal(err)
 			}
-			err = c.UpdateMonsters()
-			if err != nil {
-				t.Fatal(err)
-			}
-			return c, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
+			return api, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 	}
 
@@ -63,24 +59,22 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 			t.Errorf("expected %d items, got %d", len(expectedNames), len(monsters))
 		}
 
-		for i, monster := range monsters {
-			if monster.Name != expectedNames[i] {
-				t.Errorf("expected name %s, got %s", expectedNames[i], monster.Name)
+		for _, monster := range monsters {
+			if !contains(monster.Name, expectedNames) {
+				t.Errorf("monster name %s doesn't exist in %s", monster.Name, expectedNames)
 			}
 		}
 	}
 
 	tests := map[string]func(t *testing.T) (*InMemoryClient, []string, []string, checkFn){
 		"success": func(t *testing.T) (*InMemoryClient, []string, []string, checkFn) {
-			db, err := NewInMemoryClient(WithUpdater(&TestDataUpdater{}))
+			api := NewAPI()
+			api.RunOptions(WithSource(&TestDataUpdater{}))
+			err := api.UpdateMonsters()
 			if err != nil {
 				t.Fatal(err)
 			}
-			err = db.UpdateMonsters()
-			if err != nil {
-				t.Fatal(err)
-			}
-			return db, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
+			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 	}
 

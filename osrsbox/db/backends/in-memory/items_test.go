@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/atye/gosrsbox/osrsbox/db"
+	"github.com/atye/gosrsbox/osrsbox/db/sets"
 )
 
 func Test_GetItemsByName(t *testing.T) {
@@ -31,15 +32,13 @@ func Test_GetItemsByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*InMemoryClient, []string, checkFn){
 		"success": func(t *testing.T) (*InMemoryClient, []string, checkFn) {
-			db, err := NewInMemoryClient(WithUpdater(&TestDataUpdater{}))
+			api := NewAPI()
+			api.RunOptions(WithSource(&TestDataUpdater{ItemsFile: "items.json"}))
+			err := api.UpdateItems()
 			if err != nil {
 				t.Fatal(err)
 			}
-			err = db.UpdateItems()
-			if err != nil {
-				t.Fatal(err)
-			}
-			return db, []string{"Toolkit", "Dwarf remains"}, verifyItemNames
+			return api, []string{"Toolkit", "Dwarf remains"}, verifyItemNames
 		},
 	}
 
@@ -52,10 +51,52 @@ func Test_GetItemsByName(t *testing.T) {
 	}
 }
 
-type TestDataUpdater struct{}
+func Test_GetItemSet(t *testing.T) {
+	type checkFn func(t *testing.T, items []db.Item, expectedNames []string, err error)
+
+	verifyItemNames := func(t *testing.T, items []db.Item, expectedNames []string, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %v", err)
+		}
+
+		if len(items) != len(expectedNames) {
+			t.Errorf("expected %d items, got %d", len(expectedNames), len(items))
+		}
+
+		for i, item := range items {
+			if item.Name != expectedNames[i] {
+				t.Errorf("expected name %s, got %s", expectedNames[i], item.Name)
+			}
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*InMemoryClient, sets.SetName, []string, checkFn){
+		"success": func(t *testing.T) (*InMemoryClient, sets.SetName, []string, checkFn) {
+			api := NewAPI()
+			api.RunOptions(WithSource(&TestDataUpdater{ItemsFile: "full_rune.json"}))
+			err := api.UpdateItems()
+			if err != nil {
+				t.Fatal(err)
+			}
+			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			db, setName, names, checkFn := tc(t)
+			set, err := db.GetItemSet(context.Background(), setName)
+			checkFn(t, set, names, err)
+		})
+	}
+}
+
+type TestDataUpdater struct {
+	ItemsFile string
+}
 
 func (t *TestDataUpdater) Items() ([]byte, error) {
-	file, err := ioutil.ReadFile(filepath.Join("testdata", "items.json"))
+	file, err := ioutil.ReadFile(filepath.Join("testdata", t.ItemsFile))
 	if err != nil {
 		return nil, err
 	}

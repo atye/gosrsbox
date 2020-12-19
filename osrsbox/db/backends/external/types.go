@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/atye/gosrsbox/osrsbox/db"
 )
 
-type ItemsResponse struct {
+type itemsResponse struct {
 	Items []db.Item `json:"_items"`
 	Meta  struct {
 		Page       int `json:"page"`
@@ -23,10 +23,10 @@ type ItemsResponse struct {
 			Href  string `json:"href"`
 		} `json:"self"`
 	} `json:"_links"`
-	Error *APIError `json:"_error"`
+	Error *apiError `json:"_error"`
 }
 
-type MonstersResponse struct {
+type monstersResponse struct {
 	Monsters []db.Monster `json:"_items"`
 	Meta     struct {
 		Page       int `json:"page"`
@@ -43,10 +43,10 @@ type MonstersResponse struct {
 			Href  string `json:"href"`
 		} `json:"self"`
 	} `json:"_links"`
-	Error *APIError `json:"_error"`
+	Error *apiError `json:"_error"`
 }
 
-type PrayersResponse struct {
+type prayersResponse struct {
 	Prayers []db.Prayer `json:"_items"`
 	Meta    struct {
 		Page       int `json:"page"`
@@ -63,14 +63,14 @@ type PrayersResponse struct {
 			Href  string `json:"href"`
 		} `json:"self"`
 	} `json:"_links"`
-	Error *APIError `json:"_error"`
+	Error *apiError `json:"_error"`
 }
 
-type APIError struct {
+type apiError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
-func (err APIError) Error() string {
+func (err apiError) Error() string {
 	return fmt.Sprintf("code: %d, message: %s", err.Code, err.Message)
 }

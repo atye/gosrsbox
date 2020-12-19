@@ -1,6 +1,11 @@
 package inmemory
 
-import "golang.org/x/sync/errgroup"
+import (
+	"log"
+	"time"
+
+	"golang.org/x/sync/errgroup"
+)
 
 type Option func(c *InMemoryClient) error
 
@@ -8,27 +13,27 @@ func WithInit() Option {
 	return func(c *InMemoryClient) error {
 		var eg errgroup.Group
 		eg.Go(func() error {
-			items, err := c.Updater.Items()
+			items, err := c.source.Items()
 			if err != nil {
 				return err
 			}
-			c.Items = items
+			c.items = items
 			return nil
 		})
 		eg.Go(func() error {
-			monsters, err := c.Updater.Monsters()
+			monsters, err := c.source.Monsters()
 			if err != nil {
 				return err
 			}
-			c.Monsters = monsters
+			c.monsters = monsters
 			return nil
 		})
 		eg.Go(func() error {
-			prayers, err := c.Updater.Prayers()
+			prayers, err := c.source.Prayers()
 			if err != nil {
 				return err
 			}
-			c.Prayers = prayers
+			c.prayers = prayers
 			return nil
 		})
 
@@ -40,9 +45,19 @@ func WithInit() Option {
 	}
 }
 
-func WithUpdater(updater Updater) Option {
+func WithSource(source source) Option {
 	return func(c *InMemoryClient) error {
-		c.Updater = updater
+		c.source = source
 		return nil
+	}
+}
+
+func WithOptionLogging(logger *log.Logger, option Option) Option {
+	return func(c *InMemoryClient) error {
+		now := time.Now()
+		defer func() {
+			logger.Printf("option took %v", time.Since(now))
+		}()
+		return option(c)
 	}
 }

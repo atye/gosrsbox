@@ -25,21 +25,16 @@ func (c *InMemoryClient) GetPrayersByName(ctx context.Context, names ...string) 
 }
 
 func (c *InMemoryClient) GetPrayersByQuery(ctx context.Context, query string) ([]db.Prayer, error) {
-	gjResult, err := c.getByQuery(ctx, "prayers", query)
-	if err != nil {
-		return nil, err
-	}
-	if prayers, ok := gjResult.([]db.Prayer); ok {
-		return prayers, nil
-	}
-	return nil, fmt.Errorf("query result %T is not a valid slice of prayers", gjResult)
+	var prayers []db.Prayer
+	err := gjsonQuery(ctx, c.prayers, query, &prayers)
+	return prayers, err
 }
 
 func (c *InMemoryClient) UpdatePrayers() error {
-	prayers, err := c.Updater.Prayers()
+	prayers, err := c.source.Prayers()
 	if err != nil {
 		return err
 	}
-	c.Prayers = prayers
+	c.prayers = prayers
 	return nil
 }

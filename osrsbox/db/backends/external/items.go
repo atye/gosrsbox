@@ -1,4 +1,4 @@
-package api
+package external
 
 import (
 	"context"
@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/atye/gosrsbox/osrsbox/db"
-
+	"github.com/atye/gosrsbox/osrsbox/db/sets"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *APIClient) GetItemsByName(ctx context.Context, names ...string) ([]db.Item, error) {
+func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]db.Item, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -28,10 +28,18 @@ func (c *APIClient) GetItemsByName(ctx context.Context, names ...string) ([]db.I
 	return c.GetItemsByQuery(ctx, query)
 }
 
-func (c *APIClient) GetItemsByQuery(ctx context.Context, query string) ([]db.Item, error) {
+func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]db.Item, error) {
+	if set == nil || len(set) == 0 {
+		return nil, errors.New("no set provided")
+	}
+
+	return c.GetItemsByName(ctx, set...)
+}
+
+func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]db.Item, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, itemsEndpoint, url.QueryEscape(query))
 
-	var itemsResp ItemsResponse
+	var itemsResp itemsResponse
 	err := c.doRequest(ctx, apiURL, &itemsResp)
 	if itemsResp.Error != nil {
 		return nil, itemsResp.Error
@@ -55,8 +63,8 @@ func (c *APIClient) GetItemsByQuery(ctx context.Context, query string) ([]db.Ite
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				var temp ItemsResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, url.QueryEscape(fmt.Sprintf("&page=%d", page))), &temp)
+				var temp itemsResponse
+				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}
@@ -64,9 +72,7 @@ func (c *APIClient) GetItemsByQuery(ctx context.Context, query string) ([]db.Ite
 					return err
 				}
 				for i, item := range temp.Items {
-					//c.mu.Lock()
-					items[itemsResp.Meta.MaxResults*(page-1)+i] = item
-					//c.mu.Unlock()
+					items[temp.Meta.MaxResults*(page-1)+i] = item
 				}
 				return nil
 			})
