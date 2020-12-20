@@ -1,4 +1,4 @@
-goosrsbox is a Go client library for [osrsbox-api](https://api.osrsbox.com) and  [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
+gosrsbox is a Go client library for [osrsbox-api](https://api.osrsbox.com) and  [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
 
 # Installing
 
