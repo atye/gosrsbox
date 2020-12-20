@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 func Test_HttpUpdateItems(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error)
-	verifyItemNames := func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error) {
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -51,7 +51,7 @@ func Test_HttpUpdateItems(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.Name, func(t *testing.T) {
 			bytes, checkErr := tc.HttpGet.Items()
-			var items []osrsboxdb.Item
+			var items []osrsboxapi.Item
 			err := json.Unmarshal(bytes, &items)
 			if err != nil {
 				t.Fatal(err)
@@ -62,8 +62,8 @@ func Test_HttpUpdateItems(t *testing.T) {
 }
 
 func Test_HttpUpdateMonsters(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Monster, expectedNames []string, err error)
-	verifyItemNames := func(t *testing.T, monsters []osrsboxdb.Monster, expectedNames []string, err error) {
+	type checkFn func(t *testing.T, items []osrsboxapi.Monster, expectedNames []string, err error)
+	verifyItemNames := func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -101,7 +101,7 @@ func Test_HttpUpdateMonsters(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.Name, func(t *testing.T) {
 			bytes, checkErr := tc.HttpGet.Monsters()
-			var monsters []osrsboxdb.Monster
+			var monsters []osrsboxapi.Monster
 			err := json.Unmarshal(bytes, &monsters)
 			if err != nil {
 				t.Fatal(err)
@@ -112,8 +112,8 @@ func Test_HttpUpdateMonsters(t *testing.T) {
 }
 
 func Test_HttpUpdatePrayers(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Prayer, expectedNames []string, err error)
-	verifyItemNames := func(t *testing.T, prayers []osrsboxdb.Prayer, expectedNames []string, err error) {
+	type checkFn func(t *testing.T, items []osrsboxapi.Prayer, expectedNames []string, err error)
+	verifyItemNames := func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -151,7 +151,7 @@ func Test_HttpUpdatePrayers(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.Name, func(t *testing.T) {
 			bytes, checkErr := tc.HttpGet.Prayers()
-			var prayers []osrsboxdb.Prayer
+			var prayers []osrsboxapi.Prayer
 			err := json.Unmarshal(bytes, &prayers)
 			if err != nil {
 				t.Fatal(err)

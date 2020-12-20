@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
 	"github.com/spf13/cobra"
 )
 
@@ -31,8 +31,8 @@ var prayerqueryCmd = &cobra.Command{
 	Short: "Get prayers by MongoDB or Python queries",
 	Long: `Get items by MongoDB or Python queries. Example:
 
-	osrsboxdb prayerquery 'name=="Thick Skin"'
-	osrsboxdb prayerquery '{ "name": "Thick Skin"}'
+	osrsboxapi prayerquery 'name=="Thick Skin"'
+	osrsboxapi prayerquery '{ "name": "Thick Skin"}'
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files

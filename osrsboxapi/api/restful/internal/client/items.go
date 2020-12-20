@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsboxdb.Item, error) {
+func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsboxapi.Item, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -22,7 +22,7 @@ func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsbox
 	return c.GetItemsByQuery(ctx, query)
 }
 
-func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxdb.Item, error) {
+func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxapi.Item, error) {
 	if set == nil || len(set) == 0 {
 		return nil, errors.New("no set provided")
 	}
@@ -30,7 +30,7 @@ func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxdb.
 	return c.GetItemsByName(ctx, set...)
 }
 
-func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxdb.Item, error) {
+func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, itemsEndpoint, url.QueryEscape(query))
 
 	var itemsResp itemsResponse
@@ -42,7 +42,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxdb
 		return nil, err
 	}
 
-	items := make([]osrsboxdb.Item, itemsResp.Meta.Total)
+	items := make([]osrsboxapi.Item, itemsResp.Meta.Total)
 	for i, item := range itemsResp.Items {
 		items[i] = item
 	}

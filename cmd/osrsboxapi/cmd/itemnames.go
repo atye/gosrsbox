@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ var itemnamesCmd = &cobra.Command{
 	Short: "Get items by wiki name",
 	Long: `Get items by wiki name. Example:
 
-	osrsboxdb itemnames "Abyssal whip" "Abyssal dagger"`,
+	osrsboxapi itemnames "Abyssal whip" "Abyssal dagger"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		api := restful.NewAPI(nil)
 		items, err := api.GetItemsByName(context.Background(), args...)

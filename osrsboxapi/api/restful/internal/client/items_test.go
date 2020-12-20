@@ -12,17 +12,17 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func Test_GetItemsByName(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -56,12 +56,12 @@ func Test_GetItemsByName(t *testing.T) {
 }
 
 func Test_GetItemSet(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}

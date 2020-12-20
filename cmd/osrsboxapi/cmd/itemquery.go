@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
 	"github.com/spf13/cobra"
 )
 
@@ -31,8 +31,8 @@ var itemqueryCmd = &cobra.Command{
 	Short: "Get items by MongoDB or Python queries",
 	Long: `Get items by MongoDB or Python queries. Example:
 
-	osrsboxdb itemquery "equipment.prayer<0"
-	osrsboxdb itemquery '{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }'`,
+	osrsboxapi itemquery "equipment.prayer<0"
+	osrsboxapi itemquery '{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }'`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Fprintf(os.Stderr, "%s\n", "no query provided")

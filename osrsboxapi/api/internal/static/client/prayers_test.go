@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 func Test_GetPrayersByName(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []osrsboxdb.Prayer, expectedNames []string, err error)
+	type checkFn func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error)
 
-	verifyPrayerNames := func(t *testing.T, prayers []osrsboxdb.Prayer, expectedNames []string, err error) {
+	verifyPrayerNames := func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}

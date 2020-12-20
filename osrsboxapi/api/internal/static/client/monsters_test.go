@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 func Test_GetMonstersByName(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []osrsboxdb.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error)
 
-	verifyMonsterNames := func(t *testing.T, monsters []osrsboxdb.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -49,9 +49,9 @@ func Test_GetMonstersByName(t *testing.T) {
 }
 
 func Test_GetMonstersThatDrop(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []osrsboxdb.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error)
 
-	verifyMonsterNames := func(t *testing.T, monsters []osrsboxdb.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}

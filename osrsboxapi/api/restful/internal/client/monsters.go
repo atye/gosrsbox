@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxdb.Monster, error) {
+func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -21,7 +21,7 @@ func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrs
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]osrsboxdb.Monster, error) {
+func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -36,7 +36,7 @@ func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]os
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxdb.Monster, error) {
+func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, monstersEndpoint, url.QueryEscape(query))
 
 	var monstersResp monstersResponse
@@ -48,7 +48,7 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsbo
 		return nil, err
 	}
 
-	monsters := make([]osrsboxdb.Monster, monstersResp.Meta.Total)
+	monsters := make([]osrsboxapi.Monster, monstersResp.Meta.Total)
 	for i, monster := range monstersResp.Monsters {
 		monsters[i] = monster
 	}

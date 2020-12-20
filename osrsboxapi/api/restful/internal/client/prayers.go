@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxdb.Prayer, error) {
+func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxapi.Prayer, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -21,7 +21,7 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsb
 	return c.GetPrayersByQuery(ctx, query)
 }
 
-func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxdb.Prayer, error) {
+func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error) {
 	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, prayersEndpoint, url.QueryEscape(query))
 
 	var prayersResp prayersResponse
@@ -33,7 +33,7 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsbox
 		return nil, err
 	}
 
-	prayers := make([]osrsboxdb.Prayer, prayersResp.Meta.Total)
+	prayers := make([]osrsboxapi.Prayer, prayersResp.Meta.Total)
 	for i, prayer := range prayersResp.Prayers {
 		prayers[i] = prayer
 	}

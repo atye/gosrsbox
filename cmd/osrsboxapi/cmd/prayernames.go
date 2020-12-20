@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ var prayernamesCmd = &cobra.Command{
 	Short: "Get prayers by name",
 	Long: `Get prayers by name. Example:
 
-	osrsboxdb prayernames "Thick Skin" "Burst of Strength"`,
+	osrsboxapi prayernames "Thick Skin" "Burst of Strength"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		api := restful.NewAPI(nil)
 		prayers, err := api.GetPrayersByName(context.Background(), args...)

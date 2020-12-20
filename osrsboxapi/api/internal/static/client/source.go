@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 type httpGet func(string) (*http.Response, error)
@@ -33,13 +33,13 @@ func (f httpGet) Items() ([]byte, error) {
 	}
 
 	//itemMap can be in any order
-	var itemMap map[string]osrsboxdb.Item
+	var itemMap map[string]osrsboxapi.Item
 	err = json.Unmarshal(body, &itemMap)
 	if err != nil {
 		return nil, err
 	}
 
-	itemSlice := make([]osrsboxdb.Item, 0, len(itemMap))
+	itemSlice := make([]osrsboxapi.Item, 0, len(itemMap))
 	for _, item := range itemMap {
 		itemSlice = append(itemSlice, item)
 	}
@@ -64,13 +64,13 @@ func (f httpGet) Monsters() ([]byte, error) {
 		return nil, err
 	}
 
-	var monstersMap map[string]osrsboxdb.Monster
+	var monstersMap map[string]osrsboxapi.Monster
 	err = json.Unmarshal(body, &monstersMap)
 	if err != nil {
 		return nil, err
 	}
 
-	monstersSlice := make([]osrsboxdb.Monster, 0, len(monstersMap))
+	monstersSlice := make([]osrsboxapi.Monster, 0, len(monstersMap))
 	for _, monster := range monstersMap {
 		monstersSlice = append(monstersSlice, monster)
 
@@ -96,13 +96,13 @@ func (f httpGet) Prayers() ([]byte, error) {
 		return nil, err
 	}
 
-	var prayersMap map[string]osrsboxdb.Prayer
+	var prayersMap map[string]osrsboxapi.Prayer
 	err = json.Unmarshal(body, &prayersMap)
 	if err != nil {
 		return nil, err
 	}
 
-	prayersSlice := make([]osrsboxdb.Prayer, 0, len(prayersMap))
+	prayersSlice := make([]osrsboxapi.Prayer, 0, len(prayersMap))
 	for _, prayer := range prayersMap {
 		prayersSlice = append(prayersSlice, prayer)
 	}

@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
-func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsboxdb.Item, error) {
-	var items []osrsboxdb.Item
+func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsboxapi.Item, error) {
+	var items []osrsboxapi.Item
 
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
@@ -26,15 +26,15 @@ func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsbox
 	return items, nil
 }
 
-func (c *client) GetItemSet(ctx context.Context, setName sets.SetName) ([]osrsboxdb.Item, error) {
+func (c *client) GetItemSet(ctx context.Context, setName sets.SetName) ([]osrsboxapi.Item, error) {
 	if setName == nil || len(setName) == 0 {
 		return nil, errors.New("no set provided")
 	}
 	return c.GetItemsByName(ctx, setName...)
 }
 
-func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxdb.Item, error) {
-	var items []osrsboxdb.Item
+func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error) {
+	var items []osrsboxapi.Item
 	err := gjsonQuery(ctx, c.items, query, &items)
 	return items, err
 }

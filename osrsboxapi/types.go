@@ -1,4 +1,4 @@
-package osrsboxdb
+package osrsboxapi
 
 type Item struct {
 	ID                  interface{} `json:"id"`

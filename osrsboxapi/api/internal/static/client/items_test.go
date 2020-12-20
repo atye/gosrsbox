@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func Test_GetItemsByName(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
 
-	verifyItemNames := func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -53,9 +53,9 @@ func Test_GetItemsByName(t *testing.T) {
 }
 
 func Test_GetItemSet(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
 
-	verifyItemNames := func(t *testing.T, items []osrsboxdb.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -102,13 +102,13 @@ func (t *TestDataUpdater) Items() ([]byte, error) {
 		return nil, err
 	}
 
-	var itemMap map[string]osrsboxdb.Item
+	var itemMap map[string]osrsboxapi.Item
 	err = json.Unmarshal(file, &itemMap)
 	if err != nil {
 		return nil, err
 	}
 
-	itemSlice := make([]osrsboxdb.Item, 0, len(itemMap))
+	itemSlice := make([]osrsboxapi.Item, 0, len(itemMap))
 	for _, item := range itemMap {
 		itemSlice = append(itemSlice, item)
 	}
@@ -126,13 +126,13 @@ func (t *TestDataUpdater) Monsters() ([]byte, error) {
 		return nil, err
 	}
 
-	var monstersMap map[string]osrsboxdb.Monster
+	var monstersMap map[string]osrsboxapi.Monster
 	err = json.Unmarshal(file, &monstersMap)
 	if err != nil {
 		return nil, err
 	}
 
-	monstersSlice := make([]osrsboxdb.Monster, 0, len(monstersMap))
+	monstersSlice := make([]osrsboxapi.Monster, 0, len(monstersMap))
 	for _, monster := range monstersMap {
 		monstersSlice = append(monstersSlice, monster)
 
@@ -150,13 +150,13 @@ func (t *TestDataUpdater) Prayers() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	var prayersMap map[string]osrsboxdb.Prayer
+	var prayersMap map[string]osrsboxapi.Prayer
 	err = json.Unmarshal(file, &prayersMap)
 	if err != nil {
 		return nil, err
 	}
 
-	prayersSlice := make([]osrsboxdb.Prayer, 0, len(prayersMap))
+	prayersSlice := make([]osrsboxapi.Prayer, 0, len(prayersMap))
 	for _, prayer := range prayersMap {
 		prayersSlice = append(prayersSlice, prayer)
 	}

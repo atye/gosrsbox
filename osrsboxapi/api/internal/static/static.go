@@ -7,20 +7,20 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/api/internal/static/client"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/static/client"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 type API interface {
-	GetItemsByName(ctx context.Context, names ...string) ([]osrsboxdb.Item, error)
-	GetItemsByQuery(ctx context.Context, query string) ([]osrsboxdb.Item, error)
-	GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxdb.Item, error)
-	GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxdb.Monster, error)
-	GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxdb.Monster, error)
-	GetMonstersThatDrop(ctx context.Context, items ...string) ([]osrsboxdb.Monster, error)
-	GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxdb.Prayer, error)
-	GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxdb.Prayer, error)
+	GetItemsByName(ctx context.Context, names ...string) ([]osrsboxapi.Item, error)
+	GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error)
+	GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxapi.Item, error)
+	GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error)
+	GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error)
+	GetMonstersThatDrop(ctx context.Context, items ...string) ([]osrsboxapi.Monster, error)
+	GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxapi.Prayer, error)
+	GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error)
 	UpdateItems() error
 	UpdateMonsters() error
 	UpdatePrayers() error

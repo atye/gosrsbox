@@ -3,11 +3,11 @@ package client
 import (
 	"fmt"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
+	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 type itemsResponse struct {
-	Items []osrsboxdb.Item `json:"_items"`
+	Items []osrsboxapi.Item `json:"_items"`
 	Meta  struct {
 		Page       int `json:"page"`
 		Total      int `json:"total"`
@@ -27,7 +27,7 @@ type itemsResponse struct {
 }
 
 type monstersResponse struct {
-	Monsters []osrsboxdb.Monster `json:"_items"`
+	Monsters []osrsboxapi.Monster `json:"_items"`
 	Meta     struct {
 		Page       int `json:"page"`
 		Total      int `json:"total"`
@@ -47,7 +47,7 @@ type monstersResponse struct {
 }
 
 type prayersResponse struct {
-	Prayers []osrsboxdb.Prayer `json:"_items"`
+	Prayers []osrsboxapi.Prayer `json:"_items"`
 	Meta    struct {
 		Page       int `json:"page"`
 		Total      int `json:"total"`

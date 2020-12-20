@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxdb"
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
-	"github.com/atye/gosrsbox/osrsboxdb/sets"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func main() {
@@ -36,13 +36,13 @@ func main() {
 	printItems(items)
 }
 
-func printItems(items []osrsboxdb.Item) {
+func printItems(items []osrsboxapi.Item) {
 	for _, item := range items {
 		log.Println(item.WikiName)
 	}
 }
 
-func printMonsters(monsters []osrsboxdb.Monster) {
+func printMonsters(monsters []osrsboxapi.Monster) {
 	for _, monster := range monsters {
 		log.Println(monster.WikiName)
 	}

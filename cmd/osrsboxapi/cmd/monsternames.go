@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxdb/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ var monsternamesCmd = &cobra.Command{
 	Short: "Get monsters by wiki name",
 	Long: `Get monsters by wiki name. Example:
 
-	osrsboxdb monsternames "Molanisk" "Aberrant spectre"`,
+	osrsboxapi monsternames "Molanisk" "Aberrant spectre"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		api := restful.NewAPI(nil)
 		monsters, err := api.GetMonstersByName(context.Background(), args...)
