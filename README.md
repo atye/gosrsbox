@@ -1,22 +1,44 @@
-[![Build Status](https://travis-ci.org/atye/gosrsbox.svg?branch=master)](https://travis-ci.org/atye/gosrsbox) [![Coverage Status](https://coveralls.io/repos/github/atye/gosrsbox/badge.svg?branch=master&service=github)](https://coveralls.io/github/atye/gosrsbox?branch=master&service=github)
 
-gosrsbox is a client for the osrsbox-api; https://api.osrsbox.com.
+go-osrsbox is a Go client library for [osrsbox-api](https://api.osrsbox.com).
 
-The client supports getting items, monsters, and prayers. The API has /equipment and /weapons endpoints but those datasets are subsets of items.
-So as far as this client is concerned, those entities are items. See the godoc example for this in action.
+## RESTFul Client
+"Internet-accessible API with rich-quering including filtering, sorting and projection functionality"
 
-https://godoc.org/github.com/atye/gosrsbox/osrsbox
+```go get github.com/atye/gosrsbox/osrsboxdb/api/restful```
 
-### Install
-```go get github.com/atye/gosrsbox/osrsbox```
+The `restful` package provides a client for accessing [osrsbox-api](https://api.osrsbox.com).  See [examples](./examples/restful) for usage.
 
-### Features
-- Get all items, monsters, and prayers
-- Get items, monsters, and prayers by name
-- Get items, monsters, and prayers by custom MongoDB query
-- Get monsters that drop specific items
+#### Features
+ - all calls are made with an `http.Client` to [osrsbox-api](https://api.osrsbox.com)
+   
+ - no more than 10 concurrent http calls (for now)
+   
+  - supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
+ 
+```
+type  API  interface {
+	GetItemsByName(ctx context.Context, names ...string) ([]osrsboxdb.Item, error)
+	GetItemsByQuery(ctx context.Context, query string) ([]osrsboxdb.Item, error)
+	GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxdb.Item, error)
+	GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxdb.Monster, error)
+	GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxdb.Monster, error)
+	GetMonstersThatDrop(ctx context.Context, items ...string) ([]osrsboxdb.Monster, error)
+	GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxdb.Prayer, error)
+	GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxdb.Prayer, error)
+}
+```
+```
+// api client
+api := restful.NewAPI(nil)
 
-### Development
-I will continue to think of common use cases, such as getting entities by name, that this client could wrap.
+// Get slice of items in the Third Age Range Kit
+items, err := api.GetItemSet(context.Background(), sets.ThirdAgeRangeKit)
 
-If you want something added or have an idea, feel free to open an issue.
+// Get slice of monsters that drop the Bandos chestplate
+monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
+
+// Get slice of items with negative prayer bonus using Python query
+items, err = api.GetItemsByQuery(context.Background(), "equipment.prayer<0")
+
+// Get slice of items with negative prayer bonus using MongoDB query
+items, err = api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
