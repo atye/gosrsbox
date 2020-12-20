@@ -130,8 +130,3 @@ type Prayer struct {
 	Bonuses        map[string]int `json:"bonuses"`
 	Icon           string         `json:"icon"`
 }
-
-type NPCSummary struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
