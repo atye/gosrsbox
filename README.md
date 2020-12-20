@@ -28,6 +28,10 @@ type  API  interface {
 }
 ```
 ```
+import (
+    "github.com/atye/gosrsbox/osrsboxdb/api/restful"
+)
+
 // api client
 api := restful.NewAPI(nil)
 
