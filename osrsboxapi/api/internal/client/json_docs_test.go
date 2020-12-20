@@ -9,12 +9,15 @@ import (
 	"path/filepath"
 	"strconv"
 	"testing"
-
-	"github.com/atye/gosrsbox/osrsboxapi"
 )
 
 func Test_GetJSONFiles(t *testing.T) {
-	type checkFn func(t *testing.T, summaries map[string]osrsboxapi.NPCSummary, expectedNames []string, err error)
+	type NPCSummary struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	}
+
+	type checkFn func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error)
 
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
@@ -22,7 +25,7 @@ func Test_GetJSONFiles(t *testing.T) {
 	api := NewAPI(http.DefaultClient)
 	api.docsAddress = apiSvr.URL
 
-	verifyNpcNames := func(t *testing.T, summaries map[string]osrsboxapi.NPCSummary, expectedNames []string, err error) {
+	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -45,13 +48,13 @@ func Test_GetJSONFiles(t *testing.T) {
 	tests := map[string]func(t *testing.T) func(){
 		"npcs-summary": func(t *testing.T) func() {
 			return func() {
-				var npcs map[string]osrsboxapi.NPCSummary
-				err := api.GetJSONFiles(context.Background(), []string{"testdata/json-docs/npcs-summary.json"}, &npcs)
+				var data map[string]NPCSummary
+				err := api.GetJSONFiles(context.Background(), []string{"testdata/json-docs/npcs-summary.json"}, &data)
 				if err != nil {
 					t.Fatal(err)
 				}
 
-				verifyNpcNames(t, npcs, []string{"Tool Leprechaun", "Molanisk"}, err)
+				verifyNpcNames(t, data, []string{"Tool Leprechaun", "Molanisk"}, err)
 			}
 		},
 	}
