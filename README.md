@@ -30,6 +30,7 @@ type  API  interface {
 ```
 import (
     "github.com/atye/gosrsbox/osrsboxdb/api/restful"
+    "github.com/atye/gosrsbox/osrsboxdb/sets"
 )
 
 // api client
