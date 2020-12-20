@@ -10,6 +10,7 @@ import (
 
 	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox/osrsboxapi/slots"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -30,11 +31,20 @@ func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxapi
 	return c.GetItemsByName(ctx, set...)
 }
 
+func (c *client) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]osrsboxapi.Item, error) {
+	if slot == "" || len(slot) == 0 {
+		return nil, errors.New("no set provided")
+	}
+
+	query := fmt.Sprintf(`{ "equipable_by_player": true, "equipment.slot": %s, "duplicate": false }`, slot)
+	return c.GetItemsByQuery(ctx, query)
+}
+
 func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, itemsEndpoint, url.QueryEscape(query))
+	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, itemsEndpoint, url.QueryEscape(query))
 
 	var itemsResp itemsResponse
-	err := c.doRequest(ctx, apiURL, &itemsResp)
+	_, err := c.doAPIRequest(ctx, apiURL, &itemsResp)
 	if itemsResp.Error != nil {
 		return nil, itemsResp.Error
 	}
@@ -58,7 +68,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxap
 			page := page
 			eg.Go(func() error {
 				var temp itemsResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
+				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}
@@ -66,6 +76,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxap
 					return err
 				}
 				for i, item := range temp.Items {
+					// check if something already exists?
 					items[temp.Meta.MaxResults*(page-1)+i] = item
 				}
 				return nil

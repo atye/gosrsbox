@@ -38,7 +38,7 @@ func Test_GetMonstersByName(t *testing.T) {
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
 			api := NewAPI(http.DefaultClient)
-			api.address = apiSvr.URL
+			api.apiAddress = apiSvr.URL
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
 	}
@@ -77,7 +77,7 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 	tests := map[string]func(t *testing.T) (*client, []string, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, []string, checkFn) {
 			api := NewAPI(http.DefaultClient)
-			api.address = apiSvr.URL
+			api.apiAddress = apiSvr.URL
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 	}

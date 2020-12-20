@@ -1,4 +1,4 @@
-package static
+package api
 
 import (
 	"context"
@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 
 	"github.com/atye/gosrsbox/osrsboxapi"
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/static/client"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
@@ -21,9 +22,7 @@ type API interface {
 	GetMonstersThatDrop(ctx context.Context, items ...string) ([]osrsboxapi.Monster, error)
 	GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxapi.Prayer, error)
 	GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error)
-	UpdateItems() error
-	UpdateMonsters() error
-	UpdatePrayers() error
+	GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error
 }
 
 type APIConfig struct {
@@ -31,15 +30,17 @@ type APIConfig struct {
 	HttpClient *http.Client
 }
 
-func NewAPI(config *APIConfig) (API, error) {
-	logger, httpClient := logger(config), httpClient(config)
+var (
+	once sync.Once
+	api  API
+)
 
-	api := client.NewAPI(httpClient)
-	err := api.RunOptions(client.WithSource(client.FromHttpClient(httpClient)), client.WithOptionLogging(logger, client.WithInit(), "Initializng"))
-	if err != nil {
-		return nil, err
-	}
-	return withLogger(api, logger), nil
+func NewAPI(config *APIConfig) API {
+	once.Do(func() {
+		logger, httpClient := logger(config), httpClient(config)
+		api = withLogger(client.NewAPI(httpClient), logger)
+	})
+	return api
 }
 
 func logger(c *APIConfig) *log.Logger {

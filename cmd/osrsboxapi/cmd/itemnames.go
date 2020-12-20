@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ var itemnamesCmd = &cobra.Command{
 
 	osrsboxapi itemnames "Abyssal whip" "Abyssal dagger"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api := restful.NewAPI(nil)
+		api := api.NewAPI(nil)
 		items, err := api.GetItemsByName(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)

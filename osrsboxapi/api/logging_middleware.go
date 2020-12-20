@@ -1,4 +1,4 @@
-package static
+package api
 
 import (
 	"context"
@@ -82,26 +82,11 @@ func (l loggingMW) GetPrayersByQuery(ctx context.Context, query string) ([]osrsb
 	return l.next.GetPrayersByQuery(ctx, query)
 }
 
-func (l loggingMW) UpdateItems() error {
+func (l loggingMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
 	now := time.Now()
 	defer func() {
-		l.log.Printf("UpdateItems took %v", time.Since(now))
+		l.log.Printf("GetJSONFiles took %v", time.Since(now))
 	}()
-	return l.next.UpdateItems()
-}
-
-func (l loggingMW) UpdateMonsters() error {
-	now := time.Now()
-	defer func() {
-		l.log.Printf("UpdateMonsters took %v", time.Since(now))
-	}()
-	return l.next.UpdateMonsters()
-}
-
-func (l loggingMW) UpdatePrayers() error {
-	now := time.Now()
-	defer func() {
-		l.log.Printf("UpdatePrayers took %v", time.Since(now))
-	}()
-	return l.next.UpdatePrayers()
+	// destinations must be variadic?
+	return l.next.GetJSONFiles(ctx, files, destinations...)
 }

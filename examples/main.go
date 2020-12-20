@@ -1,23 +1,3 @@
-goosrsbox is a Go client library for [osrsbox-api](https://api.osrsbox.com) and  [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
-
-# Installing
-
-```go get github.com/atye/gosrsbox/osrsboxdb/api```
-
-The `api` package provides a client for accessing [osrsbox-api](https://api.osrsbox.com) and [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
-
-#### Features
-
-- no more than 10 concurrent http calls for accessing [osrsbox-api](https://api.osrsbox.com) (for now)
-
-- supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
-
-- Parse any JSON file in the [Static JSON API](https://www.osrsbox.com/projects/osrsbox-db/#the-osrsbox-static-json-api) by providing the relative path to the file from the `docs` folder and unmarshal into built-in or custom types
-
-#### Example
-
-```
-
 package main
 
 import (
@@ -107,6 +87,3 @@ func printMonsters(monsters []osrsboxapi.Monster) {
 		log.Println(monster.WikiName)
 	}
 }
-
-
-```

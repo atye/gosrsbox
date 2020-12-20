@@ -37,10 +37,10 @@ func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]os
 }
 
 func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, monstersEndpoint, url.QueryEscape(query))
+	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, monstersEndpoint, url.QueryEscape(query))
 
 	var monstersResp monstersResponse
-	err := c.doRequest(ctx, apiURL, &monstersResp)
+	_, err := c.doAPIRequest(ctx, apiURL, &monstersResp)
 	if monstersResp.Error != nil {
 		return nil, monstersResp.Error
 	}
@@ -64,7 +64,7 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsbo
 			page := page
 			eg.Go(func() error {
 				var temp monstersResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
+				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}

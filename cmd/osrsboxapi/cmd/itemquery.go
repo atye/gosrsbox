@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ var itemqueryCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "%s\n", "no query provided")
 			os.Exit(1)
 		}
-		api := restful.NewAPI(nil)
+		api := api.NewAPI(nil)
 		items, err := api.GetItemsByQuery(context.Background(), args[0])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)

@@ -22,10 +22,10 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsb
 }
 
 func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.address, prayersEndpoint, url.QueryEscape(query))
+	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, prayersEndpoint, url.QueryEscape(query))
 
 	var prayersResp prayersResponse
-	err := c.doRequest(ctx, apiURL, &prayersResp)
+	_, err := c.doAPIRequest(ctx, apiURL, &prayersResp)
 	if prayersResp.Error != nil {
 		return nil, prayersResp.Error
 	}
@@ -49,7 +49,7 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsbox
 			page := page
 			eg.Go(func() error {
 				var temp prayersResponse
-				err := c.doRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
+				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
 				if temp.Error != nil {
 					return temp.Error
 				}

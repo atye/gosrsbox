@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/restful"
+	"github.com/atye/gosrsbox/osrsboxapi/api"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ var monsternamesCmd = &cobra.Command{
 
 	osrsboxapi monsternames "Molanisk" "Aberrant spectre"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api := restful.NewAPI(nil)
+		api := api.NewAPI(nil)
 		monsters, err := api.GetMonstersByName(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)

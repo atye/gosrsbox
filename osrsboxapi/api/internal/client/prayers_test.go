@@ -38,7 +38,7 @@ func Test_GetPrayersByName(t *testing.T) {
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
 			api := NewAPI(http.DefaultClient)
-			api.address = apiSvr.URL
+			api.apiAddress = apiSvr.URL
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
 	}

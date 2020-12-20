@@ -3,12 +3,10 @@ package client
 import (
 	"context"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -41,7 +39,7 @@ func Test_GetItemsByName(t *testing.T) {
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
 			api := NewAPI(http.DefaultClient)
-			api.address = apiSvr.URL
+			api.apiAddress = apiSvr.URL
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
 	}
@@ -80,7 +78,7 @@ func Test_GetItemSet(t *testing.T) {
 	tests := map[string]func(t *testing.T) (*client, sets.SetName, []string, checkFn){
 		"success": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
 			api := NewAPI(http.DefaultClient)
-			api.address = apiSvr.URL
+			api.apiAddress = apiSvr.URL
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
 	}
@@ -135,12 +133,4 @@ func setupItemsAPISvr() *httptest.Server {
 	})))
 
 	return ts
-}
-
-func respBodyFromTestData(path string) io.ReadCloser {
-	file, err := os.Open(fmt.Sprintf("testdata/%s", path))
-	if err != nil {
-		panic(err)
-	}
-	return file
 }
