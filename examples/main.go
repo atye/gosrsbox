@@ -13,7 +13,13 @@ func main() {
 	//Create api client using http.DefaultClient
 	api := api.NewAPI(nil)
 
-	var dataSet map[string]osrsboxapi.Item
+	set, err := api.GetItemSet(context.Background(), sets.Ahrims)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(set)
+
+	/*var dataSet map[string]osrsboxapi.Item
 	err := api.GetJSONFiles(context.Background(), []string{"items-json"}, &dataSet)
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +85,7 @@ func main() {
 	}
 
 	log.Println(data["2"].Name)
-	log.Println(cannonBall.WikiName)
+	log.Println(cannonBall.WikiName)*/
 }
 
 func printItems(items []osrsboxapi.Item) {
