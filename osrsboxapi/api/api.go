@@ -32,7 +32,6 @@ type API interface {
 	// GetMonstersByQuery returns a slice of Monsters from the given MongoDB or Python
 	//
 	// api.GetMonstersByQuery(context.Background(), "equipment.prayer<0")
-	//
 	// api.GetMonstersByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
 	GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error)
 	// GetMonstersThatDrop returns a slice of Monsters that drop the given items
@@ -42,13 +41,11 @@ type API interface {
 	// GetPrayersByQuery returns a slice of Prayers form the given MongoDB or Python query
 	//
 	// api.GetPrayersByQuery(context.Background(), "equipment.prayer<0")
-	//
 	// api.GetPrayersByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
 	GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error)
 	// GetJSONFile retrieves the specified JSON files from the Static JSON API and unmarshals into an interfaces of your choosing
 	//
 	// var twoHandedITems map[string]osrsboxapi.Item
-	//
 	// err := api.GetJSONFiles(context.Background(), []string{"items-json-slot/items-2h.json"}, &twoHandedITems)
 	GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error
 }
