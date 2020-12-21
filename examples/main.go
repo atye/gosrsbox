@@ -13,6 +13,12 @@ func main() {
 	//Create api client using http.DefaultClient
 	api := api.NewAPI(nil)
 
+	var dataSet map[string]osrsboxapi.Item
+	err := api.GetJSONFiles(context.Background(), []string{"items-json"}, &dataSet)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Get slice of items in the Third Age Range Kit
 	items, err := api.GetItemSet(context.Background(), sets.ThirdAgeRangeKit)
 	if err != nil {

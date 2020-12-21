@@ -75,6 +75,9 @@ func (c *client) doJSONDocsRequest(ctx context.Context, url string, v interface{
 		return 0, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return resp.StatusCode, fmt.Errorf("expected status 200/OK, got %d", resp.StatusCode)
+	}
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return resp.StatusCode, err
