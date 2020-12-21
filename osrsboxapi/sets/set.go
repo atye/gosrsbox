@@ -83,7 +83,7 @@ var (
 	Dharoks = SetName([]string{"Dharok's helm (Undamaged)", "Dharok's platebody (Undamaged)", "Dharok's platelegs (Undamaged)", "Dharok's greataxe (Undamaged)"})
 	Guthans = SetName([]string{"Guthan's helm (Undamaged)", "Guthan's platebody (Undamaged)", "Guthan's chainskirt (Undamaged)", "Guthan's warspear (Undamaged)"})
 	Karils  = SetName([]string{"Karil's coif (Undamaged)", "Karil's leathertop (Undamaged)", "Karil's leatherskirt (Undamaged)", "Karil's crossbow (Undamaged)"})
-	Torags  = SetName([]string{"Torag's helm (Undamaged)", "Torag's platebody(Undamaged)", "Torag's platelegs (Undamaged)", "Torag's hammers (Undamaged)"})
+	Torags  = SetName([]string{"Torag's helm (Undamaged)", "Torag's platebody (Undamaged)", "Torag's platelegs (Undamaged)", "Torag's hammers (Undamaged)"})
 	Veracs  = SetName([]string{"Verac's helm (Undamaged)", "Verac's brassard (Undamaged)", "Verac's plateskirt (Undamaged)", "Verac's flail (Undamaged)"})
 
 	// Mystic
