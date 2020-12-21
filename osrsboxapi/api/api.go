@@ -11,12 +11,14 @@ import (
 	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
 type API interface {
 	GetItemsByName(ctx context.Context, names ...string) ([]osrsboxapi.Item, error)
 	GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error)
 	GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxapi.Item, error)
+	GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]osrsboxapi.Item, error)
 	GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error)
 	GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error)
 	GetMonstersThatDrop(ctx context.Context, items ...string) ([]osrsboxapi.Monster, error)

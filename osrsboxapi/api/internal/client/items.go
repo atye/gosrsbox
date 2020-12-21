@@ -18,16 +18,13 @@ func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]osrsbox
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
-
-	query := fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", "))
-	return c.GetItemsByQuery(ctx, query)
+	return c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 }
 
 func (c *client) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxapi.Item, error) {
 	if set == nil || len(set) == 0 {
 		return nil, errors.New("no set provided")
 	}
-
 	return c.GetItemsByName(ctx, set...)
 }
 
@@ -35,9 +32,7 @@ func (c *client) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]osr
 	if slot == "" || len(slot) == 0 {
 		return nil, errors.New("no set provided")
 	}
-
-	query := fmt.Sprintf(`{ "equipable_by_player": true, "equipment.slot": %s, "duplicate": false }`, slot)
-	return c.GetItemsByQuery(ctx, query)
+	return c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "equipable_by_player": true, "equipment.slot": %s, "duplicate": false }`, slot))
 }
 
 func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]osrsboxapi.Item, error) {

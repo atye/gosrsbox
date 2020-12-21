@@ -53,7 +53,7 @@ func Test_GetPrayersByName(t *testing.T) {
 }
 
 func setupPrayersAPISvr() *httptest.Server {
-	ts := httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.String() {
 		case fmt.Sprintf("/prayers?where=%s", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "prayers.json"))
@@ -73,6 +73,4 @@ func setupPrayersAPISvr() *httptest.Server {
 			panic(fmt.Errorf("%s not supported", r.URL.String()))
 		}
 	})))
-
-	return ts
 }

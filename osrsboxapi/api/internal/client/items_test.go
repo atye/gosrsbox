@@ -12,6 +12,7 @@ import (
 
 	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
 func Test_GetItemsByName(t *testing.T) {
@@ -92,8 +93,47 @@ func Test_GetItemSet(t *testing.T) {
 	}
 }
 
+func Test_GetItemsBySlot(t *testing.T) {
+	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
+
+	apiSvr := setupItemsAPISvr()
+	defer apiSvr.Close()
+
+	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %v", err)
+		}
+
+		if len(items) != len(expectedNames) {
+			t.Errorf("expected %d items, got %d", len(expectedNames), len(items))
+		}
+
+		for i, item := range items {
+			if item.Name != expectedNames[i] {
+				t.Errorf("expected name %s, got %s", expectedNames[i], item.Name)
+			}
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, slots.SlotName, []string, checkFn){
+		"success": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
+			api := NewAPI(http.DefaultClient)
+			api.apiAddress = apiSvr.URL
+			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			api, slotName, names, checkFn := tc(t)
+			set, err := api.GetItemsBySlot(context.Background(), slotName)
+			checkFn(t, set, names, err)
+		})
+	}
+}
+
 func setupItemsAPISvr() *httptest.Server {
-	ts := httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.String() {
 		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "items.json"))
@@ -127,10 +167,16 @@ func setupItemsAPISvr() *httptest.Server {
 			w.WriteHeader(http.StatusOK)
 			w.Write(data)
 			return
+		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "equipable_by_player": true, "equipment.slot": "2h", "duplicate": false }`)):
+			data, err := ioutil.ReadFile(filepath.Join("testdata", "items_2h.json"))
+			if err != nil {
+				panic(err)
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Write(data)
+			return
 		default:
 			panic(fmt.Errorf("%s not supported", r.URL.String()))
 		}
 	})))
-
-	return ts
 }

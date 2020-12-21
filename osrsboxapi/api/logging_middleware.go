@@ -7,6 +7,7 @@ import (
 
 	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
 type loggingMW struct {
@@ -40,6 +41,14 @@ func (l loggingMW) GetItemSet(ctx context.Context, set sets.SetName) ([]osrsboxa
 		l.log.Printf("GetItemSet took %v", time.Since(now))
 	}()
 	return l.next.GetItemSet(ctx, set)
+}
+
+func (l loggingMW) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]osrsboxapi.Item, error) {
+	now := time.Now()
+	defer func() {
+		l.log.Printf("GetItemsBySlot took %v", time.Since(now))
+	}()
+	return l.next.GetItemsBySlot(ctx, slot)
 }
 
 func (l loggingMW) GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {

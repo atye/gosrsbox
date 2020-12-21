@@ -92,7 +92,7 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 }
 
 func setupMonstersAPISvr() *httptest.Server {
-	ts := httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.String() {
 		case fmt.Sprintf("/monsters?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "monsters.json"))
@@ -119,6 +119,4 @@ func setupMonstersAPISvr() *httptest.Server {
 			panic(fmt.Errorf("%s not supported", r.URL.String()))
 		}
 	})))
-
-	return ts
 }
