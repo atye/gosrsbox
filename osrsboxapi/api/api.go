@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client"
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
@@ -56,7 +56,7 @@ type API interface {
 	// ex:
 	// var twoHandedITems map[string]osrsboxapi.Item
 	// err := api.GetJSONFiles(context.Background(), []string{"items-json-slot/items-2h.json"}, &twoHandedITems)
-	GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error
+	//GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error
 }
 
 type APIConfig struct {

@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -25,42 +25,40 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi
 	if err != nil {
 		return nil, err
 	}
-	var pages int
-	var inline openapi.InlineResponse2004
-	if inline, ok := resp.(openapi.InlineResponse2004); ok {
-		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-	} else {
-		return nil, fmt.Errorf("unexpected type %T", inline)
-	}
-	prayers := make([]openapi.Prayer, *inline.Meta.Total)
-	for i, prayer := range inline.GetItems() {
-		prayers[i] = prayer
-	}
-	if pages > 1 {
-		var eg errgroup.Group
-		for page := 2; page <= pages; page++ {
-			page := page
-			eg.Go(func() error {
-				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
-				if err != nil {
-					return err
-				}
-				if inline, ok := resp.(openapi.InlineResponse2004); ok {
-					for i, prayer := range *inline.Items {
-						// check if something already exists?
-						prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
+	switch inline := resp.(type) {
+	case openapi.InlineResponse2004:
+		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+		prayers := make([]openapi.Prayer, *inline.Meta.Total)
+		for i, prayer := range inline.GetItems() {
+			prayers[i] = prayer
+		}
+		if pages > 1 {
+			var eg errgroup.Group
+			for page := 2; page <= pages; page++ {
+				page := page
+				eg.Go(func() error {
+					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
+					if err != nil {
+						return err
 					}
-				} else {
-					return fmt.Errorf("unexpected type %T", inline)
-				}
-				return nil
-			})
+					if inline, ok := resp.(openapi.InlineResponse2004); ok {
+						for i, prayer := range inline.GetItems() {
+							// check if something already exists?
+							prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
+						}
+					} else {
+						return fmt.Errorf("unexpected inline item type type %T", inline)
+					}
+					return nil
+				})
+			}
+			err := eg.Wait()
+			if err != nil {
+				return nil, err
+			}
 		}
-		err := eg.Wait()
-		if err != nil {
-			return nil, err
-		}
+		return prayers, nil
+	default:
+		return nil, fmt.Errorf("unexpected response type %T", inline)
 	}
-
-	return prayers, nil
 }

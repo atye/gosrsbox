@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func Test_GetPrayersByName(t *testing.T) {
@@ -69,7 +69,7 @@ func setupPrayersAPISvr() *httptest.Server {
 			}
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
-		case fmt.Sprintf("/prayers?where=%s&page=2", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
+		case fmt.Sprintf("/prayers?page=2&where=%s", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "prayers_page2.json"))
 			if err != nil {
 				panic(err)

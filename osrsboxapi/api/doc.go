@@ -1,4 +1,4 @@
 /*
-Query Items, Monsters, and Prayers from the RESTful API and any JSON file from the Static JSON API
+Query Items, Monsters, and Prayers from the RESTful osrsbox-api project
 */
 package api

@@ -3,9 +3,9 @@ package api
 import (
 	"context"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -99,7 +99,7 @@ func (l semaphoreMW) GetPrayersByQuery(ctx context.Context, query string) ([]ope
 	return l.next.GetPrayersByQuery(ctx, query)
 }
 
-func (l semaphoreMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
+/*func (l semaphoreMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
 	// destinations must be variadic?
 	return l.next.GetJSONFiles(ctx, files, destinations...)
-}
+}*/

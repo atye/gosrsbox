@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func Test_GetMonstersByName(t *testing.T) {
@@ -115,7 +115,7 @@ func setupMonstersAPISvr() *httptest.Server {
 			}
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
-		case fmt.Sprintf("/monsters?where=%s&page=2", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }`)):
+		case fmt.Sprintf("/monsters?page=2&where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "monsters_page2.json"))
 			if err != nil {
 				panic(err)

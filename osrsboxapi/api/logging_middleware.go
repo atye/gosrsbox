@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 type loggingMW struct {
@@ -91,11 +91,11 @@ func (l loggingMW) GetPrayersByQuery(ctx context.Context, query string) ([]opena
 	return l.next.GetPrayersByQuery(ctx, query)
 }
 
-func (l loggingMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
+/*func (l loggingMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
 	now := time.Now()
 	defer func() {
 		l.log.Printf("GetJSONFiles took %v", time.Since(now))
 	}()
 	// destinations must be variadic?
 	return l.next.GetJSONFiles(ctx, files, destinations...)
-}
+}*/

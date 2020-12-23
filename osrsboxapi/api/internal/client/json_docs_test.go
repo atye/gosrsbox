@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func Test_GetJSONFiles(t *testing.T) {

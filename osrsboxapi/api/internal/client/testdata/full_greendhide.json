@@ -1,7 +1,7 @@
 {
     "_items": [
         {
-            "id": 1135,
+            "id": "1135",
             "name": "Green d'hide body",
             "incomplete": false,
             "members": false,
@@ -55,7 +55,7 @@
             "weapon": null
         },
         {
-            "id": 1099,
+            "id": "1099",
             "name": "Green d'hide chaps",
             "incomplete": false,
             "members": false,
@@ -108,7 +108,7 @@
             "weapon": null
         },
         {
-            "id": 1065,
+            "id": "1065",
             "name": "Green d'hide vambraces",
             "incomplete": false,
             "members": false,

@@ -1,42 +1,34 @@
-gosrsbox is a Go client library for [osrsbox-api](https://api.osrsbox.com) and  [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
+[gosrsbox](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api) is a Go client library for [osrsbox-api](https://api.osrsbox.com).
 
-[GoDoc](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api)
+Data types are defined by a [modified OpenAPI specification](.pkg/openapi/openapi.yaml) rather than the [source OpenAPI specification](https://api.osrsbox.com/api-docs) so that types adhere to what they are in a real API response. For example, the source documents an `id` as an `integer` but that field is actually a `string` in a real response.
 
 # Installing
-
 ```go get github.com/atye/gosrsbox/osrsboxdb/api```
-
-The `api` package provides a client for accessing [osrsbox-api](https://api.osrsbox.com) and [osrsbox-db](https://github.com/osrsbox/osrsbox-db/tree/master/docs).
+The `api` package provides a client for accessing [osrsbox-api](https://api.osrsbox.com).
 
 #### Features
-
 - no more than 10 concurrent http calls for accessing [osrsbox-api](https://api.osrsbox.com) (for now)
-
 - supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
 
-- Parse any JSON file in the [Static JSON API](https://www.osrsbox.com/projects/osrsbox-db/#the-osrsbox-static-json-api) by providing the relative path to the file from the `docs` folder and unmarshal into built-in or custom types
-
 #### Example
-
 ```
-
 package main
 
 import (
 	"context"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func main() {
 	//Create api client using http.DefaultClient
 	api := api.NewAPI(nil)
 
-	// Get slice of items in the Third Age Range Kit
-	items, err := api.GetItemSet(context.Background(), sets.ThirdAgeRangeKit)
+	// Get slice of items in the Ahrims set
+	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,7 +42,7 @@ func main() {
 	printMonsters(monsters)
 
 	// Get items with negative prayer bonus using Python query
-	items, err = api.GetItemsByQuery(context.Background(), "equipment.prayer<0")
+	_, err = api.GetPrayersByQuery(context.Background(), "equipment.prayer<0")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,52 +55,23 @@ func main() {
 	}
 	printItems(items)
 
-	// Get JSON file from STATIC JSON API as an osrsboxapi.Item
-	var excalibur osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"items-json/35.json"}, &excalibur)
+	// Get prayers with a faulty MongoDB query that returns an error
+	_, err = api.GetPrayersByQuery(context.Background(), `{"name":{"$nin":"test"}}`)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(excalibur.Name)
-
-	var twoHandedITems map[string]osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"items-json-slot/items-2h.json"}, &twoHandedITems)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(len(twoHandedITems))
-
-	// Gather npcs-summary.json data which doesn't contain Items, Monsters, or Prayers data
-	// Create my own custom struct and variable to unmarshal npcs-summary.json
-	type NPCSummary struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-	var data map[string]NPCSummary
-
-	// Pass variable to GetJSONFiles to use it as an unmarshal destination
-	// Get multiple JSON datasets concurrently
-	var cannonBall osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"npcs-summary.json", "items-json/2.json"}, &data, &cannonBall)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println(data["2"].Name)
-	log.Println(cannonBall.WikiName)
+	printItems(items)
 }
 
-func printItems(items []osrsboxapi.Item) {
+func printItems(items []openapi.Item) {
 	for _, item := range items {
-		log.Println(item.WikiName)
+		log.Println(item.GetWikiName())
 	}
 }
 
-func printMonsters(monsters []osrsboxapi.Monster) {
+func printMonsters(monsters []openapi.Monster) {
 	for _, monster := range monsters {
-		log.Println(monster.WikiName)
+		log.Println(monster.GetWikiName())
 	}
 }
-
-
 ```

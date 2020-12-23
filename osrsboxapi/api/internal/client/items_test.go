@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func Test_GetItemsByName(t *testing.T) {
@@ -164,7 +164,7 @@ func setupItemsAPISvr() *httptest.Server {
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
-		case fmt.Sprintf("/items?where=%s&page=2", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
+		case fmt.Sprintf("/items?page=2&where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "items_page2.json"))
 			if err != nil {
 				panic(err)

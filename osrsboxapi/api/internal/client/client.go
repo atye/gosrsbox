@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/sync/semaphore"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 type client struct {
@@ -50,9 +50,9 @@ func (c *client) doOpenAPIRequest(ctx context.Context, req interface{}) (interfa
 			if err != nil {
 				return nil, err
 			}
-			return nil, openAPIErr
+			return nil, fmt.Errorf("code: %d, message: %s", *apiErr.GetError().Code, *apiErr.GetError().Message)
 		}
-		return inline.GetItems(), nil
+		return inline, nil
 	case openapi.ApiGetmonstersRequest:
 		inline, resp, openAPIErr := r.Execute()
 		defer resp.Body.Close()
@@ -62,9 +62,9 @@ func (c *client) doOpenAPIRequest(ctx context.Context, req interface{}) (interfa
 			if err != nil {
 				return nil, err
 			}
-			return nil, openAPIErr
+			return nil, fmt.Errorf("code: %d, message: %s", *apiErr.GetError().Code, *apiErr.GetError().Message)
 		}
-		return inline.GetItems(), nil
+		return inline, nil
 	case openapi.ApiGetprayersRequest:
 		inline, resp, openAPIErr := r.Execute()
 		defer resp.Body.Close()
@@ -74,9 +74,9 @@ func (c *client) doOpenAPIRequest(ctx context.Context, req interface{}) (interfa
 			if err != nil {
 				return nil, err
 			}
-			return nil, openAPIErr
+			return nil, fmt.Errorf("code: %d, message: %s", *apiErr.GetError().Code, *apiErr.GetError().Message)
 		}
-		return inline.GetItems(), nil
+		return inline, nil
 	default:
 		return nil, fmt.Errorf("request type %T not supported", r)
 	}

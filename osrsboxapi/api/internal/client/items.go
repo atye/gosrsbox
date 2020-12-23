@@ -7,9 +7,9 @@ import (
 	"math"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -39,41 +39,40 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]openapi.I
 	if err != nil {
 		return nil, err
 	}
-	var pages int
-	var inline openapi.InlineResponse200
-	if inline, ok := resp.(openapi.InlineResponse200); ok {
-		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-	} else {
-		return nil, fmt.Errorf("unexpected type %T", inline)
-	}
-	items := make([]openapi.Item, 0, *inline.Meta.Total)
-	for i, item := range inline.GetItems() {
-		items[i] = item
-	}
-	if pages > 1 {
-		var eg errgroup.Group
-		for page := 2; page <= pages; page++ {
-			page := page
-			eg.Go(func() error {
-				inlineItems, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
-				if err != nil {
-					return err
-				}
-				if itemSlice, ok := inlineItems.([]openapi.Item); ok {
-					for i, item := range itemSlice {
-						// check if something already exists?
-						items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
+	switch inline := resp.(type) {
+	case openapi.InlineResponse200:
+		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+		items := make([]openapi.Item, *inline.Meta.Total)
+		for i, item := range inline.GetItems() {
+			items[i] = item
+		}
+		if pages > 1 {
+			var eg errgroup.Group
+			for page := 2; page <= pages; page++ {
+				page := page
+				eg.Go(func() error {
+					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
+					if err != nil {
+						return err
 					}
-				} else {
-					return fmt.Errorf("unexpected type %T", inline)
-				}
-				return nil
-			})
+					if inline, ok := resp.(openapi.InlineResponse200); ok {
+						for i, item := range inline.GetItems() {
+							// check if something already exists?
+							items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
+						}
+					} else {
+						return fmt.Errorf("unexpected inline item type %T", inline)
+					}
+					return nil
+				})
+			}
+			err := eg.Wait()
+			if err != nil {
+				return nil, err
+			}
 		}
-		err := eg.Wait()
-		if err != nil {
-			return nil, err
-		}
+		return items, nil
+	default:
+		return nil, fmt.Errorf("unexpected response type %T", inline)
 	}
-	return items, nil
 }

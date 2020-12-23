@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
+	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -34,41 +34,40 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openap
 	if err != nil {
 		return nil, err
 	}
-	var pages int
-	var inline openapi.InlineResponse2003
-	if inline, ok := resp.(openapi.InlineResponse2003); ok {
-		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-	} else {
-		return nil, fmt.Errorf("unexpected type %T", inline)
-	}
-	monsters := make([]openapi.Monster, *inline.Meta.Total)
-	for i, monster := range inline.GetItems() {
-		monsters[i] = monster
-	}
-	if pages > 1 {
-		var eg errgroup.Group
-		for page := 2; page <= pages; page++ {
-			page := page
-			eg.Go(func() error {
-				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query).Page(int32(page)))
-				if err != nil {
-					return err
-				}
-				if inline, ok := resp.(openapi.InlineResponse2003); ok {
-					for i, monster := range *inline.Items {
-						// check if something already exists?
-						monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster
+	switch inline := resp.(type) {
+	case openapi.InlineResponse2003:
+		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+		monsters := make([]openapi.Monster, *inline.Meta.Total)
+		for i, monster := range inline.GetItems() {
+			monsters[i] = monster
+		}
+		if pages > 1 {
+			var eg errgroup.Group
+			for page := 2; page <= pages; page++ {
+				page := page
+				eg.Go(func() error {
+					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query).Page(int32(page)))
+					if err != nil {
+						return err
 					}
-				} else {
-					return fmt.Errorf("unexpected type %T", inline)
-				}
-				return nil
-			})
+					if inline, ok := resp.(openapi.InlineResponse2003); ok {
+						for i, monster := range inline.GetItems() {
+							// check if something already exists?
+							monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster
+						}
+					} else {
+						return fmt.Errorf("unexpected inline item type type %T", inline)
+					}
+					return nil
+				})
+			}
+			err := eg.Wait()
+			if err != nil {
+				return nil, err
+			}
 		}
-		err := eg.Wait()
-		if err != nil {
-			return nil, err
-		}
+		return monsters, nil
+	default:
+		return nil, fmt.Errorf("unexpected response type %T", inline)
 	}
-	return monsters, nil
 }
