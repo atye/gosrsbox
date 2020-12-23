@@ -13,7 +13,14 @@ import (
 	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
 )
 
-func Test_GetPrayersByID(t *testing.T) {
+func Test_Prayers(t *testing.T) {
+	apiSvr := setupPrayersAPISvr()
+	defer apiSvr.Close()
+	t.Run("GetPrayersByID", test_GetPrayersByID)
+	t.Run("GetPrayersByName", test_GetPrayersByName)
+}
+
+func test_GetPrayersByID(t *testing.T) {
 	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedIDs []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
@@ -59,7 +66,7 @@ func Test_GetPrayersByID(t *testing.T) {
 	}
 }
 
-func Test_GetPrayersByName(t *testing.T) {
+func test_GetPrayersByName(t *testing.T) {
 	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error)
 
 	apiSvr := setupPrayersAPISvr()

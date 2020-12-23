@@ -13,7 +13,15 @@ import (
 	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
 )
 
-func Test_GetMonstersByID(t *testing.T) {
+func Test_Monsters(t *testing.T) {
+	apiSvr := setupMonstersAPISvr()
+	defer apiSvr.Close()
+	t.Run("GetMonstersByID", test_GetMonstersByID)
+	t.Run("GetMonstersByName", test_GetMonstersByName)
+	t.Run("GetMonstersThatDrop", test_GetMonstersThatDrop)
+}
+
+func test_GetMonstersByID(t *testing.T) {
 	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedIDs []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
@@ -59,7 +67,7 @@ func Test_GetMonstersByID(t *testing.T) {
 	}
 }
 
-func Test_GetMonstersByName(t *testing.T) {
+func test_GetMonstersByName(t *testing.T) {
 	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
@@ -105,7 +113,7 @@ func Test_GetMonstersByName(t *testing.T) {
 	}
 }
 
-func Test_GetMonstersThatDrop(t *testing.T) {
+func test_GetMonstersThatDrop(t *testing.T) {
 	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()

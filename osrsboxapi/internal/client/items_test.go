@@ -15,7 +15,16 @@ import (
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
-func Test_GetItemsByID(t *testing.T) {
+func Test_Items(t *testing.T) {
+	apiSvr := setupItemsAPISvr()
+	defer apiSvr.Close()
+	t.Run("GetItemsByID", test_GetItemsByID)
+	t.Run("GetItemsByName", test_GetItemsByName)
+	t.Run("GetItemSetD", test_GetItemSet)
+	t.Run("GetItemsBySlot", test_GetItemsBySlot)
+}
+
+func test_GetItemsByID(t *testing.T) {
 	type checkFn func(t *testing.T, items []openapi.Item, expectedID []string, err error)
 
 	apiSvr := setupItemsAPISvr()
@@ -61,7 +70,7 @@ func Test_GetItemsByID(t *testing.T) {
 	}
 }
 
-func Test_GetItemsByName(t *testing.T) {
+func test_GetItemsByName(t *testing.T) {
 	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
@@ -107,7 +116,7 @@ func Test_GetItemsByName(t *testing.T) {
 	}
 }
 
-func Test_GetItemSet(t *testing.T) {
+func test_GetItemSet(t *testing.T) {
 	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
@@ -153,7 +162,7 @@ func Test_GetItemSet(t *testing.T) {
 	}
 }
 
-func Test_GetItemsBySlot(t *testing.T) {
+func test_GetItemsBySlot(t *testing.T) {
 	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()

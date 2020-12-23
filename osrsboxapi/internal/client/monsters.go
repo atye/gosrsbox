@@ -29,11 +29,7 @@ func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]op
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
-	formattedNames := make([]string, len(names))
-	for i, name := range names {
-		formattedNames[i] = fmt.Sprintf(`"%s"`, name)
-	}
-	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(formattedNames, ", ")))
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 }
 
 func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openapi.Monster, error) {
