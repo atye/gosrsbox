@@ -7,13 +7,20 @@ import (
 	"math"
 	"strings"
 
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
+func (c *client) GetMonstersByID(ctx context.Context, ids ...string) ([]openapi.Monster, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("no ids provided")
+	}
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(ids...), ", ")))
+}
+
 func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	if len(names) == 0 {
-		return nil, errors.New("No names provided")
+		return nil, errors.New("no names provided")
 	}
 	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 }

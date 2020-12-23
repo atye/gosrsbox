@@ -5,13 +5,16 @@ import (
 	"log"
 
 	"github.com/atye/gosrsbox/osrsboxapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func main() {
-	//Create api client using http.DefaultClient
-	api := api.NewAPI(nil)
+	//Create api client using http.DefaultClient, disable logging
+	api := api.NewAPI(&api.APIConfig{Logger: nil})
+
+	//Create api client using http.DefaultClient, with logging
+	//api := api.NewAPI(nil)
 
 	// Get slice of items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)

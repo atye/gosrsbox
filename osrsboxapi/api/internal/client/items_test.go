@@ -10,10 +10,56 @@ import (
 	"path/filepath"
 	"testing"
 
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
+
+func Test_GetItemsByID(t *testing.T) {
+	type checkFn func(t *testing.T, items []openapi.Item, expectedID []string, err error)
+
+	apiSvr := setupItemsAPISvr()
+	defer apiSvr.Close()
+
+	verifyItemIDs := func(t *testing.T, items []openapi.Item, expectedIDs []string, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %v", err)
+		}
+
+		if len(items) != len(expectedIDs) {
+			t.Errorf("expected %d items, got %d", len(expectedIDs), len(items))
+		}
+
+		for i, item := range items {
+			if item.GetId() != expectedIDs[i] {
+				t.Errorf("expected name %s, got %s", expectedIDs[i], item.GetId())
+			}
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, []string{"2"}, verifyItemIDs
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			api, ids, checkFn := tc(t)
+			items, err := api.GetItemsByID(context.Background(), ids...)
+			checkFn(t, items, ids, err)
+		})
+	}
+}
 
 func Test_GetItemsByName(t *testing.T) {
 	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
@@ -190,6 +236,14 @@ func setupItemsAPISvr() *httptest.Server {
 			return
 		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "equipable_by_player": true, "equipment.slot": "2h", "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "items_2h.json"))
+			if err != nil {
+				panic(err)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(data)
+			return
+		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "id": { "$in": ["2"] }, "duplicate": false }`)):
+			data, err := ioutil.ReadFile(filepath.Join("testdata", "single_item.json"))
 			if err != nil {
 				panic(err)
 			}

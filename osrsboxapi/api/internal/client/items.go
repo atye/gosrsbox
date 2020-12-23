@@ -7,15 +7,22 @@ import (
 	"math"
 	"strings"
 
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
+func (c *client) GetItemsByID(ctx context.Context, ids ...string) ([]openapi.Item, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("no ids provided")
+	}
+	return c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(ids...), ", ")))
+}
+
 func (c *client) GetItemsByName(ctx context.Context, names ...string) ([]openapi.Item, error) {
 	if len(names) == 0 {
-		return nil, errors.New("No names provided")
+		return nil, errors.New("no names provided")
 	}
 	return c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 }

@@ -1,7 +1,7 @@
-osrsboxapi/api/internal/client/openapi-client/.openapi-generator/FILES
-osrsboxapi/api/internal/client/openapi-client/.gitignore
-osrsboxapi/api/internal/client/openapi-client/.openapi-generator-ignore
-osrsboxapi/api/internal/client/openapi-client/.travis.yml
-osrsboxapi/api/internal/client/openapi-client/git_push.sh
-osrsboxapi/api/internal/client/openapi-client/go.mod
-osrsboxapi/api/internal/client/openapi-client/go.sum
+osrsboxapi/openapi/api/.openapi-generator/FILES
+osrsboxapi/openapi/api/.gitignore
+osrsboxapi/openapi/api/.openapi-generator-ignore
+osrsboxapi/openapi/api/.travis.yml
+osrsboxapi/openapi/api/git_push.sh
+osrsboxapi/openapi/api/go.mod
+osrsboxapi/openapi/api/go.sum

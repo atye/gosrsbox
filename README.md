@@ -1,15 +1,9 @@
-[gosrsbox](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api) is a Go client library for [osrsbox-api](https://api.osrsbox.com).
-
-Data types are defined by a [modified OpenAPI specification](.pkg/openapi/openapi.yaml) rather than the [source OpenAPI specification](https://api.osrsbox.com/api-docs) so that types adhere to what they are in a real API response. For example, the source documents an `id` as an `integer` but that field is actually a `string` in a real response.
-
+[gosrsbox/osrsboxapi/api](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api) is a client library for [osrsbox-api](https://api.osrsbox.com).
 # Installing
 ```go get github.com/atye/gosrsbox/osrsboxdb/api```
-The `api` package provides a client for accessing [osrsbox-api](https://api.osrsbox.com).
-
 #### Features
-- no more than 10 concurrent http calls for accessing [osrsbox-api](https://api.osrsbox.com) (for now)
+- get Items, Monsters, and Prayers by id, wiki name, built-in options, and custom queries
 - supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
-
 #### Example
 ```
 package main
@@ -19,8 +13,8 @@ import (
 	"log"
 
 	"github.com/atye/gosrsbox/osrsboxapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 func main() {

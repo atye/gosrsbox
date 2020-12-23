@@ -10,8 +10,54 @@ import (
 	"path/filepath"
 	"testing"
 
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 )
+
+func Test_GetMonstersByID(t *testing.T) {
+	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedIDs []string, err error)
+
+	apiSvr := setupMonstersAPISvr()
+	defer apiSvr.Close()
+
+	verifyMonsterID := func(t *testing.T, monsters []openapi.Monster, expectedIDs []string, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %v", err)
+		}
+
+		if len(monsters) != len(expectedIDs) {
+			t.Errorf("expected %d items, got %d", len(expectedIDs), len(monsters))
+		}
+
+		for i, monster := range monsters {
+			if monster.GetId() != expectedIDs[i] {
+				t.Errorf("expected name %s, got %s", expectedIDs[i], monster.GetName())
+			}
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, []string{"2"}, verifyMonsterID
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			api, ids, checkFn := tc(t)
+			monster, err := api.GetMonstersByID(context.Background(), ids...)
+			checkFn(t, monster, ids, err)
+		})
+	}
+}
 
 func Test_GetMonstersByName(t *testing.T) {
 	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
@@ -129,6 +175,14 @@ func setupMonstersAPISvr() *httptest.Server {
 			}
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
+		case fmt.Sprintf("/monsters?where=%s", url.QueryEscape(`{ "id": { "$in": ["2"] }, "duplicate": false }`)):
+			data, err := ioutil.ReadFile(filepath.Join("testdata", "single_monster.json"))
+			if err != nil {
+				panic(err)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(data)
+			return
 		default:
 			panic(fmt.Errorf("%s not supported", r.URL.String()))
 		}

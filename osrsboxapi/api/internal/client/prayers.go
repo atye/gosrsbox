@@ -7,13 +7,20 @@ import (
 	"math"
 	"strings"
 
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
+func (c *client) GetPrayersByID(ctx context.Context, ids ...string) ([]openapi.Prayer, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("no ids provided")
+	}
+	return c.GetPrayersByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }}`, strings.Join(quoteStrings(ids...), ", ")))
+}
+
 func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]openapi.Prayer, error) {
 	if len(names) == 0 {
-		return nil, errors.New("No names provided")
+		return nil, errors.New("no names provided")
 	}
 
 	query := fmt.Sprintf(`{ "name": { "$in": [%s] } }`, strings.Join(quoteStrings(names...), ", "))

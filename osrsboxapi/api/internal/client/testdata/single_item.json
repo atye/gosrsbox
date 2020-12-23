@@ -1,0 +1,63 @@
+{
+    "_items": [
+        {
+            "_id": "5fdd4161cf9da9174e87782d",
+            "id": "2",
+            "name": "Cannonball",
+            "incomplete": false,
+            "members": true,
+            "tradeable": true,
+            "tradeable_on_ge": true,
+            "stackable": true,
+            "stacked": null,
+            "noted": false,
+            "noteable": false,
+            "linked_id_item": null,
+            "linked_id_noted": null,
+            "linked_id_placeholder": 17853,
+            "placeholder": false,
+            "equipable": false,
+            "equipable_by_player": false,
+            "equipable_weapon": false,
+            "cost": 5,
+            "lowalch": 2,
+            "highalch": 3,
+            "weight": 0.0,
+            "buy_limit": 11000,
+            "quest_item": false,
+            "release_date": "2003-05-27",
+            "duplicate": false,
+            "examine": "Ammo for the Dwarf Cannon.",
+            "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAABEUlEQVR4Xu3W4QqCMBQFYPcWEQgiISEhEoYkQe//VItbXLk7blPbWj/0wPmRkvu4W1KW7dmz7Sg932RR+ng46CLP9aks9bmqxtJnuk73E6GUAbnUtdHEKGVArk3z7p9QagJxNQHKxNza1tkEqOUYhP0IpUbMvetWFWGRUGqcDC44Vx+oLYpvUHbMo++dRZBE0dYFg+iBuCj2OQxeFE4pCOSaCCFk8b5vStFAiMD6UAyiBoHkliHAVhuKpyQxQSCeEi7uKqJ4QnSGAqbDMVFLYLhlkc6PjP1wI8SG4a3iN3YkEGU6KYTZMHKrAs+PLW6UxOBPXUIiYjjm23sNBp8UMfjf2d0EmE/kFswVv7tnz2bzAgIXZdMJ7hLLAAAAAElFTkSuQmCC",
+            "wiki_name": "Cannonball",
+            "wiki_url": "https://oldschool.runescape.wiki/w/Cannonball",
+            "wiki_exchange": "https://oldschool.runescape.wiki/w/Exchange:Cannonball",
+            "equipment": null,
+            "weapon": null,
+            "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
+            "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
+            "_etag": "1dd002d5891d204cc4fa1da3f7d39b61e2272568",
+            "_links": {
+                "self": {
+                    "title": "Item",
+                    "href": "items/5fdd4161cf9da9174e87782d"
+                }
+            }
+        }
+    ],
+    "_links": {
+        "parent": {
+            "title": "home",
+            "href": "/"
+        },
+        "self": {
+            "title": "items",
+            "href": "items?where={ \"id\": { \"$in\": [\"2\"] }, \"duplicate\": false }"
+        }
+    },
+    "_meta": {
+        "page": 1,
+        "max_results": 25,
+        "total": 1
+    }
+}

@@ -9,13 +9,15 @@ import (
 	"sync"
 
 	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
 type API interface {
+	GetItemsByID(ctx context.Context, ids ...string) ([]openapi.Item, error)
+
 	// GetItemsByName returns a slice of Items from the given wiki names
 	GetItemsByName(ctx context.Context, names ...string) ([]openapi.Item, error)
 
@@ -31,6 +33,8 @@ type API interface {
 	// GetItemsBySlot returns a slice of Items in the given slot
 	GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]openapi.Item, error)
 
+	GetMonstersByID(ctx context.Context, ids ...string) ([]openapi.Monster, error)
+
 	// GetMonstersByName returns a slice of Monsters from the given wiki names
 	GetMonstersByName(ctx context.Context, names ...string) ([]openapi.Monster, error)
 
@@ -42,6 +46,8 @@ type API interface {
 
 	// GetMonstersThatDrop returns a slice of Monsters that drop the given items
 	GetMonstersThatDrop(ctx context.Context, items ...string) ([]openapi.Monster, error)
+
+	GetPrayersByID(ctx context.Context, ids ...string) ([]openapi.Prayer, error)
 
 	// GetPrayersByName returns a slice of Prayers from the given names
 	GetPrayersByName(ctx context.Context, names ...string) ([]openapi.Prayer, error)
@@ -62,6 +68,7 @@ type API interface {
 type APIConfig struct {
 	Logger     *log.Logger
 	HttpClient *http.Client
+	UserAgent  string
 }
 
 var (
@@ -71,10 +78,11 @@ var (
 
 func NewAPI(config *APIConfig) API {
 	once.Do(func() {
-		logger, httpClient := logger(config), httpClient(config)
+		logger, httpClient, userAgent := logger(config), httpClient(config), userAgent(config)
 		conf := &openapi.Configuration{
 			Scheme:     "https",
 			HTTPClient: httpClient,
+			UserAgent:  userAgent,
 			Servers: []openapi.ServerConfiguration{
 				{
 					URL: "api.osrsbox.com",
@@ -103,4 +111,11 @@ func httpClient(c *APIConfig) *http.Client {
 		return c.HttpClient
 	}
 	return http.DefaultClient
+}
+
+func userAgent(c *APIConfig) string {
+	if c != nil && c.UserAgent != "" {
+		return c.UserAgent
+	}
+	return ""
 }

@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
-	openapi "github.com/atye/gosrsbox/pkg/openapi/api"
 )
 
 type loggingMW struct {
@@ -17,6 +17,14 @@ type loggingMW struct {
 
 func withLogger(next API, log *log.Logger) loggingMW {
 	return loggingMW{next: next, log: log}
+}
+
+func (l loggingMW) GetItemsByID(ctx context.Context, ids ...string) ([]openapi.Item, error) {
+	now := time.Now()
+	defer func() {
+		l.log.Printf("GetItemByID took %v", time.Since(now))
+	}()
+	return l.next.GetItemsByID(ctx, ids...)
 }
 
 func (l loggingMW) GetItemsByName(ctx context.Context, names ...string) ([]openapi.Item, error) {
@@ -51,6 +59,14 @@ func (l loggingMW) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]o
 	return l.next.GetItemsBySlot(ctx, slot)
 }
 
+func (l loggingMW) GetMonstersByID(ctx context.Context, ids ...string) ([]openapi.Monster, error) {
+	now := time.Now()
+	defer func() {
+		l.log.Printf("GetMonstersByID took %v", time.Since(now))
+	}()
+	return l.next.GetMonstersByID(ctx, ids...)
+}
+
 func (l loggingMW) GetMonstersByName(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	now := time.Now()
 	defer func() {
@@ -75,6 +91,14 @@ func (l loggingMW) GetMonstersThatDrop(ctx context.Context, items ...string) ([]
 	return l.next.GetMonstersThatDrop(ctx, items...)
 }
 
+func (l loggingMW) GetPrayersByID(ctx context.Context, ids ...string) ([]openapi.Prayer, error) {
+	now := time.Now()
+	defer func() {
+		l.log.Printf("GetPrayersByID took %v", time.Since(now))
+	}()
+	return l.next.GetPrayersByID(ctx, ids...)
+}
+
 func (l loggingMW) GetPrayersByName(ctx context.Context, names ...string) ([]openapi.Prayer, error) {
 	now := time.Now()
 	defer func() {
@@ -90,12 +114,3 @@ func (l loggingMW) GetPrayersByQuery(ctx context.Context, query string) ([]opena
 	}()
 	return l.next.GetPrayersByQuery(ctx, query)
 }
-
-/*func (l loggingMW) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
-	now := time.Now()
-	defer func() {
-		l.log.Printf("GetJSONFiles took %v", time.Since(now))
-	}()
-	// destinations must be variadic?
-	return l.next.GetJSONFiles(ctx, files, destinations...)
-}*/
