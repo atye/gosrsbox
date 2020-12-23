@@ -4,14 +4,17 @@ import (
 	"context"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/atye/gosrsbox/osrsboxapi/api"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func main() {
-	//Create api client using http.DefaultClient
-	api := api.NewAPI(nil)
+	//Create api client using http.DefaultClient, disable logging
+	api := api.NewAPI(&api.APIConfig{Logger: nil})
+
+	//Create api client using http.DefaultClient, with logging
+	//api := api.NewAPI(nil)
 
 	// Get slice of items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
@@ -28,7 +31,7 @@ func main() {
 	printMonsters(monsters)
 
 	// Get items with negative prayer bonus using Python query
-	items, err = api.GetItemsByQuery(context.Background(), "equipment.prayer<0")
+	_, err = api.GetPrayersByQuery(context.Background(), "equipment.prayer<0")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,49 +44,22 @@ func main() {
 	}
 	printItems(items)
 
-	// Get JSON file from STATIC JSON API as an osrsboxapi.Item
-	var excalibur osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"items-json/35.json"}, &excalibur)
+	// Get prayers with a faulty MongoDB query that returns an error
+	_, err = api.GetPrayersByQuery(context.Background(), `{"name":{"$nin":"test"}}`)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(excalibur.Name)
-
-	var twoHandedITems map[string]osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"items-json-slot/items-2h.json"}, &twoHandedITems)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(len(twoHandedITems))
-
-	// Gather npcs-summary.json data which doesn't contain Items, Monsters, or Prayers data
-	// Create my own custom struct and variable to unmarshal npcs-summary.json
-	type NPCSummary struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-	var data map[string]NPCSummary
-
-	// Pass variable to GetJSONFiles to use it as an unmarshal destination
-	// Get multiple JSON datasets concurrently
-	var cannonBall osrsboxapi.Item
-	err = api.GetJSONFiles(context.Background(), []string{"npcs-summary.json", "items-json/2.json"}, &data, &cannonBall)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println(data["2"].Name)
-	log.Println(cannonBall.WikiName)
+	printItems(items)
 }
 
-func printItems(items []osrsboxapi.Item) {
+func printItems(items []openapi.Item) {
 	for _, item := range items {
-		log.Println(item.WikiName)
+		log.Println(item.GetWikiName())
 	}
 }
 
-func printMonsters(monsters []osrsboxapi.Monster) {
+func printMonsters(monsters []openapi.Monster) {
 	for _, monster := range monsters {
-		log.Println(monster.WikiName)
+		log.Println(monster.GetWikiName())
 	}
 }

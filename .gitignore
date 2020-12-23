@@ -1,0 +1,7 @@
+osrsboxapi/openapi/api/.openapi-generator/FILES
+osrsboxapi/openapi/api/.gitignore
+osrsboxapi/openapi/api/.openapi-generator-ignore
+osrsboxapi/openapi/api/.travis.yml
+osrsboxapi/openapi/api/git_push.sh
+osrsboxapi/openapi/api/go.mod
+osrsboxapi/openapi/api/go.sum

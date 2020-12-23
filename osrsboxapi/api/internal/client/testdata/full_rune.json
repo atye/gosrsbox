@@ -1,7 +1,7 @@
 {
     "_items": [
         {
-            "id": 1163,
+            "id": "1163",
             "name": "Rune full helm",
             "incomplete": false,
             "members": false,
@@ -54,7 +54,7 @@
             "weapon": null
         },
         {
-            "id": 1127,
+            "id": "1127",
             "name": "Rune platebody",
             "incomplete": false,
             "members": false,
@@ -107,7 +107,7 @@
             "weapon": null
         },
         {
-            "id": 1079,
+            "id": "1079",
             "name": "Rune platelegs",
             "incomplete": false,
             "members": false,
@@ -160,7 +160,7 @@
             "weapon": null
         },
         {
-            "id": 1201,
+            "id": "1201",
             "name": "Rune kiteshield",
             "incomplete": false,
             "members": false,

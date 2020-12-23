@@ -1,7 +1,7 @@
 {
     "_items": [
         {
-            "id": 839,
+            "id": "839",
             "name": "Longbow",
             "incomplete": false,
             "members": false,
@@ -80,7 +80,7 @@
             }
         },
         {
-            "id": 841,
+            "id": "841",
             "name": "Shortbow",
             "incomplete": false,
             "members": false,

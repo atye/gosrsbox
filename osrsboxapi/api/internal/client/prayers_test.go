@@ -10,16 +10,62 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 )
 
-func Test_GetPrayersByName(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error)
+func Test_GetPrayersByID(t *testing.T) {
+	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedIDs []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerNames := func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error) {
+	verifyPrayerID := func(t *testing.T, prayers []openapi.Prayer, expectedIDs []string, err error) {
+		if err != nil {
+			t.Errorf("expected no error, got %v", err)
+		}
+
+		if len(prayers) != len(expectedIDs) {
+			t.Errorf("expected %d items, got %d", len(expectedIDs), len(prayers))
+		}
+
+		for i, prayer := range prayers {
+			if prayer.GetId() != expectedIDs[i] {
+				t.Errorf("expected name %s, got %s", expectedIDs[i], prayer.GetName())
+			}
+		}
+	}
+
+	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
+		"success": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, []string{"2"}, verifyPrayerID
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			api, ids, checkFn := tc(t)
+			prayer, err := api.GetPrayersByID(context.Background(), ids...)
+			checkFn(t, prayer, ids, err)
+		})
+	}
+}
+
+func Test_GetPrayersByName(t *testing.T) {
+	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error)
+
+	apiSvr := setupPrayersAPISvr()
+	defer apiSvr.Close()
+
+	verifyPrayerNames := func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -37,8 +83,15 @@ func Test_GetPrayersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
 	}
@@ -60,15 +113,23 @@ func setupPrayersAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
-		case fmt.Sprintf("/prayers?where=%s&page=2", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
+		case fmt.Sprintf("/prayers?page=2&where=%s", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "prayers_page2.json"))
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
+		case fmt.Sprintf("/prayers?where=%s", url.QueryEscape(`{ "id": { "$in": ["2"] }}`)):
+			data, err := ioutil.ReadFile(filepath.Join("testdata", "single_prayer.json"))
+			if err != nil {
+				panic(err)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(data)
+			return
 		default:
 			panic(fmt.Errorf("%s not supported", r.URL.String()))
 		}

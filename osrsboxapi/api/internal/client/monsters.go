@@ -5,83 +5,76 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
-	if len(names) == 0 {
-		return nil, errors.New("No names provided")
+func (c *client) GetMonstersByID(ctx context.Context, ids ...string) ([]openapi.Monster, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("no ids provided")
 	}
-
-	query := fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", "))
-	return c.GetMonstersByQuery(ctx, query)
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(ids...), ", ")))
 }
 
-func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
+func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]openapi.Monster, error) {
+	if len(names) == 0 {
+		return nil, errors.New("no names provided")
+	}
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
+}
+
+func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
-
 	formattedNames := make([]string, len(names))
-
 	for i, name := range names {
 		formattedNames[i] = fmt.Sprintf(`"%s"`, name)
 	}
-
-	query := fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(formattedNames, ", "))
-	return c.GetMonstersByQuery(ctx, query)
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(formattedNames, ", ")))
 }
 
-func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, monstersEndpoint, url.QueryEscape(query))
-
-	var monstersResp monstersResponse
-	_, err := c.doAPIRequest(ctx, apiURL, &monstersResp)
-	if monstersResp.Error != nil {
-		return nil, monstersResp.Error
-	}
+func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openapi.Monster, error) {
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
-
-	monsters := make([]osrsboxapi.Monster, monstersResp.Meta.Total)
-	for i, monster := range monstersResp.Monsters {
-		monsters[i] = monster
-	}
-
-	var pages int
-	if monstersResp.Meta.MaxResults != 0 {
-		pages = int(math.Ceil(float64(monstersResp.Meta.Total) / float64(monstersResp.Meta.MaxResults)))
-	}
-
-	if pages > 1 {
-		var eg errgroup.Group
-		for page := 2; page <= pages; page++ {
-			page := page
-			eg.Go(func() error {
-				var temp monstersResponse
-				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
-				if temp.Error != nil {
-					return temp.Error
-				}
-				if err != nil {
-					return err
-				}
-				for i, monster := range temp.Monsters {
-					monsters[temp.Meta.MaxResults*(page-1)+i] = monster
-				}
-				return nil
-			})
+	switch inline := resp.(type) {
+	case openapi.InlineResponse2003:
+		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+		monsters := make([]openapi.Monster, *inline.Meta.Total)
+		for i, monster := range inline.GetItems() {
+			monsters[i] = monster
 		}
-		err := eg.Wait()
-		if err != nil {
-			return nil, err
+		if pages > 1 {
+			var eg errgroup.Group
+			for page := 2; page <= pages; page++ {
+				page := page
+				eg.Go(func() error {
+					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query).Page(int32(page)))
+					if err != nil {
+						return err
+					}
+					if inline, ok := resp.(openapi.InlineResponse2003); ok {
+						for i, monster := range inline.GetItems() {
+							// check if something already exists?
+							monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster
+						}
+					} else {
+						return fmt.Errorf("unexpected inline item type type %T", inline)
+					}
+					return nil
+				})
+			}
+			err := eg.Wait()
+			if err != nil {
+				return nil, err
+			}
 		}
+		return monsters, nil
+	default:
+		return nil, fmt.Errorf("unexpected response type %T", inline)
 	}
-
-	return monsters, nil
 }
