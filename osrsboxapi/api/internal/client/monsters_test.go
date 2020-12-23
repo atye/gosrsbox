@@ -10,16 +10,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 )
 
 func Test_GetMonstersByName(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -37,8 +37,15 @@ func Test_GetMonstersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
 	}
@@ -53,12 +60,12 @@ func Test_GetMonstersByName(t *testing.T) {
 }
 
 func Test_GetMonstersThatDrop(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []osrsboxapi.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -76,8 +83,15 @@ func Test_GetMonstersThatDrop(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, []string, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 	}
@@ -99,21 +113,21 @@ func setupMonstersAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 		case fmt.Sprintf("/monsters?where=%s&page=2", url.QueryEscape(`{ "wiki_name": { "$in": ["Molanisk", "Aberrant spectre", "Chaos Elemental"] }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "monsters_page2.json"))
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 		case fmt.Sprintf("/monsters?where=%s", url.QueryEscape(`{ "drops": { "$elemMatch": { "name": { "$in": ["Grimy ranarr weed"] } } }, "duplicate": false }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "monsters_onepage.json"))
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 		default:
 			panic(fmt.Errorf("%s not supported", r.URL.String()))

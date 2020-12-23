@@ -5,14 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsboxapi.Prayer, error) {
+func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]openapi.Prayer, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -21,43 +20,38 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]osrsb
 	return c.GetPrayersByQuery(ctx, query)
 }
 
-func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]osrsboxapi.Prayer, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, prayersEndpoint, url.QueryEscape(query))
-
-	var prayersResp prayersResponse
-	_, err := c.doAPIRequest(ctx, apiURL, &prayersResp)
-	if prayersResp.Error != nil {
-		return nil, prayersResp.Error
-	}
+func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi.Prayer, error) {
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getprayers(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
-
-	prayers := make([]osrsboxapi.Prayer, prayersResp.Meta.Total)
-	for i, prayer := range prayersResp.Prayers {
+	var pages int
+	var inline openapi.InlineResponse2004
+	if inline, ok := resp.(openapi.InlineResponse2004); ok {
+		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+	} else {
+		return nil, fmt.Errorf("%T", inline)
+	}
+	prayers := make([]openapi.Prayer, *inline.Meta.Total)
+	for i, prayer := range inline.GetItems() {
 		prayers[i] = prayer
 	}
-
-	var pages int
-	if prayersResp.Meta.MaxResults != 0 {
-		pages = int(math.Ceil(float64(prayersResp.Meta.Total) / float64(prayersResp.Meta.MaxResults)))
-	}
-
 	if pages > 1 {
 		var eg errgroup.Group
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				var temp prayersResponse
-				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
-				if temp.Error != nil {
-					return temp.Error
-				}
+				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getprayers(ctx).Where(query).Page(int32(page)))
 				if err != nil {
 					return err
 				}
-				for i, prayer := range temp.Prayers {
-					prayers[temp.Meta.MaxResults*(page-1)+i] = prayer
+				if inline, ok := resp.(openapi.InlineResponse2004); ok {
+					for i, prayer := range *inline.Items {
+						// check if something already exists?
+						prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
+					}
+				} else {
+					return fmt.Errorf("%T", inline)
 				}
 				return nil
 			})

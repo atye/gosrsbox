@@ -1,17 +1,14 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"github.com/atye/gosrsbox/osrsboxapi"
-	"github.com/atye/gosrsbox/osrsboxapi/api"
-	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func main() {
 	//Create api client using http.DefaultClient
-	api := api.NewAPI(nil)
+	/*api := api.NewAPI(nil)
 
 	// Get slice of items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
@@ -73,7 +70,7 @@ func main() {
 	}
 
 	log.Println(data["2"].Name)
-	log.Println(cannonBall.WikiName)
+	log.Println(cannonBall.WikiName)*/
 }
 
 func printItems(items []osrsboxapi.Item) {

@@ -10,16 +10,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 )
 
 func Test_GetPrayersByName(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error)
+	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerNames := func(t *testing.T, prayers []osrsboxapi.Prayer, expectedNames []string, err error) {
+	verifyPrayerNames := func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -37,8 +37,15 @@ func Test_GetPrayersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
 	}
@@ -60,14 +67,14 @@ func setupPrayersAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 		case fmt.Sprintf("/prayers?where=%s&page=2", url.QueryEscape(`{ "name": { "$in": ["Burst of Strength", "Thick Skin"] } }`)):
 			data, err := ioutil.ReadFile(filepath.Join("testdata", "prayers_page2.json"))
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 		default:
 			panic(fmt.Errorf("%s not supported", r.URL.String()))

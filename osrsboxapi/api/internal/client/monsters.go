@@ -5,14 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"net/url"
 	"strings"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
+func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -21,7 +20,7 @@ func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]osrs
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]osrsboxapi.Monster, error) {
+func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
@@ -36,43 +35,38 @@ func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]os
 	return c.GetMonstersByQuery(ctx, query)
 }
 
-func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsboxapi.Monster, error) {
-	apiURL := fmt.Sprintf("%s/%s?where=%s", c.apiAddress, monstersEndpoint, url.QueryEscape(query))
-
-	var monstersResp monstersResponse
-	_, err := c.doAPIRequest(ctx, apiURL, &monstersResp)
-	if monstersResp.Error != nil {
-		return nil, monstersResp.Error
-	}
+func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openapi.Monster, error) {
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getmonsters(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
-
-	monsters := make([]osrsboxapi.Monster, monstersResp.Meta.Total)
-	for i, monster := range monstersResp.Monsters {
+	var pages int
+	var inline openapi.InlineResponse2003
+	if inline, ok := resp.(openapi.InlineResponse2003); ok {
+		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+	} else {
+		return nil, fmt.Errorf("%T", inline)
+	}
+	monsters := make([]openapi.Monster, *inline.Meta.Total)
+	for i, monster := range inline.GetItems() {
 		monsters[i] = monster
 	}
-
-	var pages int
-	if monstersResp.Meta.MaxResults != 0 {
-		pages = int(math.Ceil(float64(monstersResp.Meta.Total) / float64(monstersResp.Meta.MaxResults)))
-	}
-
 	if pages > 1 {
 		var eg errgroup.Group
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				var temp monstersResponse
-				_, err := c.doAPIRequest(ctx, fmt.Sprintf("%s%s", apiURL, fmt.Sprintf("&page=%d", page)), &temp)
-				if temp.Error != nil {
-					return temp.Error
-				}
+				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getmonsters(ctx).Where(query).Page(int32(page)))
 				if err != nil {
 					return err
 				}
-				for i, monster := range temp.Monsters {
-					monsters[temp.Meta.MaxResults*(page-1)+i] = monster
+				if inline, ok := resp.(openapi.InlineResponse2003); ok {
+					for i, monster := range *inline.Items {
+						// check if something already exists?
+						monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster
+					}
+				} else {
+					return fmt.Errorf("%T", inline)
 				}
 				return nil
 			})
@@ -82,6 +76,5 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]osrsbo
 			return nil, err
 		}
 	}
-
 	return monsters, nil
 }

@@ -10,18 +10,18 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
 )
 
 func Test_GetItemsByName(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []openapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -39,8 +39,15 @@ func Test_GetItemsByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
 	}
@@ -55,12 +62,12 @@ func Test_GetItemsByName(t *testing.T) {
 }
 
 func Test_GetItemSet(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []openapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -78,8 +85,15 @@ func Test_GetItemSet(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, sets.SetName, []string, checkFn){
 		"success": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
 	}
@@ -94,12 +108,12 @@ func Test_GetItemSet(t *testing.T) {
 }
 
 func Test_GetItemsBySlot(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []openapi.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsboxapi.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []openapi.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -117,8 +131,15 @@ func Test_GetItemsBySlot(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*client, slots.SlotName, []string, checkFn){
 		"success": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
-			api := NewAPI(http.DefaultClient)
-			api.apiAddress = apiSvr.URL
+			api := NewAPI(&openapi.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []openapi.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
 	}
@@ -140,7 +161,7 @@ func setupItemsAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
 		case fmt.Sprintf("/items?where=%s&page=2", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
@@ -148,7 +169,7 @@ func setupItemsAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
 		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"] }, "duplicate": false }`)):
@@ -156,7 +177,7 @@ func setupItemsAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
 		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Green d'hide body", "Green d'hide chaps", "Green d'hide vambraces"] }, "duplicate": false }`)):
@@ -164,7 +185,7 @@ func setupItemsAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
 		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "equipable_by_player": true, "equipment.slot": "2h", "duplicate": false }`)):
@@ -172,7 +193,7 @@ func setupItemsAPISvr() *httptest.Server {
 			if err != nil {
 				panic(err)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(data)
 			return
 		default:

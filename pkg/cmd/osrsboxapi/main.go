@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/atye/gosrsbox/cmd/osrsboxapi/cmd"
+import "github.com/atye/gosrsbox/pkg/cmd/osrsboxapi/cmd"
 
 func main() {
 	cmd.Execute()

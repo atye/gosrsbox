@@ -9,57 +9,88 @@ import (
 	"sync"
 
 	"golang.org/x/sync/semaphore"
+
+	"github.com/atye/gosrsbox/osrsboxapi/api/internal/client/openapi"
 )
 
 type client struct {
-	apiAddress  string
-	docsAddress string
-	client      *http.Client
-	apiSemaphor *semaphore.Weighted
-	mu          sync.Mutex
+	apiAddress    string
+	docsAddress   string
+	httpClient    *http.Client
+	openAPIClient openAPIClient
+	apiSemaphor   *semaphore.Weighted
+	mu            sync.Mutex
+}
+
+type openAPIClient interface {
+	openapi.EquipmentApi
+	openapi.IconsItemApi
+	openapi.IconsPrayerApi
+	openapi.ItemApi
+	openapi.MonsterApi
+	openapi.PrayerApi
+	openapi.WeaponApi
 }
 
 const (
-	docs             = "https://www.osrsbox.com/osrsbox-db"
-	api              = "https://api.osrsbox.com"
-	itemsEndpoint    = "items"
-	monstersEndpoint = "monsters"
-	prayersEndpoint  = "prayers"
+	docs = "https://www.osrsbox.com/osrsbox-db"
 )
 
-func NewAPI(httpClient *http.Client) *client {
+func NewAPI(conf *openapi.Configuration) *client {
 	return &client{
-		apiAddress:  api,
-		docsAddress: docs,
-		client:      httpClient,
-		apiSemaphor: semaphore.NewWeighted(int64(10)),
-		mu:          sync.Mutex{},
+		docsAddress:   docs,
+		httpClient:    conf.HTTPClient,
+		openAPIClient: openapi.NewAPIClient(conf),
+		apiSemaphor:   semaphore.NewWeighted(int64(10)),
 	}
 }
 
-func (c *client) doAPIRequest(ctx context.Context, url string, v interface{}) (int, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return 0, err
-	}
-	err = c.apiSemaphor.Acquire(ctx, 1)
+func (c *client) doOpenAPIRequest(ctx context.Context, req interface{}) (interface{}, error) {
+	err := c.apiSemaphor.Acquire(ctx, 1)
 	if err != nil {
 		return 0, err
 	}
 	defer c.apiSemaphor.Release(1)
-	resp, err := c.client.Do(req)
-	if err != nil {
-		if resp != nil {
-			return resp.StatusCode, err
+	switch r := req.(type) {
+	case openapi.ApiGetitemsRequest:
+		inline, resp, openAPIErr := r.Execute()
+		defer resp.Body.Close()
+		if openAPIErr.Body() != nil {
+			var apiErr openapi.Error
+			err := json.NewDecoder(resp.Body).Decode(&apiErr)
+			if err != nil {
+				return nil, err
+			}
+			return nil, openAPIErr
 		}
-		return 0, err
+		return inline.GetItems(), nil
+	case openapi.ApiGetmonstersRequest:
+		inline, resp, openAPIErr := r.Execute()
+		defer resp.Body.Close()
+		if openAPIErr.Body() != nil {
+			var apiErr openapi.Error
+			err := json.NewDecoder(resp.Body).Decode(&apiErr)
+			if err != nil {
+				return nil, err
+			}
+			return nil, openAPIErr
+		}
+		return inline.GetItems(), nil
+	case openapi.ApiGetprayersRequest:
+		inline, resp, openAPIErr := r.Execute()
+		defer resp.Body.Close()
+		if openAPIErr.Body() != nil {
+			var apiErr openapi.Error
+			err := json.NewDecoder(resp.Body).Decode(&apiErr)
+			if err != nil {
+				return nil, err
+			}
+			return nil, openAPIErr
+		}
+		return inline.GetItems(), nil
+	default:
+		return nil, fmt.Errorf("request type %T not supported", r)
 	}
-	defer resp.Body.Close()
-	err = json.NewDecoder(resp.Body).Decode(v)
-	if err != nil {
-		return resp.StatusCode, err
-	}
-	return resp.StatusCode, nil
 }
 
 func (c *client) doJSONDocsRequest(ctx context.Context, url string, v interface{}) (int, error) {
@@ -67,7 +98,7 @@ func (c *client) doJSONDocsRequest(ctx context.Context, url string, v interface{
 	if err != nil {
 		return 0, err
 	}
-	resp, err := c.client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		if resp != nil {
 			return resp.StatusCode, err

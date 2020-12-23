@@ -14,7 +14,6 @@ func (c *client) GetJSONFiles(ctx context.Context, files []string, destinations 
 	if len(destinations) < len(files) {
 		return fmt.Errorf("not enough interfaces provided")
 	}
-
 	var eg errgroup.Group
 	for i := range destinations {
 		i := i
@@ -24,7 +23,7 @@ func (c *client) GetJSONFiles(ctx context.Context, files []string, destinations 
 				return err
 			}
 			if code != http.StatusOK {
-				return fmt.Errorf("expected status 200/OK, got: %d", code)
+				return fmt.Errorf("code: %d, file: %s", code, files[i])
 			}
 			return nil
 		})
