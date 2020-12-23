@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type WeaponApi interface {
-
-	/*
-	 * GetWeaponItem Retrieves a Weapon document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param weaponId Unique OSRS item ID number.
-	 * @return ApiGetWeaponItemRequest
-	 */
-	GetWeaponItem(ctx _context.Context, weaponId string) ApiGetWeaponItemRequest
-
-	/*
-	 * GetWeaponItemExecute executes the request
-	 * @return Weapon
-	 */
-	GetWeaponItemExecute(r ApiGetWeaponItemRequest) (Weapon, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * Getweapons Retrieves one or more weapons
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGetweaponsRequest
-	 */
-	Getweapons(ctx _context.Context) ApiGetweaponsRequest
-
-	/*
-	 * GetweaponsExecute executes the request
-	 * @return InlineResponse2001
-	 */
-	GetweaponsExecute(r ApiGetweaponsRequest) (InlineResponse2001, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // WeaponApiService WeaponApi service
 type WeaponApiService service
 
 type ApiGetWeaponItemRequest struct {
 	ctx _context.Context
-	ApiService WeaponApi
+	ApiService *WeaponApiService
 	weaponId string
 }
 
@@ -176,7 +146,7 @@ func (a *WeaponApiService) GetWeaponItemExecute(r ApiGetWeaponItemRequest) (Weap
 
 type ApiGetweaponsRequest struct {
 	ctx _context.Context
-	ApiService WeaponApi
+	ApiService *WeaponApiService
 	where *string
 	projection *string
 	sort *string

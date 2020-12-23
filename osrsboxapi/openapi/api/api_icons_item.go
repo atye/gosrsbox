@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type IconsItemApi interface {
-
-	/*
-	 * GetIconsItemItem Retrieves a Icons_item document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param iconsItemId Unique OSRS item ID number.
-	 * @return ApiGetIconsItemItemRequest
-	 */
-	GetIconsItemItem(ctx _context.Context, iconsItemId string) ApiGetIconsItemItemRequest
-
-	/*
-	 * GetIconsItemItemExecute executes the request
-	 * @return IconsItem
-	 */
-	GetIconsItemItemExecute(r ApiGetIconsItemItemRequest) (IconsItem, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * GeticonsItems Retrieves one or more icons_items
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGeticonsItemsRequest
-	 */
-	GeticonsItems(ctx _context.Context) ApiGeticonsItemsRequest
-
-	/*
-	 * GeticonsItemsExecute executes the request
-	 * @return InlineResponse2005
-	 */
-	GeticonsItemsExecute(r ApiGeticonsItemsRequest) (InlineResponse2005, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // IconsItemApiService IconsItemApi service
 type IconsItemApiService service
 
 type ApiGetIconsItemItemRequest struct {
 	ctx _context.Context
-	ApiService IconsItemApi
+	ApiService *IconsItemApiService
 	iconsItemId string
 }
 
@@ -176,7 +146,7 @@ func (a *IconsItemApiService) GetIconsItemItemExecute(r ApiGetIconsItemItemReque
 
 type ApiGeticonsItemsRequest struct {
 	ctx _context.Context
-	ApiService IconsItemApi
+	ApiService *IconsItemApiService
 	where *string
 	projection *string
 	sort *string

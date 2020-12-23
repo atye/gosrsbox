@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type IconsPrayerApi interface {
-
-	/*
-	 * GetIconsPrayerItem Retrieves a Icons_prayer document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param iconsPrayerId Unique OSRS prayer ID number.
-	 * @return ApiGetIconsPrayerItemRequest
-	 */
-	GetIconsPrayerItem(ctx _context.Context, iconsPrayerId string) ApiGetIconsPrayerItemRequest
-
-	/*
-	 * GetIconsPrayerItemExecute executes the request
-	 * @return IconsPrayer
-	 */
-	GetIconsPrayerItemExecute(r ApiGetIconsPrayerItemRequest) (IconsPrayer, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * GeticonsPrayers Retrieves one or more icons_prayers
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGeticonsPrayersRequest
-	 */
-	GeticonsPrayers(ctx _context.Context) ApiGeticonsPrayersRequest
-
-	/*
-	 * GeticonsPrayersExecute executes the request
-	 * @return InlineResponse2006
-	 */
-	GeticonsPrayersExecute(r ApiGeticonsPrayersRequest) (InlineResponse2006, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // IconsPrayerApiService IconsPrayerApi service
 type IconsPrayerApiService service
 
 type ApiGetIconsPrayerItemRequest struct {
 	ctx _context.Context
-	ApiService IconsPrayerApi
+	ApiService *IconsPrayerApiService
 	iconsPrayerId string
 }
 
@@ -176,7 +146,7 @@ func (a *IconsPrayerApiService) GetIconsPrayerItemExecute(r ApiGetIconsPrayerIte
 
 type ApiGeticonsPrayersRequest struct {
 	ctx _context.Context
-	ApiService IconsPrayerApi
+	ApiService *IconsPrayerApiService
 	where *string
 	projection *string
 	sort *string

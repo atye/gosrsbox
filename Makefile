@@ -1,8 +1,11 @@
-OPENAPI_DIR=pkg/openapi
+OPENAPI_DIR=osrsboxapi/openapi
 
 generate:
-	openapi-generator generate -i ${OPENAPI_DIR}/openapi.yaml -g go --additional-properties=generateInterfaces=true --package-name api \
-		-o ${OPENAPI_DIR}/api
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
+    -i /local/${OPENAPI_DIR}/openapi.yaml \
+    -g go \
+	--package-name api \
+    -o /local/${OPENAPI_DIR}/api
 	rm -f \
 		${OPENAPI_DIR}/api/.openapi-generator/FILES \
 		${OPENAPI_DIR}/api/.gitignore \

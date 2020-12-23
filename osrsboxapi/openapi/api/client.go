@@ -48,19 +48,19 @@ type APIClient struct {
 
 	// API Services
 
-	EquipmentApi EquipmentApi
+	EquipmentApi *EquipmentApiService
 
-	IconsItemApi IconsItemApi
+	IconsItemApi *IconsItemApiService
 
-	IconsPrayerApi IconsPrayerApi
+	IconsPrayerApi *IconsPrayerApiService
 
-	ItemApi ItemApi
+	ItemApi *ItemApiService
 
-	MonsterApi MonsterApi
+	MonsterApi *MonsterApiService
 
-	PrayerApi PrayerApi
+	PrayerApi *PrayerApiService
 
-	WeaponApi WeaponApi
+	WeaponApi *WeaponApiService
 }
 
 type service struct {

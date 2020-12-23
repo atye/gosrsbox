@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type PrayerApi interface {
-
-	/*
-	 * GetPrayerItem Retrieves a Prayer document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param prayerId Unique prayer ID number.
-	 * @return ApiGetPrayerItemRequest
-	 */
-	GetPrayerItem(ctx _context.Context, prayerId string) ApiGetPrayerItemRequest
-
-	/*
-	 * GetPrayerItemExecute executes the request
-	 * @return Prayer
-	 */
-	GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Prayer, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * Getprayers Retrieves one or more prayers
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGetprayersRequest
-	 */
-	Getprayers(ctx _context.Context) ApiGetprayersRequest
-
-	/*
-	 * GetprayersExecute executes the request
-	 * @return InlineResponse2004
-	 */
-	GetprayersExecute(r ApiGetprayersRequest) (InlineResponse2004, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // PrayerApiService PrayerApi service
 type PrayerApiService service
 
 type ApiGetPrayerItemRequest struct {
 	ctx _context.Context
-	ApiService PrayerApi
+	ApiService *PrayerApiService
 	prayerId string
 }
 
@@ -176,7 +146,7 @@ func (a *PrayerApiService) GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Pray
 
 type ApiGetprayersRequest struct {
 	ctx _context.Context
-	ApiService PrayerApi
+	ApiService *PrayerApiService
 	where *string
 	projection *string
 	sort *string

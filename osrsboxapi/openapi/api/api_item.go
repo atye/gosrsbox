@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type ItemApi interface {
-
-	/*
-	 * GetItemItem Retrieves a Item document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param itemId Unique OSRS item ID number.
-	 * @return ApiGetItemItemRequest
-	 */
-	GetItemItem(ctx _context.Context, itemId string) ApiGetItemItemRequest
-
-	/*
-	 * GetItemItemExecute executes the request
-	 * @return Item
-	 */
-	GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * Getitems Retrieves one or more items
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGetitemsRequest
-	 */
-	Getitems(ctx _context.Context) ApiGetitemsRequest
-
-	/*
-	 * GetitemsExecute executes the request
-	 * @return InlineResponse200
-	 */
-	GetitemsExecute(r ApiGetitemsRequest) (InlineResponse200, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // ItemApiService ItemApi service
 type ItemApiService service
 
 type ApiGetItemItemRequest struct {
 	ctx _context.Context
-	ApiService ItemApi
+	ApiService *ItemApiService
 	itemId string
 }
 
@@ -176,7 +146,7 @@ func (a *ItemApiService) GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_ne
 
 type ApiGetitemsRequest struct {
 	ctx _context.Context
-	ApiService ItemApi
+	ApiService *ItemApiService
 	where *string
 	projection *string
 	sort *string

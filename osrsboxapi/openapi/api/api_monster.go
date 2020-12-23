@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type MonsterApi interface {
-
-	/*
-	 * GetMonsterItem Retrieves a Monster document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param monsterId Unique OSRS item ID number.
-	 * @return ApiGetMonsterItemRequest
-	 */
-	GetMonsterItem(ctx _context.Context, monsterId string) ApiGetMonsterItemRequest
-
-	/*
-	 * GetMonsterItemExecute executes the request
-	 * @return Monster
-	 */
-	GetMonsterItemExecute(r ApiGetMonsterItemRequest) (Monster, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * Getmonsters Retrieves one or more monsters
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGetmonstersRequest
-	 */
-	Getmonsters(ctx _context.Context) ApiGetmonstersRequest
-
-	/*
-	 * GetmonstersExecute executes the request
-	 * @return InlineResponse2003
-	 */
-	GetmonstersExecute(r ApiGetmonstersRequest) (InlineResponse2003, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // MonsterApiService MonsterApi service
 type MonsterApiService service
 
 type ApiGetMonsterItemRequest struct {
 	ctx _context.Context
-	ApiService MonsterApi
+	ApiService *MonsterApiService
 	monsterId string
 }
 
@@ -176,7 +146,7 @@ func (a *MonsterApiService) GetMonsterItemExecute(r ApiGetMonsterItemRequest) (M
 
 type ApiGetmonstersRequest struct {
 	ctx _context.Context
-	ApiService MonsterApi
+	ApiService *MonsterApiService
 	where *string
 	projection *string
 	sort *string

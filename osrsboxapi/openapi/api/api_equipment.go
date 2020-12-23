@@ -24,42 +24,12 @@ var (
 	_ _context.Context
 )
 
-type EquipmentApi interface {
-
-	/*
-	 * GetEquipmentItem Retrieves a Equipment document
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @param equipmentId Unique OSRS item ID number.
-	 * @return ApiGetEquipmentItemRequest
-	 */
-	GetEquipmentItem(ctx _context.Context, equipmentId string) ApiGetEquipmentItemRequest
-
-	/*
-	 * GetEquipmentItemExecute executes the request
-	 * @return Equipment
-	 */
-	GetEquipmentItemExecute(r ApiGetEquipmentItemRequest) (Equipment, *_nethttp.Response, GenericOpenAPIError)
-
-	/*
-	 * Getequipment Retrieves one or more equipment
-	 * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	 * @return ApiGetequipmentRequest
-	 */
-	Getequipment(ctx _context.Context) ApiGetequipmentRequest
-
-	/*
-	 * GetequipmentExecute executes the request
-	 * @return InlineResponse2002
-	 */
-	GetequipmentExecute(r ApiGetequipmentRequest) (InlineResponse2002, *_nethttp.Response, GenericOpenAPIError)
-}
-
 // EquipmentApiService EquipmentApi service
 type EquipmentApiService service
 
 type ApiGetEquipmentItemRequest struct {
 	ctx _context.Context
-	ApiService EquipmentApi
+	ApiService *EquipmentApiService
 	equipmentId string
 }
 
@@ -176,7 +146,7 @@ func (a *EquipmentApiService) GetEquipmentItemExecute(r ApiGetEquipmentItemReque
 
 type ApiGetequipmentRequest struct {
 	ctx _context.Context
-	ApiService EquipmentApi
+	ApiService *EquipmentApiService
 	where *string
 	projection *string
 	sort *string
