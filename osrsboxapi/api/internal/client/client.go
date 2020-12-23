@@ -14,22 +14,11 @@ import (
 )
 
 type client struct {
-	apiAddress    string
 	docsAddress   string
 	httpClient    *http.Client
-	openAPIClient openAPIClient
+	openAPIClient *openapi.APIClient
 	apiSemaphor   *semaphore.Weighted
 	mu            sync.Mutex
-}
-
-type openAPIClient interface {
-	openapi.EquipmentApi
-	openapi.IconsItemApi
-	openapi.IconsPrayerApi
-	openapi.ItemApi
-	openapi.MonsterApi
-	openapi.PrayerApi
-	openapi.WeaponApi
 }
 
 const (

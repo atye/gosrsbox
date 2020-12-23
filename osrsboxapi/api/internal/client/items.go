@@ -35,7 +35,7 @@ func (c *client) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]ope
 }
 
 func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]openapi.Item, error) {
-	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getitems(ctx).Where(query))
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]openapi.I
 	if inline, ok := resp.(openapi.InlineResponse200); ok {
 		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	} else {
-		return nil, fmt.Errorf("%T", inline)
+		return nil, fmt.Errorf("unexpected type %T", inline)
 	}
 	items := make([]openapi.Item, 0, *inline.Meta.Total)
 	for i, item := range inline.GetItems() {
@@ -55,7 +55,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]openapi.I
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				inlineItems, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getitems(ctx).Where(query).Page(int32(page)))
+				inlineItems, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
 				if err != nil {
 					return err
 				}
@@ -65,7 +65,7 @@ func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]openapi.I
 						items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
 					}
 				} else {
-					return fmt.Errorf("%T", inline)
+					return fmt.Errorf("unexpected type %T", inline)
 				}
 				return nil
 			})

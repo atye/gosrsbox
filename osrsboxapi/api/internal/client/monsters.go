@@ -15,28 +15,22 @@ func (c *client) GetMonstersByName(ctx context.Context, names ...string) ([]open
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
-
-	query := fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", "))
-	return c.GetMonstersByQuery(ctx, query)
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 }
 
 func (c *client) GetMonstersThatDrop(ctx context.Context, names ...string) ([]openapi.Monster, error) {
 	if len(names) == 0 {
 		return nil, errors.New("No names provided")
 	}
-
 	formattedNames := make([]string, len(names))
-
 	for i, name := range names {
 		formattedNames[i] = fmt.Sprintf(`"%s"`, name)
 	}
-
-	query := fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(formattedNames, ", "))
-	return c.GetMonstersByQuery(ctx, query)
+	return c.GetMonstersByQuery(ctx, fmt.Sprintf(`{ "drops": { "$elemMatch": { "name": { "$in": [%s] } } }, "duplicate": false }`, strings.Join(formattedNames, ", ")))
 }
 
 func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openapi.Monster, error) {
-	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getmonsters(ctx).Where(query))
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +39,7 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openap
 	if inline, ok := resp.(openapi.InlineResponse2003); ok {
 		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	} else {
-		return nil, fmt.Errorf("%T", inline)
+		return nil, fmt.Errorf("unexpected type %T", inline)
 	}
 	monsters := make([]openapi.Monster, *inline.Meta.Total)
 	for i, monster := range inline.GetItems() {
@@ -56,7 +50,7 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openap
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getmonsters(ctx).Where(query).Page(int32(page)))
+				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query).Page(int32(page)))
 				if err != nil {
 					return err
 				}
@@ -66,7 +60,7 @@ func (c *client) GetMonstersByQuery(ctx context.Context, query string) ([]openap
 						monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster
 					}
 				} else {
-					return fmt.Errorf("%T", inline)
+					return fmt.Errorf("unexpected type %T", inline)
 				}
 				return nil
 			})

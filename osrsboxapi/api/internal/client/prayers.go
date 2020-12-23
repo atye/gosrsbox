@@ -21,7 +21,7 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]opena
 }
 
 func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi.Prayer, error) {
-	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getprayers(ctx).Where(query))
+	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi
 	if inline, ok := resp.(openapi.InlineResponse2004); ok {
 		pages = int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	} else {
-		return nil, fmt.Errorf("%T", inline)
+		return nil, fmt.Errorf("unexpected type %T", inline)
 	}
 	prayers := make([]openapi.Prayer, *inline.Meta.Total)
 	for i, prayer := range inline.GetItems() {
@@ -41,7 +41,7 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.Getprayers(ctx).Where(query).Page(int32(page)))
+				resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
 				if err != nil {
 					return err
 				}
@@ -51,7 +51,7 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]openapi
 						prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
 					}
 				} else {
-					return fmt.Errorf("%T", inline)
+					return fmt.Errorf("unexpected type %T", inline)
 				}
 				return nil
 			})
