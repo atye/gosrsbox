@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api"
+	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +42,7 @@ to quickly create a Cobra application.`,
 			fmt.Fprintf(os.Stderr, "%s\n", "no query provided")
 			os.Exit(1)
 		}
-		api := api.NewAPI(nil)
+		api := osrsboxapi.NewAPI(nil)
 		prayers, err := api.GetPrayersByQuery(context.Background(), args[0])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)

@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api"
+	"github.com/atye/gosrsbox/osrsboxapi"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ var prayernamesCmd = &cobra.Command{
 
 	osrsboxapi prayernames "Thick Skin" "Burst of Strength"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api := api.NewAPI(nil)
+		api := osrsboxapi.NewAPI(nil)
 		prayers, err := api.GetPrayersByName(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)

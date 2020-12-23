@@ -4,14 +4,14 @@ import (
 	"context"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxapi/api"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
+	"github.com/atye/gosrsbox/osrsboxapi"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
 func main() {
 	//Create api client using http.DefaultClient, disable logging
-	api := api.NewAPI(&api.APIConfig{Logger: nil})
+	api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
 
 	//Create api client using http.DefaultClient, with logging
 	//api := api.NewAPI(nil)

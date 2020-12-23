@@ -4,16 +4,30 @@ generate:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
     -i /local/${OPENAPI_DIR}/openapi.yaml \
     -g go \
-	--package-name api \
-    -o /local/${OPENAPI_DIR}/api
+	--package-name client \
+    -o /local/${OPENAPI_DIR}/client
 	rm -f \
-		${OPENAPI_DIR}/api/.openapi-generator/FILES \
-		${OPENAPI_DIR}/api/.gitignore \
-		${OPENAPI_DIR}/api/.openapi-generator-ignore \
-		${OPENAPI_DIR}/api/.travis.yml \
-		${OPENAPI_DIR}/api/git_push.sh \
-		${OPENAPI_DIR}/api/go.mod \
-		${OPENAPI_DIR}/api/go.sum
+		${OPENAPI_DIR}/client/.openapi-generator/FILES \
+		${OPENAPI_DIR}/client/.gitignore \
+		${OPENAPI_DIR}/client/.openapi-generator-ignore \
+		${OPENAPI_DIR}/client/.travis.yml \
+		${OPENAPI_DIR}/client/git_push.sh \
+		${OPENAPI_DIR}/client/go.mod \
+		${OPENAPI_DIR}/client/go.sum
+
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
+    -i /local/${OPENAPI_DIR}/openapi.yaml \
+    -g go-server \
+	--package-name server \
+    -o /local/${OPENAPI_DIR}/server
+	rm -f \
+		${OPENAPI_DIR}/server/.openapi-generator/FILES \
+		${OPENAPI_DIR}/server/.gitignore \
+		${OPENAPI_DIR}/server/.openapi-generator-ignore \
+		${OPENAPI_DIR}/server/.travis.yml \
+		${OPENAPI_DIR}/server/git_push.sh \
+		${OPENAPI_DIR}/server/go.mod \
+		${OPENAPI_DIR}/server/go.sum
 
 test:
 	go test -v -cover -race ./...
