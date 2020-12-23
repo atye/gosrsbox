@@ -1,4 +1,4 @@
-[gosrsbox/osrsboxapi/api](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api) is a client library for [osrsbox-api](https://api.osrsbox.com).
+[gosrsbox/osrsboxapi/api](https://godoc.org/github.com/atye/gosrsbox/osrsboxapi/api) is a client library for [osrsbox-api](https://api.osrsbox.com) utilizing OpenAPI automation.
 # Installing
 ```go get github.com/atye/gosrsbox/osrsboxdb/api```
 #### Features
