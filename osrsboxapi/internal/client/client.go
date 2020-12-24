@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 )
 
 type client struct {

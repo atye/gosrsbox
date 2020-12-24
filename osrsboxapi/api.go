@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/atye/gosrsbox/osrsboxapi/internal/client"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"

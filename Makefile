@@ -4,16 +4,16 @@ generate:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
     -i /local/${OPENAPI_DIR}/openapi.yaml \
     -g go \
-	--package-name client \
-    -o /local/${OPENAPI_DIR}/client
+	--package-name api \
+    -o /local/${OPENAPI_DIR}/api
 	rm -f \
-		${OPENAPI_DIR}/client/.openapi-generator/FILES \
-		${OPENAPI_DIR}/client/.gitignore \
-		${OPENAPI_DIR}/client/.openapi-generator-ignore \
-		${OPENAPI_DIR}/client/.travis.yml \
-		${OPENAPI_DIR}/client/git_push.sh \
-		${OPENAPI_DIR}/client/go.mod \
-		${OPENAPI_DIR}/client/go.sum
+		${OPENAPI_DIR}/api/.openapi-generator/FILES \
+		${OPENAPI_DIR}/api/.gitignore \
+		${OPENAPI_DIR}/api/.openapi-generator-ignore \
+		${OPENAPI_DIR}/api/.travis.yml \
+		${OPENAPI_DIR}/api/git_push.sh \
+		${OPENAPI_DIR}/api/go.mod \
+		${OPENAPI_DIR}/api/go.sum
 
 test:
 	go test -v -cover -race ./...

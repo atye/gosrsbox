@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 	"github.com/atye/gosrsbox/osrsboxapi/slots"
 	"golang.org/x/sync/errgroup"

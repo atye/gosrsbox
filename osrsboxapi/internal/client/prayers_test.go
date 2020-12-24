@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 )
 
 func Test_Prayers(t *testing.T) {

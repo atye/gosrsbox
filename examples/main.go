@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/atye/gosrsbox/osrsboxapi"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/client"
+	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
 	"github.com/atye/gosrsbox/osrsboxapi/sets"
 )
 
