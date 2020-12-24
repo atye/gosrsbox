@@ -22,7 +22,7 @@ func withLogger(next API, log *log.Logger) loggingMW {
 func (l loggingMW) GetItemsByID(ctx context.Context, ids ...string) ([]openapi.Item, error) {
 	now := time.Now()
 	defer func() {
-		l.log.Printf("GetItemByID took %v", time.Since(now))
+		l.log.Printf("GetItemsByID took %v", time.Since(now))
 	}()
 	return l.next.GetItemsByID(ctx, ids...)
 }
