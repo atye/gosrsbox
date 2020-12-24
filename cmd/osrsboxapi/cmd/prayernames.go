@@ -33,13 +33,13 @@ var prayernamesCmd = &cobra.Command{
 
 	osrsboxapi prayernames "Thick Skin" "Burst of Strength"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api := osrsboxapi.NewAPI(nil)
+		api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
 		prayers, err := api.GetPrayersByName(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
 		}
-		data, err := json.MarshalIndent(prayers, "", "\t")
+		data, err := json.Marshal(prayers)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)

@@ -38,13 +38,13 @@ var itemqueryCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "%s\n", "no query provided")
 			os.Exit(1)
 		}
-		api := osrsboxapi.NewAPI(nil)
+		api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
 		items, err := api.GetItemsByQuery(context.Background(), args[0])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
 		}
-		data, err := json.MarshalIndent(items, "", "\t")
+		data, err := json.Marshal(items)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)

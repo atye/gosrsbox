@@ -33,13 +33,13 @@ var itemnamesCmd = &cobra.Command{
 
 	osrsboxapi itemnames "Abyssal whip" "Abyssal dagger"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api := osrsboxapi.NewAPI(nil)
+		api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
 		items, err := api.GetItemsByName(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
 		}
-		data, err := json.MarshalIndent(items, "", "\t")
+		data, err := json.Marshal(items)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)

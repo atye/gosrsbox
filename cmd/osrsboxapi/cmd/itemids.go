@@ -25,30 +25,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// monsterqueryCmd represents the monsterquery command
-var monsterqueryCmd = &cobra.Command{
-	Use:   "monsterquery",
-	Short: "Get items by MongoDB or Python queries",
-	Long: `Get items by MongoDB or Python queries. Example:
+// itemidsCmd represents the itemids command
+var itemidsCmd = &cobra.Command{
+	Use:   "itemids",
+	Short: "Get items by ids",
+	Long: `Get items by ids. Example:
 
-	osrsboxapi monsterquery 'wiki_name=="Abyssal demon"'
-	osrsboxapi monsterquery '{ "wiki_name": "Abyssal demon", "duplicate": false }'
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	osrsboxapi itemids "1" "2"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			fmt.Fprintf(os.Stderr, "%s\n", "no query provided")
-			os.Exit(1)
-		}
 		api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
-		monsters, err := api.GetMonstersByQuery(context.Background(), args[0])
+		items, err := api.GetItemsByID(context.Background(), args...)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
 		}
-		data, err := json.Marshal(monsters)
+		data, err := json.Marshal(items)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
@@ -58,15 +49,15 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(monsterqueryCmd)
+	rootCmd.AddCommand(itemidsCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// monsterqueryCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// itemidsCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// monsterqueryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// itemidsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
