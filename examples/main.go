@@ -4,17 +4,14 @@ import (
 	"context"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
-	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox"
+	"github.com/atye/gosrsbox/internal/api"
+	"github.com/atye/gosrsbox/sets"
 )
 
 func main() {
 	//Create api client using http.DefaultClient, disable logging
-	api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
-
-	//Create api client using http.DefaultClient, with logging
-	//api := api.NewAPI(nil)
+	api := gosrsbox.NewAPI(gosrsbox.APIConfig{})
 
 	// Get slice of items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
@@ -24,18 +21,11 @@ func main() {
 	printItems(items)
 
 	// Get slice of monsters that drop the Bandos chestplate
-	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
+	_, err = api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
 	if err != nil {
 		log.Fatal(err)
 	}
-	printMonsters(monsters)
-
-	// Get items with negative prayer bonus using Python query
-	_, err = api.GetPrayersByQuery(context.Background(), "equipment.prayer<0")
-	if err != nil {
-		log.Fatal(err)
-	}
-	printItems(items)
+	//printMonsters(monsters)
 
 	// Get items with negative prayer bonus using MongoDB query
 	items, err = api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
@@ -43,23 +33,16 @@ func main() {
 		log.Fatal(err)
 	}
 	printItems(items)
-
-	// Get prayers with a faulty MongoDB query that returns an error
-	_, err = api.GetPrayersByQuery(context.Background(), `{"name":{"$nin":"test"}}`)
-	if err != nil {
-		log.Fatal(err)
-	}
-	printItems(items)
 }
 
-func printItems(items []openapi.Item) {
+func printItems(items []api.Item) {
 	for _, item := range items {
-		log.Println(item.GetWikiName())
+		log.Println(item.WikiName)
 	}
 }
 
-func printMonsters(monsters []openapi.Monster) {
+/*func printMonsters(monsters []openapi.Monster) {
 	for _, monster := range monsters {
 		log.Println(monster.GetWikiName())
 	}
-}
+}*/

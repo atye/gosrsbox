@@ -1,4 +1,4 @@
-package client
+package api
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
+	openapi "github.com/atye/gosrsbox/internal/openapi/api"
 	"golang.org/x/sync/errgroup"
 )
 

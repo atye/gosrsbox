@@ -1,4 +1,4 @@
-package client
+package api
 
 import (
 	"context"
@@ -6,16 +6,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"sync"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
+	openapi "github.com/atye/gosrsbox/internal/openapi/api"
 )
 
 type client struct {
 	docsAddress   string
 	httpClient    *http.Client
 	openAPIClient *openapi.APIClient
-	mu            sync.Mutex
 }
 
 const (

@@ -1,38 +1,34 @@
-package osrsboxapi
+package gosrsbox
 
 import (
 	"context"
-	"io/ioutil"
-	"log"
 	"net/http"
-	"os"
 	"sync"
 
-	"github.com/atye/gosrsbox/osrsboxapi/internal/client"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
-
-	"github.com/atye/gosrsbox/osrsboxapi/sets"
-	"github.com/atye/gosrsbox/osrsboxapi/slots"
+	"github.com/atye/gosrsbox/internal/api"
+	openapi "github.com/atye/gosrsbox/internal/openapi/api"
+	"github.com/atye/gosrsbox/sets"
+	"github.com/atye/gosrsbox/slots"
 )
 
 type API interface {
 	// GetItemsByName returns a slice of Items with the given IDs
-	GetItemsByID(ctx context.Context, ids ...string) ([]openapi.Item, error)
+	GetItemsByID(ctx context.Context, ids ...string) ([]api.Item, error)
 
 	// GetItemsByName returns a slice of Items from the given wiki names
-	GetItemsByName(ctx context.Context, names ...string) ([]openapi.Item, error)
+	GetItemsByName(ctx context.Context, names ...string) ([]api.Item, error)
 
 	// GetItemsByQuery returns a slice of Items from the given MongoDB or Python query
 	// ex:
 	// api.GetItemsByQuery(context.Background(), "equipment.prayer<0")
 	// api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
-	GetItemsByQuery(ctx context.Context, query string) ([]openapi.Item, error)
+	GetItemsByQuery(ctx context.Context, query string) ([]api.Item, error)
 
 	// GetItemSet returns a slice of Items in the given set
-	GetItemSet(ctx context.Context, set sets.SetName) ([]openapi.Item, error)
+	GetItemSet(ctx context.Context, set sets.SetName) ([]api.Item, error)
 
 	// GetItemsBySlot returns a slice of Items in the given slot
-	GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]openapi.Item, error)
+	GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]api.Item, error)
 
 	// GetMonstersByID returns a slice of Monsters with the given IDs
 	GetMonstersByID(ctx context.Context, ids ...string) ([]openapi.Monster, error)
@@ -69,58 +65,29 @@ type API interface {
 }
 
 type APIConfig struct {
-	Logger     *log.Logger
-	HttpClient *http.Client
-	UserAgent  string
+	UserAgent string
 }
 
 var (
-	once sync.Once
-	api  API
+	once   sync.Once
+	client API
 )
 
 // NewAPI creates a osrsboxapi client
 // A UserAgent configuration is typically advised
-func NewAPI(config *APIConfig) API {
+func NewAPI(config APIConfig) API {
 	once.Do(func() {
-		logger, httpClient, userAgent := logger(config), httpClient(config), userAgent(config)
 		conf := &openapi.Configuration{
 			Scheme:     "https",
-			HTTPClient: httpClient,
-			UserAgent:  userAgent,
+			HTTPClient: http.DefaultClient,
+			UserAgent:  config.UserAgent,
 			Servers: []openapi.ServerConfiguration{
 				{
 					URL: "api.osrsbox.com",
 				},
 			},
 		}
-		api = withLogger(client.NewAPI(conf), logger)
+		client = api.NewAPI(conf)
 	})
-	return api
-}
-
-func logger(c *APIConfig) *log.Logger {
-	var logger *log.Logger
-	if c == nil {
-		logger = log.New(os.Stdout, "osrsboxapi", log.LstdFlags)
-	} else if c.Logger == nil {
-		logger = log.New(ioutil.Discard, "", log.LstdFlags)
-	} else {
-		logger = c.Logger
-	}
-	return logger
-}
-
-func httpClient(c *APIConfig) *http.Client {
-	if c != nil && c.HttpClient != nil {
-		return c.HttpClient
-	}
-	return http.DefaultClient
-}
-
-func userAgent(c *APIConfig) string {
-	if c != nil && c.UserAgent != "" {
-		return c.UserAgent
-	}
-	return ""
+	return client
 }

@@ -1,4 +1,4 @@
-package client
+package api
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"testing"
 
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
+	openapi "github.com/atye/gosrsbox/internal/openapi/api"
 )
 
 func Test_GetJSONFiles(t *testing.T) {
