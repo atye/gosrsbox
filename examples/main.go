@@ -2,19 +2,16 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
-	"github.com/atye/gosrsbox/osrsboxapi"
-	openapi "github.com/atye/gosrsbox/osrsboxapi/openapi/api"
-	"github.com/atye/gosrsbox/osrsboxapi/sets"
+	"github.com/atye/gosrsbox"
+	"github.com/atye/gosrsbox/osrsbox"
+	"github.com/atye/gosrsbox/sets"
 )
 
 func main() {
-	//Create api client using http.DefaultClient, disable logging
-	api := osrsboxapi.NewAPI(&osrsboxapi.APIConfig{Logger: nil})
-
-	//Create api client using http.DefaultClient, with logging
-	//api := api.NewAPI(nil)
+	api := gosrsbox.NewAPI("")
 
 	// Get slice of items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
@@ -30,13 +27,6 @@ func main() {
 	}
 	printMonsters(monsters)
 
-	// Get items with negative prayer bonus using Python query
-	_, err = api.GetPrayersByQuery(context.Background(), "equipment.prayer<0")
-	if err != nil {
-		log.Fatal(err)
-	}
-	printItems(items)
-
 	// Get items with negative prayer bonus using MongoDB query
 	items, err = api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
 	if err != nil {
@@ -44,22 +34,41 @@ func main() {
 	}
 	printItems(items)
 
-	// Get prayers with a faulty MongoDB query that returns an error
-	_, err = api.GetPrayersByQuery(context.Background(), `{"name":{"$nin":"test"}}`)
+	// Get items with negative prayer bonus using Python query
+	items, err = api.GetItemsByQuery(context.Background(), `equipment.prayer<0`)
 	if err != nil {
 		log.Fatal(err)
 	}
 	printItems(items)
+
+	prayers, err := api.GetPrayersByName(context.Background(), "Thick Skin")
+	if err != nil {
+		log.Fatal(err)
+	}
+	printPrayers(prayers)
+
+	var out map[string]interface{}
+	err = api.GetDocument(context.Background(), "items-json/0.json", &out)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", out["wiki_name"])
 }
 
-func printItems(items []openapi.Item) {
+func printItems(items []osrsbox.Item) {
 	for _, item := range items {
-		log.Println(item.GetWikiName())
+		fmt.Println(item.WikiName)
 	}
 }
 
-func printMonsters(monsters []openapi.Monster) {
+func printMonsters(monsters []osrsbox.Monster) {
 	for _, monster := range monsters {
-		log.Println(monster.GetWikiName())
+		fmt.Println(monster.WikiName)
+	}
+}
+
+func printPrayers(prayers []osrsbox.Prayer) {
+	for _, prayer := range prayers {
+		fmt.Println(prayer.Name)
 	}
 }
