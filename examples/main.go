@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	//Create api client using http.DefaultClient, disable logging
 	api := gosrsbox.NewAPI("")
 
 	// Get slice of items in the Ahrims set
@@ -30,6 +29,13 @@ func main() {
 
 	// Get items with negative prayer bonus using MongoDB query
 	items, err = api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	printItems(items)
+
+	// Get items with negative prayer bonus using Python query
+	items, err = api.GetItemsByQuery(context.Background(), `equipment.prayer<0`)
 	if err != nil {
 		log.Fatal(err)
 	}

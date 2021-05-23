@@ -6,8 +6,6 @@
 ```
 api := gosrsbox.NewAPI("my user agent")
 ```
-#### Features
+#### Features (See examples folder for examples)
 - get Items, Monsters, and Prayers by id, wiki name, built-in options, and custom queries
 - supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
-
-### See examples folder for examples.
