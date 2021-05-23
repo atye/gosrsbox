@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | Unique OSRS item ID number. | 
 **Name** | **string** | The name of the item. | 
+**LastUpdated** | **string** | The last time (UTC) the item was updated (in ISO8601 date format). | 
 **Incomplete** | **bool** | If the item has incomplete wiki data. | 
 **Members** | **bool** | If the item is a members-only. | 
 **Tradeable** | **bool** | If the item is tradeable (between players and on the GE). | 
@@ -33,7 +34,6 @@ Name | Type | Description | Notes
 **Icon** | **string** | The item icon (in base64 encoding). | 
 **WikiName** | **NullableString** | The OSRS Wiki name for the item. | 
 **WikiUrl** | **NullableString** | The OSRS Wiki URL (possibly including anchor link). | 
-**WikiExchange** | **NullableString** | The OSRS Wiki Exchange URL. | 
 **Equipment** | [**NullableItemEquipment**](Item_equipment.md) |  | 
 **Weapon** | [**NullableItemWeapon**](Item_weapon.md) |  | 
 
@@ -41,7 +41,7 @@ Name | Type | Description | Notes
 
 ### NewEquipment
 
-`func NewEquipment(id string, name string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, wikiExchange NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon, ) *Equipment`
+`func NewEquipment(id string, name string, lastUpdated string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon, ) *Equipment`
 
 NewEquipment instantiates a new Equipment object
 This constructor will assign default values to properties that have it defined,
@@ -94,6 +94,26 @@ and a boolean to check if the value has been set.
 `func (o *Equipment) SetName(v string)`
 
 SetName sets Name field to given value.
+
+
+### GetLastUpdated
+
+`func (o *Equipment) GetLastUpdated() string`
+
+GetLastUpdated returns the LastUpdated field if non-nil, zero value otherwise.
+
+### GetLastUpdatedOk
+
+`func (o *Equipment) GetLastUpdatedOk() (*string, bool)`
+
+GetLastUpdatedOk returns a tuple with the LastUpdated field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastUpdated
+
+`func (o *Equipment) SetLastUpdated(v string)`
+
+SetLastUpdated sets LastUpdated field to given value.
 
 
 ### GetIncomplete
@@ -756,36 +776,6 @@ SetWikiUrl sets WikiUrl field to given value.
 `func (o *Equipment) UnsetWikiUrl()`
 
 UnsetWikiUrl ensures that no value is present for WikiUrl, not even an explicit nil
-### GetWikiExchange
-
-`func (o *Equipment) GetWikiExchange() string`
-
-GetWikiExchange returns the WikiExchange field if non-nil, zero value otherwise.
-
-### GetWikiExchangeOk
-
-`func (o *Equipment) GetWikiExchangeOk() (*string, bool)`
-
-GetWikiExchangeOk returns a tuple with the WikiExchange field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetWikiExchange
-
-`func (o *Equipment) SetWikiExchange(v string)`
-
-SetWikiExchange sets WikiExchange field to given value.
-
-
-### SetWikiExchangeNil
-
-`func (o *Equipment) SetWikiExchangeNil(b bool)`
-
- SetWikiExchangeNil sets the value for WikiExchange to be an explicit nil
-
-### UnsetWikiExchange
-`func (o *Equipment) UnsetWikiExchange()`
-
-UnsetWikiExchange ensures that no value is present for WikiExchange, not even an explicit nil
 ### GetEquipment
 
 `func (o *Equipment) GetEquipment() ItemEquipment`

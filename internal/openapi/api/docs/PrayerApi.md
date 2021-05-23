@@ -1,12 +1,141 @@
 # \PrayerApi
 
-All URIs are relative to *http://api.osrsbox.com*
+All URIs are relative to *https://api.osrsbox.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**DeletePrayerItem**](PrayerApi.md#DeletePrayerItem) | **Delete** /prayers/{prayerId} | Deletes a Prayer document
+[**Deleteprayers**](PrayerApi.md#Deleteprayers) | **Delete** /prayers | Deletes all prayers
 [**GetPrayerItem**](PrayerApi.md#GetPrayerItem) | **Get** /prayers/{prayerId} | Retrieves a Prayer document
 [**Getprayers**](PrayerApi.md#Getprayers) | **Get** /prayers | Retrieves one or more prayers
+[**Postprayers**](PrayerApi.md#Postprayers) | **Post** /prayers | Stores one or more prayers.
+[**PutPrayerItem**](PrayerApi.md#PutPrayerItem) | **Put** /prayers/{prayerId} | Replaces a Prayer document
 
+
+
+## DeletePrayerItem
+
+> DeletePrayerItem(ctx, prayerId).IfMatch(ifMatch).Execute()
+
+Deletes a Prayer document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    prayerId := "prayerId_example" // string | Unique prayer ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PrayerApi.DeletePrayerItem(context.Background(), prayerId).IfMatch(ifMatch).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `PrayerApi.DeletePrayerItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**prayerId** | **string** | Unique prayer ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeletePrayerItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Deleteprayers
+
+> Deleteprayers(ctx).Execute()
+
+Deletes all prayers
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PrayerApi.Deleteprayers(context.Background()).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `PrayerApi.Deleteprayers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteprayersRequest struct via the builder pattern
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## GetPrayerItem
@@ -142,6 +271,138 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Postprayers
+
+> Postprayers(ctx).Prayer(prayer).Execute()
+
+Stores one or more prayers.
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    prayer := *openapiclient.NewPrayer("Id_example", "Name_example", false, "Description_example", float32(123), "WikiUrl_example", map[string]interface{}(123), map[string]interface{}(123), "Icon_example") // Prayer | A Prayer or list of Prayer documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PrayerApi.Postprayers(context.Background()).Prayer(prayer).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `PrayerApi.Postprayers``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostprayersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **prayer** | [**Prayer**](Prayer.md) | A Prayer or list of Prayer documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PutPrayerItem
+
+> PutPrayerItem(ctx, prayerId).IfMatch(ifMatch).Prayer(prayer).Execute()
+
+Replaces a Prayer document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    prayerId := "prayerId_example" // string | Unique prayer ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+    prayer := *openapiclient.NewPrayer("Id_example", "Name_example", false, "Description_example", float32(123), "WikiUrl_example", map[string]interface{}(123), map[string]interface{}(123), "Icon_example") // Prayer | A Prayer or list of Prayer documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.PrayerApi.PutPrayerItem(context.Background(), prayerId).IfMatch(ifMatch).Prayer(prayer).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `PrayerApi.PutPrayerItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**prayerId** | **string** | Unique prayer ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPutPrayerItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+ **prayer** | [**Prayer**](Prayer.md) | A Prayer or list of Prayer documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

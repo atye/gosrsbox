@@ -75,24 +75,52 @@ ctx = context.WithValue(context.Background(), sw.ContextOperationServerVariables
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://api.osrsbox.com*
+All URIs are relative to *https://api.osrsbox.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*EquipmentApi* | [**DeleteEquipmentItem**](docs/EquipmentApi.md#deleteequipmentitem) | **Delete** /equipment/{equipmentId} | Deletes a Equipment document
+*EquipmentApi* | [**Deleteequipment**](docs/EquipmentApi.md#deleteequipment) | **Delete** /equipment | Deletes all equipment
 *EquipmentApi* | [**GetEquipmentItem**](docs/EquipmentApi.md#getequipmentitem) | **Get** /equipment/{equipmentId} | Retrieves a Equipment document
 *EquipmentApi* | [**Getequipment**](docs/EquipmentApi.md#getequipment) | **Get** /equipment | Retrieves one or more equipment
+*EquipmentApi* | [**Postequipment**](docs/EquipmentApi.md#postequipment) | **Post** /equipment | Stores one or more equipment.
+*EquipmentApi* | [**PutEquipmentItem**](docs/EquipmentApi.md#putequipmentitem) | **Put** /equipment/{equipmentId} | Replaces a Equipment document
+*IconsItemApi* | [**DeleteIconsItemItem**](docs/IconsItemApi.md#deleteiconsitemitem) | **Delete** /icons_items/{icons_itemId} | Deletes a Icons_item document
+*IconsItemApi* | [**DeleteiconsItems**](docs/IconsItemApi.md#deleteiconsitems) | **Delete** /icons_items | Deletes all icons_items
 *IconsItemApi* | [**GetIconsItemItem**](docs/IconsItemApi.md#geticonsitemitem) | **Get** /icons_items/{icons_itemId} | Retrieves a Icons_item document
 *IconsItemApi* | [**GeticonsItems**](docs/IconsItemApi.md#geticonsitems) | **Get** /icons_items | Retrieves one or more icons_items
+*IconsItemApi* | [**PosticonsItems**](docs/IconsItemApi.md#posticonsitems) | **Post** /icons_items | Stores one or more icons_items.
+*IconsItemApi* | [**PutIconsItemItem**](docs/IconsItemApi.md#puticonsitemitem) | **Put** /icons_items/{icons_itemId} | Replaces a Icons_item document
+*IconsPrayerApi* | [**DeleteIconsPrayerItem**](docs/IconsPrayerApi.md#deleteiconsprayeritem) | **Delete** /icons_prayers/{icons_prayerId} | Deletes a Icons_prayer document
+*IconsPrayerApi* | [**DeleteiconsPrayers**](docs/IconsPrayerApi.md#deleteiconsprayers) | **Delete** /icons_prayers | Deletes all icons_prayers
 *IconsPrayerApi* | [**GetIconsPrayerItem**](docs/IconsPrayerApi.md#geticonsprayeritem) | **Get** /icons_prayers/{icons_prayerId} | Retrieves a Icons_prayer document
 *IconsPrayerApi* | [**GeticonsPrayers**](docs/IconsPrayerApi.md#geticonsprayers) | **Get** /icons_prayers | Retrieves one or more icons_prayers
+*IconsPrayerApi* | [**PosticonsPrayers**](docs/IconsPrayerApi.md#posticonsprayers) | **Post** /icons_prayers | Stores one or more icons_prayers.
+*IconsPrayerApi* | [**PutIconsPrayerItem**](docs/IconsPrayerApi.md#puticonsprayeritem) | **Put** /icons_prayers/{icons_prayerId} | Replaces a Icons_prayer document
+*ItemApi* | [**DeleteItemItem**](docs/ItemApi.md#deleteitemitem) | **Delete** /items/{itemId} | Deletes a Item document
+*ItemApi* | [**Deleteitems**](docs/ItemApi.md#deleteitems) | **Delete** /items | Deletes all items
 *ItemApi* | [**GetItemItem**](docs/ItemApi.md#getitemitem) | **Get** /items/{itemId} | Retrieves a Item document
 *ItemApi* | [**Getitems**](docs/ItemApi.md#getitems) | **Get** /items | Retrieves one or more items
+*ItemApi* | [**Postitems**](docs/ItemApi.md#postitems) | **Post** /items | Stores one or more items.
+*ItemApi* | [**PutItemItem**](docs/ItemApi.md#putitemitem) | **Put** /items/{itemId} | Replaces a Item document
+*MonsterApi* | [**DeleteMonsterItem**](docs/MonsterApi.md#deletemonsteritem) | **Delete** /monsters/{monsterId} | Deletes a Monster document
+*MonsterApi* | [**Deletemonsters**](docs/MonsterApi.md#deletemonsters) | **Delete** /monsters | Deletes all monsters
 *MonsterApi* | [**GetMonsterItem**](docs/MonsterApi.md#getmonsteritem) | **Get** /monsters/{monsterId} | Retrieves a Monster document
 *MonsterApi* | [**Getmonsters**](docs/MonsterApi.md#getmonsters) | **Get** /monsters | Retrieves one or more monsters
+*MonsterApi* | [**Postmonsters**](docs/MonsterApi.md#postmonsters) | **Post** /monsters | Stores one or more monsters.
+*MonsterApi* | [**PutMonsterItem**](docs/MonsterApi.md#putmonsteritem) | **Put** /monsters/{monsterId} | Replaces a Monster document
+*PrayerApi* | [**DeletePrayerItem**](docs/PrayerApi.md#deleteprayeritem) | **Delete** /prayers/{prayerId} | Deletes a Prayer document
+*PrayerApi* | [**Deleteprayers**](docs/PrayerApi.md#deleteprayers) | **Delete** /prayers | Deletes all prayers
 *PrayerApi* | [**GetPrayerItem**](docs/PrayerApi.md#getprayeritem) | **Get** /prayers/{prayerId} | Retrieves a Prayer document
 *PrayerApi* | [**Getprayers**](docs/PrayerApi.md#getprayers) | **Get** /prayers | Retrieves one or more prayers
+*PrayerApi* | [**Postprayers**](docs/PrayerApi.md#postprayers) | **Post** /prayers | Stores one or more prayers.
+*PrayerApi* | [**PutPrayerItem**](docs/PrayerApi.md#putprayeritem) | **Put** /prayers/{prayerId} | Replaces a Prayer document
+*WeaponApi* | [**DeleteWeaponItem**](docs/WeaponApi.md#deleteweaponitem) | **Delete** /weapons/{weaponId} | Deletes a Weapon document
+*WeaponApi* | [**Deleteweapons**](docs/WeaponApi.md#deleteweapons) | **Delete** /weapons | Deletes all weapons
 *WeaponApi* | [**GetWeaponItem**](docs/WeaponApi.md#getweaponitem) | **Get** /weapons/{weaponId} | Retrieves a Weapon document
 *WeaponApi* | [**Getweapons**](docs/WeaponApi.md#getweapons) | **Get** /weapons | Retrieves one or more weapons
+*WeaponApi* | [**Postweapons**](docs/WeaponApi.md#postweapons) | **Post** /weapons | Stores one or more weapons.
+*WeaponApi* | [**PutWeaponItem**](docs/WeaponApi.md#putweaponitem) | **Put** /weapons/{weaponId} | Replaces a Weapon document
 
 
 ## Documentation For Models

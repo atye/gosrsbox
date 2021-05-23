@@ -1,9 +1,10 @@
 {
     "_items": [
         {
-            "_id": "5fdd4161cf9da9174e87782d",
+            "_id": "609344d938eb4c917ce686e8",
             "id": "2",
             "name": "Cannonball",
+            "last_updated": "2020-12-27",
             "incomplete": false,
             "members": true,
             "tradeable": true,
@@ -31,16 +32,15 @@
             "icon": "iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAABEUlEQVR4Xu3W4QqCMBQFYPcWEQgiISEhEoYkQe//VItbXLk7blPbWj/0wPmRkvu4W1KW7dmz7Sg932RR+ng46CLP9aks9bmqxtJnuk73E6GUAbnUtdHEKGVArk3z7p9QagJxNQHKxNza1tkEqOUYhP0IpUbMvetWFWGRUGqcDC44Vx+oLYpvUHbMo++dRZBE0dYFg+iBuCj2OQxeFE4pCOSaCCFk8b5vStFAiMD6UAyiBoHkliHAVhuKpyQxQSCeEi7uKqJ4QnSGAqbDMVFLYLhlkc6PjP1wI8SG4a3iN3YkEGU6KYTZMHKrAs+PLW6UxOBPXUIiYjjm23sNBp8UMfjf2d0EmE/kFswVv7tnz2bzAgIXZdMJ7hLLAAAAAElFTkSuQmCC",
             "wiki_name": "Cannonball",
             "wiki_url": "https://oldschool.runescape.wiki/w/Cannonball",
-            "wiki_exchange": "https://oldschool.runescape.wiki/w/Exchange:Cannonball",
             "equipment": null,
             "weapon": null,
             "_created": "Thu, 01 Jan 1970 00:00:00 GMT",
             "_updated": "Thu, 01 Jan 1970 00:00:00 GMT",
-            "_etag": "1dd002d5891d204cc4fa1da3f7d39b61e2272568",
+            "_etag": "5b3f263350aa6dd014994f2d4683f668f778161d",
             "_links": {
                 "self": {
                     "title": "Item",
-                    "href": "items/5fdd4161cf9da9174e87782d"
+                    "href": "items/609344d938eb4c917ce686e8"
                 }
             }
         }

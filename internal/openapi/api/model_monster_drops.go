@@ -27,16 +27,16 @@ type MonsterDrops struct {
 	// If the item drop is noted, or not.
 	Noted bool `json:"noted"`
 	// The rarity of the item drop (as a float out of 1.0).
-	Rarity NullableFloat32 `json:"rarity"`
-	// If there are any requirements to getting the specific drop.
-	DropRequirements NullableString `json:"drop_requirements"`
+	Rarity float32 `json:"rarity"`
+	// Number of rolls from the drop.
+	Rolls int32 `json:"rolls"`
 }
 
 // NewMonsterDrops instantiates a new MonsterDrops object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity NullableFloat32, dropRequirements NullableString, ) *MonsterDrops {
+func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity float32, rolls int32, ) *MonsterDrops {
 	this := MonsterDrops{}
 	this.Id = id
 	this.Name = name
@@ -44,7 +44,7 @@ func NewMonsterDrops(id int32, name string, members bool, quantity NullableStrin
 	this.Quantity = quantity
 	this.Noted = noted
 	this.Rarity = rarity
-	this.DropRequirements = dropRequirements
+	this.Rolls = rolls
 	return &this
 }
 
@@ -179,55 +179,51 @@ func (o *MonsterDrops) SetNoted(v bool) {
 }
 
 // GetRarity returns the Rarity field value
-// If the value is explicit nil, the zero value for float32 will be returned
 func (o *MonsterDrops) GetRarity() float32 {
-	if o == nil || o.Rarity.Get() == nil {
+	if o == nil  {
 		var ret float32
 		return ret
 	}
 
-	return *o.Rarity.Get()
+	return o.Rarity
 }
 
 // GetRarityOk returns a tuple with the Rarity field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *MonsterDrops) GetRarityOk() (*float32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return o.Rarity.Get(), o.Rarity.IsSet()
+	return &o.Rarity, true
 }
 
 // SetRarity sets field value
 func (o *MonsterDrops) SetRarity(v float32) {
-	o.Rarity.Set(&v)
+	o.Rarity = v
 }
 
-// GetDropRequirements returns the DropRequirements field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *MonsterDrops) GetDropRequirements() string {
-	if o == nil || o.DropRequirements.Get() == nil {
-		var ret string
+// GetRolls returns the Rolls field value
+func (o *MonsterDrops) GetRolls() int32 {
+	if o == nil  {
+		var ret int32
 		return ret
 	}
 
-	return *o.DropRequirements.Get()
+	return o.Rolls
 }
 
-// GetDropRequirementsOk returns a tuple with the DropRequirements field value
+// GetRollsOk returns a tuple with the Rolls field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *MonsterDrops) GetDropRequirementsOk() (*string, bool) {
+func (o *MonsterDrops) GetRollsOk() (*int32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return o.DropRequirements.Get(), o.DropRequirements.IsSet()
+	return &o.Rolls, true
 }
 
-// SetDropRequirements sets field value
-func (o *MonsterDrops) SetDropRequirements(v string) {
-	o.DropRequirements.Set(&v)
+// SetRolls sets field value
+func (o *MonsterDrops) SetRolls(v int32) {
+	o.Rolls = v
 }
 
 func (o MonsterDrops) MarshalJSON() ([]byte, error) {
@@ -248,10 +244,10 @@ func (o MonsterDrops) MarshalJSON() ([]byte, error) {
 		toSerialize["noted"] = o.Noted
 	}
 	if true {
-		toSerialize["rarity"] = o.Rarity.Get()
+		toSerialize["rarity"] = o.Rarity
 	}
 	if true {
-		toSerialize["drop_requirements"] = o.DropRequirements.Get()
+		toSerialize["rolls"] = o.Rolls
 	}
 	return json.Marshal(toSerialize)
 }

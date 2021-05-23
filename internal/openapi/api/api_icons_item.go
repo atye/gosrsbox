@@ -27,6 +27,224 @@ var (
 // IconsItemApiService IconsItemApi service
 type IconsItemApiService service
 
+type ApiDeleteIconsItemItemRequest struct {
+	ctx _context.Context
+	ApiService *IconsItemApiService
+	iconsItemId string
+	ifMatch *string
+}
+
+func (r ApiDeleteIconsItemItemRequest) IfMatch(ifMatch string) ApiDeleteIconsItemItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+
+func (r ApiDeleteIconsItemItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeleteIconsItemItemExecute(r)
+}
+
+/*
+ * DeleteIconsItemItem Deletes a Icons_item document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param iconsItemId Unique OSRS item ID number.
+ * @return ApiDeleteIconsItemItemRequest
+ */
+func (a *IconsItemApiService) DeleteIconsItemItem(ctx _context.Context, iconsItemId string) ApiDeleteIconsItemItemRequest {
+	return ApiDeleteIconsItemItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		iconsItemId: iconsItemId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *IconsItemApiService) DeleteIconsItemItemExecute(r ApiDeleteIconsItemItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsItemApiService.DeleteIconsItemItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/icons_items/{icons_itemId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"icons_itemId"+"}", _neturl.PathEscape(parameterToString(r.iconsItemId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiDeleteiconsItemsRequest struct {
+	ctx _context.Context
+	ApiService *IconsItemApiService
+}
+
+
+func (r ApiDeleteiconsItemsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeleteiconsItemsExecute(r)
+}
+
+/*
+ * DeleteiconsItems Deletes all icons_items
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiDeleteiconsItemsRequest
+ */
+func (a *IconsItemApiService) DeleteiconsItems(ctx _context.Context) ApiDeleteiconsItemsRequest {
+	return ApiDeleteiconsItemsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *IconsItemApiService) DeleteiconsItemsExecute(r ApiDeleteiconsItemsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsItemApiService.DeleteiconsItems")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/icons_items"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
 type ApiGetIconsItemItemRequest struct {
 	ctx _context.Context
 	ApiService *IconsItemApiService
@@ -295,4 +513,244 @@ func (a *IconsItemApiService) GeticonsItemsExecute(r ApiGeticonsItemsRequest) (I
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, executionError
+}
+
+type ApiPosticonsItemsRequest struct {
+	ctx _context.Context
+	ApiService *IconsItemApiService
+	iconsItem *IconsItem
+}
+
+func (r ApiPosticonsItemsRequest) IconsItem(iconsItem IconsItem) ApiPosticonsItemsRequest {
+	r.iconsItem = &iconsItem
+	return r
+}
+
+func (r ApiPosticonsItemsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PosticonsItemsExecute(r)
+}
+
+/*
+ * PosticonsItems Stores one or more icons_items.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiPosticonsItemsRequest
+ */
+func (a *IconsItemApiService) PosticonsItems(ctx _context.Context) ApiPosticonsItemsRequest {
+	return ApiPosticonsItemsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *IconsItemApiService) PosticonsItemsExecute(r ApiPosticonsItemsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsItemApiService.PosticonsItems")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/icons_items"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.iconsItem == nil {
+		executionError.error = "iconsItem is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.iconsItem
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiPutIconsItemItemRequest struct {
+	ctx _context.Context
+	ApiService *IconsItemApiService
+	iconsItemId string
+	ifMatch *string
+	iconsItem *IconsItem
+}
+
+func (r ApiPutIconsItemItemRequest) IfMatch(ifMatch string) ApiPutIconsItemItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+func (r ApiPutIconsItemItemRequest) IconsItem(iconsItem IconsItem) ApiPutIconsItemItemRequest {
+	r.iconsItem = &iconsItem
+	return r
+}
+
+func (r ApiPutIconsItemItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PutIconsItemItemExecute(r)
+}
+
+/*
+ * PutIconsItemItem Replaces a Icons_item document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param iconsItemId Unique OSRS item ID number.
+ * @return ApiPutIconsItemItemRequest
+ */
+func (a *IconsItemApiService) PutIconsItemItem(ctx _context.Context, iconsItemId string) ApiPutIconsItemItemRequest {
+	return ApiPutIconsItemItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		iconsItemId: iconsItemId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *IconsItemApiService) PutIconsItemItemExecute(r ApiPutIconsItemItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPut
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsItemApiService.PutIconsItemItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/icons_items/{icons_itemId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"icons_itemId"+"}", _neturl.PathEscape(parameterToString(r.iconsItemId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+	if r.iconsItem == nil {
+		executionError.error = "iconsItem is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	// body params
+	localVarPostBody = r.iconsItem
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
 }

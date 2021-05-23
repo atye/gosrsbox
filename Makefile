@@ -1,6 +1,10 @@
-OPENAPI_DIR=osrsboxapi/openapi
-
-generate:
+OPENAPI_DIR=internal/openapi
+ 
+ # openapi.yaml:
+ # _id properties must be removed
+ # id properties must be string, except for MonsterDrops
+ # response meta page must be int
+openapi:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
     -i /local/${OPENAPI_DIR}/openapi.yaml \
     -g go \
@@ -16,7 +20,7 @@ generate:
 		${OPENAPI_DIR}/api/go.sum
 
 test:
-	go test -v -cover -race ./...
+	go test -count=1 -v -cover -race ./...
 
 cover-profile:
 	go test -coverprofile=coverage.out ./...

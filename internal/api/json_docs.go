@@ -3,30 +3,13 @@ package api
 import (
 	"context"
 	"fmt"
-	"net/http"
-
-	"golang.org/x/sync/errgroup"
 )
 
-// GetJSONFile retrieves the specified file from the Static JSON API.
-// This is a good option if you want to dump enitire database
-func (c *client) GetJSONFiles(ctx context.Context, files []string, destinations ...interface{}) error {
-	if len(destinations) < len(files) {
-		return fmt.Errorf("not enough interfaces provided")
+// GetDocument retrieves the specified file from the Static JSON API
+func (c *client) GetDocument(ctx context.Context, file string, destination interface{}) error {
+	err := c.doDocumentRequest(ctx, fmt.Sprintf("%s/%s", c.docsAddress, file), destination)
+	if err != nil {
+		return err
 	}
-	var eg errgroup.Group
-	for i := range destinations {
-		i := i
-		eg.Go(func() error {
-			code, err := c.doJSONDocsRequest(ctx, fmt.Sprintf("%s/%s", c.docsAddress, files[i]), destinations[i])
-			if err != nil {
-				return err
-			}
-			if code != http.StatusOK {
-				return fmt.Errorf("code: %d, file: %s", code, files[i])
-			}
-			return nil
-		})
-	}
-	return eg.Wait()
+	return nil
 }

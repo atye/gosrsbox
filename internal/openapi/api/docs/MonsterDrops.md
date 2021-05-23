@@ -9,14 +9,14 @@ Name | Type | Description | Notes
 **Members** | **bool** | If the drop is a members-only item. | 
 **Quantity** | **NullableString** | The quantity of the item drop (integer, comma-separated or range). | 
 **Noted** | **bool** | If the item drop is noted, or not. | 
-**Rarity** | **NullableFloat32** | The rarity of the item drop (as a float out of 1.0). | 
-**DropRequirements** | **NullableString** | If there are any requirements to getting the specific drop. | 
+**Rarity** | **float32** | The rarity of the item drop (as a float out of 1.0). | 
+**Rolls** | **int32** | Number of rolls from the drop. | 
 
 ## Methods
 
 ### NewMonsterDrops
 
-`func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity NullableFloat32, dropRequirements NullableString, ) *MonsterDrops`
+`func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity float32, rolls int32, ) *MonsterDrops`
 
 NewMonsterDrops instantiates a new MonsterDrops object
 This constructor will assign default values to properties that have it defined,
@@ -161,46 +161,26 @@ and a boolean to check if the value has been set.
 SetRarity sets Rarity field to given value.
 
 
-### SetRarityNil
+### GetRolls
 
-`func (o *MonsterDrops) SetRarityNil(b bool)`
+`func (o *MonsterDrops) GetRolls() int32`
 
- SetRarityNil sets the value for Rarity to be an explicit nil
+GetRolls returns the Rolls field if non-nil, zero value otherwise.
 
-### UnsetRarity
-`func (o *MonsterDrops) UnsetRarity()`
+### GetRollsOk
 
-UnsetRarity ensures that no value is present for Rarity, not even an explicit nil
-### GetDropRequirements
+`func (o *MonsterDrops) GetRollsOk() (*int32, bool)`
 
-`func (o *MonsterDrops) GetDropRequirements() string`
-
-GetDropRequirements returns the DropRequirements field if non-nil, zero value otherwise.
-
-### GetDropRequirementsOk
-
-`func (o *MonsterDrops) GetDropRequirementsOk() (*string, bool)`
-
-GetDropRequirementsOk returns a tuple with the DropRequirements field if it's non-nil, zero value otherwise
+GetRollsOk returns a tuple with the Rolls field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetDropRequirements
+### SetRolls
 
-`func (o *MonsterDrops) SetDropRequirements(v string)`
+`func (o *MonsterDrops) SetRolls(v int32)`
 
-SetDropRequirements sets DropRequirements field to given value.
+SetRolls sets Rolls field to given value.
 
 
-### SetDropRequirementsNil
-
-`func (o *MonsterDrops) SetDropRequirementsNil(b bool)`
-
- SetDropRequirementsNil sets the value for DropRequirements to be an explicit nil
-
-### UnsetDropRequirements
-`func (o *MonsterDrops) UnsetDropRequirements()`
-
-UnsetDropRequirements ensures that no value is present for DropRequirements, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

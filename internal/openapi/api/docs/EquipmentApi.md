@@ -1,12 +1,141 @@
 # \EquipmentApi
 
-All URIs are relative to *http://api.osrsbox.com*
+All URIs are relative to *https://api.osrsbox.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**DeleteEquipmentItem**](EquipmentApi.md#DeleteEquipmentItem) | **Delete** /equipment/{equipmentId} | Deletes a Equipment document
+[**Deleteequipment**](EquipmentApi.md#Deleteequipment) | **Delete** /equipment | Deletes all equipment
 [**GetEquipmentItem**](EquipmentApi.md#GetEquipmentItem) | **Get** /equipment/{equipmentId} | Retrieves a Equipment document
 [**Getequipment**](EquipmentApi.md#Getequipment) | **Get** /equipment | Retrieves one or more equipment
+[**Postequipment**](EquipmentApi.md#Postequipment) | **Post** /equipment | Stores one or more equipment.
+[**PutEquipmentItem**](EquipmentApi.md#PutEquipmentItem) | **Put** /equipment/{equipmentId} | Replaces a Equipment document
 
+
+
+## DeleteEquipmentItem
+
+> DeleteEquipmentItem(ctx, equipmentId).IfMatch(ifMatch).Execute()
+
+Deletes a Equipment document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    equipmentId := "equipmentId_example" // string | Unique OSRS item ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.EquipmentApi.DeleteEquipmentItem(context.Background(), equipmentId).IfMatch(ifMatch).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.DeleteEquipmentItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**equipmentId** | **string** | Unique OSRS item ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteEquipmentItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Deleteequipment
+
+> Deleteequipment(ctx).Execute()
+
+Deletes all equipment
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.EquipmentApi.Deleteequipment(context.Background()).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.Deleteequipment``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteequipmentRequest struct via the builder pattern
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## GetEquipmentItem
@@ -142,6 +271,138 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Postequipment
+
+> Postequipment(ctx).Equipment(equipment).Execute()
+
+Stores one or more equipment.
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Equipment | A Equipment or list of Equipment documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.EquipmentApi.Postequipment(context.Background()).Equipment(equipment).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.Postequipment``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostequipmentRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **equipment** | [**Equipment**](Equipment.md) | A Equipment or list of Equipment documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PutEquipmentItem
+
+> PutEquipmentItem(ctx, equipmentId).IfMatch(ifMatch).Equipment(equipment).Execute()
+
+Replaces a Equipment document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    equipmentId := "equipmentId_example" // string | Unique OSRS item ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Equipment | A Equipment or list of Equipment documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.EquipmentApi.PutEquipmentItem(context.Background(), equipmentId).IfMatch(ifMatch).Equipment(equipment).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.PutEquipmentItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**equipmentId** | **string** | Unique OSRS item ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPutEquipmentItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+ **equipment** | [**Equipment**](Equipment.md) | A Equipment or list of Equipment documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

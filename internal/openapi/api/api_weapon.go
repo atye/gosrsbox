@@ -27,6 +27,224 @@ var (
 // WeaponApiService WeaponApi service
 type WeaponApiService service
 
+type ApiDeleteWeaponItemRequest struct {
+	ctx _context.Context
+	ApiService *WeaponApiService
+	weaponId string
+	ifMatch *string
+}
+
+func (r ApiDeleteWeaponItemRequest) IfMatch(ifMatch string) ApiDeleteWeaponItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+
+func (r ApiDeleteWeaponItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeleteWeaponItemExecute(r)
+}
+
+/*
+ * DeleteWeaponItem Deletes a Weapon document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param weaponId Unique OSRS item ID number.
+ * @return ApiDeleteWeaponItemRequest
+ */
+func (a *WeaponApiService) DeleteWeaponItem(ctx _context.Context, weaponId string) ApiDeleteWeaponItemRequest {
+	return ApiDeleteWeaponItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		weaponId: weaponId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *WeaponApiService) DeleteWeaponItemExecute(r ApiDeleteWeaponItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WeaponApiService.DeleteWeaponItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/weapons/{weaponId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"weaponId"+"}", _neturl.PathEscape(parameterToString(r.weaponId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiDeleteweaponsRequest struct {
+	ctx _context.Context
+	ApiService *WeaponApiService
+}
+
+
+func (r ApiDeleteweaponsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeleteweaponsExecute(r)
+}
+
+/*
+ * Deleteweapons Deletes all weapons
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiDeleteweaponsRequest
+ */
+func (a *WeaponApiService) Deleteweapons(ctx _context.Context) ApiDeleteweaponsRequest {
+	return ApiDeleteweaponsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *WeaponApiService) DeleteweaponsExecute(r ApiDeleteweaponsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WeaponApiService.Deleteweapons")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/weapons"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
 type ApiGetWeaponItemRequest struct {
 	ctx _context.Context
 	ApiService *WeaponApiService
@@ -295,4 +513,244 @@ func (a *WeaponApiService) GetweaponsExecute(r ApiGetweaponsRequest) (InlineResp
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, executionError
+}
+
+type ApiPostweaponsRequest struct {
+	ctx _context.Context
+	ApiService *WeaponApiService
+	weapon *Weapon
+}
+
+func (r ApiPostweaponsRequest) Weapon(weapon Weapon) ApiPostweaponsRequest {
+	r.weapon = &weapon
+	return r
+}
+
+func (r ApiPostweaponsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PostweaponsExecute(r)
+}
+
+/*
+ * Postweapons Stores one or more weapons.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiPostweaponsRequest
+ */
+func (a *WeaponApiService) Postweapons(ctx _context.Context) ApiPostweaponsRequest {
+	return ApiPostweaponsRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *WeaponApiService) PostweaponsExecute(r ApiPostweaponsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WeaponApiService.Postweapons")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/weapons"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.weapon == nil {
+		executionError.error = "weapon is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.weapon
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiPutWeaponItemRequest struct {
+	ctx _context.Context
+	ApiService *WeaponApiService
+	weaponId string
+	ifMatch *string
+	weapon *Weapon
+}
+
+func (r ApiPutWeaponItemRequest) IfMatch(ifMatch string) ApiPutWeaponItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+func (r ApiPutWeaponItemRequest) Weapon(weapon Weapon) ApiPutWeaponItemRequest {
+	r.weapon = &weapon
+	return r
+}
+
+func (r ApiPutWeaponItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PutWeaponItemExecute(r)
+}
+
+/*
+ * PutWeaponItem Replaces a Weapon document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param weaponId Unique OSRS item ID number.
+ * @return ApiPutWeaponItemRequest
+ */
+func (a *WeaponApiService) PutWeaponItem(ctx _context.Context, weaponId string) ApiPutWeaponItemRequest {
+	return ApiPutWeaponItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		weaponId: weaponId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *WeaponApiService) PutWeaponItemExecute(r ApiPutWeaponItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPut
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WeaponApiService.PutWeaponItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/weapons/{weaponId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"weaponId"+"}", _neturl.PathEscape(parameterToString(r.weaponId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+	if r.weapon == nil {
+		executionError.error = "weapon is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	// body params
+	localVarPostBody = r.weapon
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
 }

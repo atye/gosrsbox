@@ -1,12 +1,141 @@
 # \MonsterApi
 
-All URIs are relative to *http://api.osrsbox.com*
+All URIs are relative to *https://api.osrsbox.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**DeleteMonsterItem**](MonsterApi.md#DeleteMonsterItem) | **Delete** /monsters/{monsterId} | Deletes a Monster document
+[**Deletemonsters**](MonsterApi.md#Deletemonsters) | **Delete** /monsters | Deletes all monsters
 [**GetMonsterItem**](MonsterApi.md#GetMonsterItem) | **Get** /monsters/{monsterId} | Retrieves a Monster document
 [**Getmonsters**](MonsterApi.md#Getmonsters) | **Get** /monsters | Retrieves one or more monsters
+[**Postmonsters**](MonsterApi.md#Postmonsters) | **Post** /monsters | Stores one or more monsters.
+[**PutMonsterItem**](MonsterApi.md#PutMonsterItem) | **Put** /monsters/{monsterId} | Replaces a Monster document
 
+
+
+## DeleteMonsterItem
+
+> DeleteMonsterItem(ctx, monsterId).IfMatch(ifMatch).Execute()
+
+Deletes a Monster document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    monsterId := "monsterId_example" // string | Unique OSRS monster ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.MonsterApi.DeleteMonsterItem(context.Background(), monsterId).IfMatch(ifMatch).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.DeleteMonsterItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**monsterId** | **string** | Unique OSRS monster ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteMonsterItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Deletemonsters
+
+> Deletemonsters(ctx).Execute()
+
+Deletes all monsters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.MonsterApi.Deletemonsters(context.Background()).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.Deletemonsters``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+This endpoint does not need any parameter.
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeletemonstersRequest struct via the builder pattern
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## GetMonsterItem
@@ -28,7 +157,7 @@ import (
 )
 
 func main() {
-    monsterId := "monsterId_example" // string | Unique OSRS item ID number.
+    monsterId := "monsterId_example" // string | Unique OSRS monster ID number.
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -48,7 +177,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**monsterId** | **string** | Unique OSRS item ID number. | 
+**monsterId** | **string** | Unique OSRS monster ID number. | 
 
 ### Other Parameters
 
@@ -142,6 +271,138 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Postmonsters
+
+> Postmonsters(ctx).Monster(monster).Execute()
+
+Stores one or more monsters.
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), int32(123), int32(123), []string{"AttackType_example"}, int32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, int32(123), float32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.MonsterApi.Postmonsters(context.Background()).Monster(monster).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.Postmonsters``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostmonstersRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **monster** | [**Monster**](Monster.md) | A Monster or list of Monster documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PutMonsterItem
+
+> PutMonsterItem(ctx, monsterId).IfMatch(ifMatch).Monster(monster).Execute()
+
+Replaces a Monster document
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    monsterId := "monsterId_example" // string | Unique OSRS monster ID number.
+    ifMatch := "ifMatch_example" // string | Current value of the _etag field
+    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), int32(123), int32(123), []string{"AttackType_example"}, int32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, int32(123), float32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
+
+    configuration := openapiclient.NewConfiguration()
+    api_client := openapiclient.NewAPIClient(configuration)
+    resp, r, err := api_client.MonsterApi.PutMonsterItem(context.Background(), monsterId).IfMatch(ifMatch).Monster(monster).Execute()
+    if err.Error() != "" {
+        fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.PutMonsterItem``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**monsterId** | **string** | Unique OSRS monster ID number. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPutMonsterItemRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **ifMatch** | **string** | Current value of the _etag field | 
+ **monster** | [**Monster**](Monster.md) | A Monster or list of Monster documents | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

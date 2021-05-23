@@ -4,19 +4,21 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | Unique OSRS item ID number. | 
+**Id** | **string** | Unique OSRS monster ID number. | 
 **Name** | **string** | The name of the monster. | 
+**LastUpdated** | **NullableString** | The last time (UTC) the monster was updated (in ISO8601 date format). | 
 **Incomplete** | **bool** | If the monster has incomplete wiki data. | 
 **Members** | **bool** | If the monster is members only, or not. | 
-**ReleaseDate** | **NullableString** | The release date of the monster (in ISO8601 format). | 
+**ReleaseDate** | **NullableString** | The release date of the monster (in ISO8601 date format). | 
 **CombatLevel** | **int32** | The combat level of the monster. | 
 **Size** | **int32** | The size, in tiles, of the monster. | 
-**Hitpoints** | **int32** | The number of hitpoints a monster has. | 
-**MaxHit** | **int32** | The maximum hit of the monster. | 
-**AttackType** | **[]string** | The attack style (melee, magic, range) of the monster. | 
+**Hitpoints** | **NullableInt32** | The number of hitpoints a monster has. | 
+**MaxHit** | **NullableInt32** | The maximum hit of the monster. | 
+**AttackType** | **[]string** | The attack style (e.g., melee, magic, range) of the monster. | 
 **AttackSpeed** | **NullableInt32** | The attack speed (in game ticks) of the monster. | 
 **Aggressive** | **bool** | If the monster is aggressive, or not. | 
 **Poisonous** | **bool** | If the monster poisons, or not | 
+**Venomous** | **bool** | If the monster poisons using venom, or not | 
 **ImmunePoison** | **bool** | If the monster is immune to poison, or not | 
 **ImmuneVenom** | **bool** | If the monster is immune to venom, or not | 
 **Attributes** | **[]string** | An array of monster attributes. | 
@@ -27,7 +29,6 @@ Name | Type | Description | Notes
 **SlayerMasters** | **[]string** | The slayer masters who can assign the monster. | 
 **Duplicate** | **bool** | If the monster is a duplicate. | 
 **Examine** | **string** | The examine text of the monster. | 
-**Icon** | **NullableString** | The monster icon  (in base64 encoding). | 
 **WikiName** | **string** | The OSRS Wiki name for the monster. | 
 **WikiUrl** | **string** | The OSRS Wiki URL (possibly including anchor link). | 
 **AttackLevel** | **int32** | The attack level of the monster. | 
@@ -35,27 +36,24 @@ Name | Type | Description | Notes
 **DefenceLevel** | **int32** | The defence level of the monster. | 
 **MagicLevel** | **int32** | The magic level of the monster. | 
 **RangedLevel** | **int32** | The ranged level of the monster. | 
-**AttackStab** | **int32** | The attack stab bonus of the monster. | 
-**AttackSlash** | **int32** | The attack slash bonus of the monster. | 
-**AttackCrush** | **int32** | The attack crush bonus of the monster. | 
-**AttackMagic** | **int32** | The attack magic bonus of the monster. | 
-**AttackRanged** | **int32** | The attack ranged bonus of the monster. | 
+**AttackBonus** | **int32** | The attack bonus of the monster. | 
+**StrengthBonus** | **int32** | The strength bonus of the monster. | 
+**AttackMagic** | **int32** | The magic attack of the monster. | 
+**MagicBonus** | **int32** | The magic bonus of the monster. | 
+**AttackRanged** | **int32** | The ranged attack of the monster. | 
+**RangedBonus** | **int32** | The ranged bonus of the monster. | 
 **DefenceStab** | **int32** | The defence stab bonus of the monster. | 
 **DefenceSlash** | **int32** | The defence slash bonus of the monster. | 
 **DefenceCrush** | **int32** | The defence crush bonus of the monster. | 
 **DefenceMagic** | **int32** | The defence magic bonus of the monster. | 
 **DefenceRanged** | **int32** | The defence ranged bonus of the monster. | 
-**AttackAccuracy** | **int32** | The attack accuracy bonus of the monster. | 
-**MeleeStrength** | **int32** | The melee strength bonus of the monster. | 
-**RangedStrength** | **int32** | The ranged strength bonus of the monster. | 
-**MagicDamage** | **int32** | The magic damage bonus of the monster. | 
 **Drops** | [**[]MonsterDrops**](MonsterDrops.md) | An array of monster drop objects. | 
 
 ## Methods
 
 ### NewMonster
 
-`func NewMonster(id string, name string, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints int32, maxHit int32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, icon NullableString, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackStab int32, attackSlash int32, attackCrush int32, attackMagic int32, attackRanged int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, attackAccuracy int32, meleeStrength int32, rangedStrength int32, magicDamage int32, drops []MonsterDrops, ) *Monster`
+`func NewMonster(id string, name string, lastUpdated NullableString, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints NullableInt32, maxHit NullableInt32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, venomous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackBonus int32, strengthBonus int32, attackMagic int32, magicBonus int32, attackRanged int32, rangedBonus int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, drops []MonsterDrops, ) *Monster`
 
 NewMonster instantiates a new Monster object
 This constructor will assign default values to properties that have it defined,
@@ -110,6 +108,36 @@ and a boolean to check if the value has been set.
 SetName sets Name field to given value.
 
 
+### GetLastUpdated
+
+`func (o *Monster) GetLastUpdated() string`
+
+GetLastUpdated returns the LastUpdated field if non-nil, zero value otherwise.
+
+### GetLastUpdatedOk
+
+`func (o *Monster) GetLastUpdatedOk() (*string, bool)`
+
+GetLastUpdatedOk returns a tuple with the LastUpdated field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLastUpdated
+
+`func (o *Monster) SetLastUpdated(v string)`
+
+SetLastUpdated sets LastUpdated field to given value.
+
+
+### SetLastUpdatedNil
+
+`func (o *Monster) SetLastUpdatedNil(b bool)`
+
+ SetLastUpdatedNil sets the value for LastUpdated to be an explicit nil
+
+### UnsetLastUpdated
+`func (o *Monster) UnsetLastUpdated()`
+
+UnsetLastUpdated ensures that no value is present for LastUpdated, not even an explicit nil
 ### GetIncomplete
 
 `func (o *Monster) GetIncomplete() bool`
@@ -240,6 +268,16 @@ and a boolean to check if the value has been set.
 SetHitpoints sets Hitpoints field to given value.
 
 
+### SetHitpointsNil
+
+`func (o *Monster) SetHitpointsNil(b bool)`
+
+ SetHitpointsNil sets the value for Hitpoints to be an explicit nil
+
+### UnsetHitpoints
+`func (o *Monster) UnsetHitpoints()`
+
+UnsetHitpoints ensures that no value is present for Hitpoints, not even an explicit nil
 ### GetMaxHit
 
 `func (o *Monster) GetMaxHit() int32`
@@ -260,6 +298,16 @@ and a boolean to check if the value has been set.
 SetMaxHit sets MaxHit field to given value.
 
 
+### SetMaxHitNil
+
+`func (o *Monster) SetMaxHitNil(b bool)`
+
+ SetMaxHitNil sets the value for MaxHit to be an explicit nil
+
+### UnsetMaxHit
+`func (o *Monster) UnsetMaxHit()`
+
+UnsetMaxHit ensures that no value is present for MaxHit, not even an explicit nil
 ### GetAttackType
 
 `func (o *Monster) GetAttackType() []string`
@@ -348,6 +396,26 @@ and a boolean to check if the value has been set.
 `func (o *Monster) SetPoisonous(v bool)`
 
 SetPoisonous sets Poisonous field to given value.
+
+
+### GetVenomous
+
+`func (o *Monster) GetVenomous() bool`
+
+GetVenomous returns the Venomous field if non-nil, zero value otherwise.
+
+### GetVenomousOk
+
+`func (o *Monster) GetVenomousOk() (*bool, bool)`
+
+GetVenomousOk returns a tuple with the Venomous field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetVenomous
+
+`func (o *Monster) SetVenomous(v bool)`
+
+SetVenomous sets Venomous field to given value.
 
 
 ### GetImmunePoison
@@ -570,36 +638,6 @@ and a boolean to check if the value has been set.
 SetExamine sets Examine field to given value.
 
 
-### GetIcon
-
-`func (o *Monster) GetIcon() string`
-
-GetIcon returns the Icon field if non-nil, zero value otherwise.
-
-### GetIconOk
-
-`func (o *Monster) GetIconOk() (*string, bool)`
-
-GetIconOk returns a tuple with the Icon field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetIcon
-
-`func (o *Monster) SetIcon(v string)`
-
-SetIcon sets Icon field to given value.
-
-
-### SetIconNil
-
-`func (o *Monster) SetIconNil(b bool)`
-
- SetIconNil sets the value for Icon to be an explicit nil
-
-### UnsetIcon
-`func (o *Monster) UnsetIcon()`
-
-UnsetIcon ensures that no value is present for Icon, not even an explicit nil
 ### GetWikiName
 
 `func (o *Monster) GetWikiName() string`
@@ -740,64 +778,44 @@ and a boolean to check if the value has been set.
 SetRangedLevel sets RangedLevel field to given value.
 
 
-### GetAttackStab
+### GetAttackBonus
 
-`func (o *Monster) GetAttackStab() int32`
+`func (o *Monster) GetAttackBonus() int32`
 
-GetAttackStab returns the AttackStab field if non-nil, zero value otherwise.
+GetAttackBonus returns the AttackBonus field if non-nil, zero value otherwise.
 
-### GetAttackStabOk
+### GetAttackBonusOk
 
-`func (o *Monster) GetAttackStabOk() (*int32, bool)`
+`func (o *Monster) GetAttackBonusOk() (*int32, bool)`
 
-GetAttackStabOk returns a tuple with the AttackStab field if it's non-nil, zero value otherwise
+GetAttackBonusOk returns a tuple with the AttackBonus field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetAttackStab
+### SetAttackBonus
 
-`func (o *Monster) SetAttackStab(v int32)`
+`func (o *Monster) SetAttackBonus(v int32)`
 
-SetAttackStab sets AttackStab field to given value.
+SetAttackBonus sets AttackBonus field to given value.
 
 
-### GetAttackSlash
+### GetStrengthBonus
 
-`func (o *Monster) GetAttackSlash() int32`
+`func (o *Monster) GetStrengthBonus() int32`
 
-GetAttackSlash returns the AttackSlash field if non-nil, zero value otherwise.
+GetStrengthBonus returns the StrengthBonus field if non-nil, zero value otherwise.
 
-### GetAttackSlashOk
+### GetStrengthBonusOk
 
-`func (o *Monster) GetAttackSlashOk() (*int32, bool)`
+`func (o *Monster) GetStrengthBonusOk() (*int32, bool)`
 
-GetAttackSlashOk returns a tuple with the AttackSlash field if it's non-nil, zero value otherwise
+GetStrengthBonusOk returns a tuple with the StrengthBonus field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetAttackSlash
+### SetStrengthBonus
 
-`func (o *Monster) SetAttackSlash(v int32)`
+`func (o *Monster) SetStrengthBonus(v int32)`
 
-SetAttackSlash sets AttackSlash field to given value.
-
-
-### GetAttackCrush
-
-`func (o *Monster) GetAttackCrush() int32`
-
-GetAttackCrush returns the AttackCrush field if non-nil, zero value otherwise.
-
-### GetAttackCrushOk
-
-`func (o *Monster) GetAttackCrushOk() (*int32, bool)`
-
-GetAttackCrushOk returns a tuple with the AttackCrush field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetAttackCrush
-
-`func (o *Monster) SetAttackCrush(v int32)`
-
-SetAttackCrush sets AttackCrush field to given value.
+SetStrengthBonus sets StrengthBonus field to given value.
 
 
 ### GetAttackMagic
@@ -820,6 +838,26 @@ and a boolean to check if the value has been set.
 SetAttackMagic sets AttackMagic field to given value.
 
 
+### GetMagicBonus
+
+`func (o *Monster) GetMagicBonus() int32`
+
+GetMagicBonus returns the MagicBonus field if non-nil, zero value otherwise.
+
+### GetMagicBonusOk
+
+`func (o *Monster) GetMagicBonusOk() (*int32, bool)`
+
+GetMagicBonusOk returns a tuple with the MagicBonus field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMagicBonus
+
+`func (o *Monster) SetMagicBonus(v int32)`
+
+SetMagicBonus sets MagicBonus field to given value.
+
+
 ### GetAttackRanged
 
 `func (o *Monster) GetAttackRanged() int32`
@@ -838,6 +876,26 @@ and a boolean to check if the value has been set.
 `func (o *Monster) SetAttackRanged(v int32)`
 
 SetAttackRanged sets AttackRanged field to given value.
+
+
+### GetRangedBonus
+
+`func (o *Monster) GetRangedBonus() int32`
+
+GetRangedBonus returns the RangedBonus field if non-nil, zero value otherwise.
+
+### GetRangedBonusOk
+
+`func (o *Monster) GetRangedBonusOk() (*int32, bool)`
+
+GetRangedBonusOk returns a tuple with the RangedBonus field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRangedBonus
+
+`func (o *Monster) SetRangedBonus(v int32)`
+
+SetRangedBonus sets RangedBonus field to given value.
 
 
 ### GetDefenceStab
@@ -938,86 +996,6 @@ and a boolean to check if the value has been set.
 `func (o *Monster) SetDefenceRanged(v int32)`
 
 SetDefenceRanged sets DefenceRanged field to given value.
-
-
-### GetAttackAccuracy
-
-`func (o *Monster) GetAttackAccuracy() int32`
-
-GetAttackAccuracy returns the AttackAccuracy field if non-nil, zero value otherwise.
-
-### GetAttackAccuracyOk
-
-`func (o *Monster) GetAttackAccuracyOk() (*int32, bool)`
-
-GetAttackAccuracyOk returns a tuple with the AttackAccuracy field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetAttackAccuracy
-
-`func (o *Monster) SetAttackAccuracy(v int32)`
-
-SetAttackAccuracy sets AttackAccuracy field to given value.
-
-
-### GetMeleeStrength
-
-`func (o *Monster) GetMeleeStrength() int32`
-
-GetMeleeStrength returns the MeleeStrength field if non-nil, zero value otherwise.
-
-### GetMeleeStrengthOk
-
-`func (o *Monster) GetMeleeStrengthOk() (*int32, bool)`
-
-GetMeleeStrengthOk returns a tuple with the MeleeStrength field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetMeleeStrength
-
-`func (o *Monster) SetMeleeStrength(v int32)`
-
-SetMeleeStrength sets MeleeStrength field to given value.
-
-
-### GetRangedStrength
-
-`func (o *Monster) GetRangedStrength() int32`
-
-GetRangedStrength returns the RangedStrength field if non-nil, zero value otherwise.
-
-### GetRangedStrengthOk
-
-`func (o *Monster) GetRangedStrengthOk() (*int32, bool)`
-
-GetRangedStrengthOk returns a tuple with the RangedStrength field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRangedStrength
-
-`func (o *Monster) SetRangedStrength(v int32)`
-
-SetRangedStrength sets RangedStrength field to given value.
-
-
-### GetMagicDamage
-
-`func (o *Monster) GetMagicDamage() int32`
-
-GetMagicDamage returns the MagicDamage field if non-nil, zero value otherwise.
-
-### GetMagicDamageOk
-
-`func (o *Monster) GetMagicDamageOk() (*int32, bool)`
-
-GetMagicDamageOk returns a tuple with the MagicDamage field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetMagicDamage
-
-`func (o *Monster) SetMagicDamage(v int32)`
-
-SetMagicDamage sets MagicDamage field to given value.
 
 
 ### GetDrops

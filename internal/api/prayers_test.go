@@ -11,22 +11,23 @@ import (
 	"testing"
 
 	openapi "github.com/atye/gosrsbox/internal/openapi/api"
+	"github.com/atye/gosrsbox/osrsbox"
 )
 
 func Test_Prayers(t *testing.T) {
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
-	t.Run("GetPrayersByID", test_GetPrayersByID)
-	t.Run("GetPrayersByName", test_GetPrayersByName)
+	t.Run("GetPrayersByID", testGetPrayersByID)
+	t.Run("GetPrayersByName", testGetPrayersByName)
 }
 
-func test_GetPrayersByID(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedIDs []string, err error)
+func testGetPrayersByID(t *testing.T) {
+	type checkFn func(t *testing.T, prayers []osrsbox.Prayer, expectedIDs []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerID := func(t *testing.T, prayers []openapi.Prayer, expectedIDs []string, err error) {
+	verifyPrayerID := func(t *testing.T, prayers []osrsbox.Prayer, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -36,8 +37,8 @@ func test_GetPrayersByID(t *testing.T) {
 		}
 
 		for i, prayer := range prayers {
-			if prayer.GetId() != expectedIDs[i] {
-				t.Errorf("expected name %s, got %s", expectedIDs[i], prayer.GetName())
+			if prayer.Id != expectedIDs[i] {
+				t.Errorf("expected name %s, got %s", expectedIDs[i], prayer.Name)
 			}
 		}
 	}
@@ -66,13 +67,13 @@ func test_GetPrayersByID(t *testing.T) {
 	}
 }
 
-func test_GetPrayersByName(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error)
+func testGetPrayersByName(t *testing.T) {
+	type checkFn func(t *testing.T, prayers []osrsbox.Prayer, expectedNames []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerNames := func(t *testing.T, prayers []openapi.Prayer, expectedNames []string, err error) {
+	verifyPrayerNames := func(t *testing.T, prayers []osrsbox.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}

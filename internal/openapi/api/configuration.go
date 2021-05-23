@@ -105,7 +105,7 @@ func NewConfiguration() *Configuration {
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
-				URL: "api.osrsbox.com",
+				URL: "https://api.osrsbox.com",
 				Description: "No description provided",
 			},
 		},

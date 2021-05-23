@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Page** | Pointer to **int32** |  | [optional] 
+**Page** | Pointer to **int** |  | [optional] 
 **Total** | Pointer to **int32** |  | [optional] 
 **MaxResults** | Pointer to **int32** |  | [optional] 
 
@@ -29,20 +29,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetPage
 
-`func (o *ResponeMetadata) GetPage() int32`
+`func (o *ResponeMetadata) GetPage() int`
 
 GetPage returns the Page field if non-nil, zero value otherwise.
 
 ### GetPageOk
 
-`func (o *ResponeMetadata) GetPageOk() (*int32, bool)`
+`func (o *ResponeMetadata) GetPageOk() (*int, bool)`
 
 GetPageOk returns a tuple with the Page field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPage
 
-`func (o *ResponeMetadata) SetPage(v int32)`
+`func (o *ResponeMetadata) SetPage(v int)`
 
 SetPage sets Page field to given value.
 

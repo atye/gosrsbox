@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **int32** | Unique OSRS prayer ID number. | 
+**Id** | **string** | Unique OSRS prayer ID number. | 
 **Icon** | **string** | The icon image (in base64 encoding) of the prayer. | 
 
 ## Methods
 
 ### NewIconsPrayer
 
-`func NewIconsPrayer(id int32, icon string, ) *IconsPrayer`
+`func NewIconsPrayer(id string, icon string, ) *IconsPrayer`
 
 NewIconsPrayer instantiates a new IconsPrayer object
 This constructor will assign default values to properties that have it defined,
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetId
 
-`func (o *IconsPrayer) GetId() int32`
+`func (o *IconsPrayer) GetId() string`
 
 GetId returns the Id field if non-nil, zero value otherwise.
 
 ### GetIdOk
 
-`func (o *IconsPrayer) GetIdOk() (*int32, bool)`
+`func (o *IconsPrayer) GetIdOk() (*string, bool)`
 
 GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetId
 
-`func (o *IconsPrayer) SetId(v int32)`
+`func (o *IconsPrayer) SetId(v string)`
 
 SetId sets Id field to given value.
 

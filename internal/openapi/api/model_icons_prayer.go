@@ -17,7 +17,7 @@ import (
 // IconsPrayer struct for IconsPrayer
 type IconsPrayer struct {
 	// Unique OSRS prayer ID number.
-	Id int32 `json:"id"`
+	Id string `json:"id"`
 	// The icon image (in base64 encoding) of the prayer.
 	Icon string `json:"icon"`
 }
@@ -26,7 +26,7 @@ type IconsPrayer struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIconsPrayer(id int32, icon string, ) *IconsPrayer {
+func NewIconsPrayer(id string, icon string, ) *IconsPrayer {
 	this := IconsPrayer{}
 	this.Id = id
 	this.Icon = icon
@@ -42,9 +42,9 @@ func NewIconsPrayerWithDefaults() *IconsPrayer {
 }
 
 // GetId returns the Id field value
-func (o *IconsPrayer) GetId() int32 {
+func (o *IconsPrayer) GetId() string {
 	if o == nil  {
-		var ret int32
+		var ret string
 		return ret
 	}
 
@@ -53,7 +53,7 @@ func (o *IconsPrayer) GetId() int32 {
 
 // GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *IconsPrayer) GetIdOk() (*int32, bool) {
+func (o *IconsPrayer) GetIdOk() (*string, bool) {
 	if o == nil  {
 		return nil, false
 	}
@@ -61,7 +61,7 @@ func (o *IconsPrayer) GetIdOk() (*int32, bool) {
 }
 
 // SetId sets field value
-func (o *IconsPrayer) SetId(v int32) {
+func (o *IconsPrayer) SetId(v string) {
 	o.Id = v
 }
 

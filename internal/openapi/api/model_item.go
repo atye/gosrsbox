@@ -20,6 +20,8 @@ type Item struct {
 	Id string `json:"id"`
 	// The name of the item.
 	Name string `json:"name"`
+	// The last time (UTC) the item was updated (in ISO8601 date format).
+	LastUpdated string `json:"last_updated"`
 	// If the item has incomplete wiki data.
 	Incomplete bool `json:"incomplete"`
 	// If the item is a members-only.
@@ -74,8 +76,6 @@ type Item struct {
 	WikiName NullableString `json:"wiki_name"`
 	// The OSRS Wiki URL (possibly including anchor link).
 	WikiUrl NullableString `json:"wiki_url"`
-	// The OSRS Wiki Exchange URL.
-	WikiExchange NullableString `json:"wiki_exchange"`
 	Equipment NullableItemEquipment `json:"equipment"`
 	Weapon NullableItemWeapon `json:"weapon"`
 }
@@ -84,10 +84,11 @@ type Item struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewItem(id string, name string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, wikiExchange NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon, ) *Item {
+func NewItem(id string, name string, lastUpdated string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon, ) *Item {
 	this := Item{}
 	this.Id = id
 	this.Name = name
+	this.LastUpdated = lastUpdated
 	this.Incomplete = incomplete
 	this.Members = members
 	this.Tradeable = tradeable
@@ -115,7 +116,6 @@ func NewItem(id string, name string, incomplete bool, members bool, tradeable bo
 	this.Icon = icon
 	this.WikiName = wikiName
 	this.WikiUrl = wikiUrl
-	this.WikiExchange = wikiExchange
 	this.Equipment = equipment
 	this.Weapon = weapon
 	return &this
@@ -175,6 +175,30 @@ func (o *Item) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *Item) SetName(v string) {
 	o.Name = v
+}
+
+// GetLastUpdated returns the LastUpdated field value
+func (o *Item) GetLastUpdated() string {
+	if o == nil  {
+		var ret string
+		return ret
+	}
+
+	return o.LastUpdated
+}
+
+// GetLastUpdatedOk returns a tuple with the LastUpdated field value
+// and a boolean to check if the value has been set.
+func (o *Item) GetLastUpdatedOk() (*string, bool) {
+	if o == nil  {
+		return nil, false
+	}
+	return &o.LastUpdated, true
+}
+
+// SetLastUpdated sets field value
+func (o *Item) SetLastUpdated(v string) {
+	o.LastUpdated = v
 }
 
 // GetIncomplete returns the Incomplete field value
@@ -849,32 +873,6 @@ func (o *Item) SetWikiUrl(v string) {
 	o.WikiUrl.Set(&v)
 }
 
-// GetWikiExchange returns the WikiExchange field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *Item) GetWikiExchange() string {
-	if o == nil || o.WikiExchange.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.WikiExchange.Get()
-}
-
-// GetWikiExchangeOk returns a tuple with the WikiExchange field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Item) GetWikiExchangeOk() (*string, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return o.WikiExchange.Get(), o.WikiExchange.IsSet()
-}
-
-// SetWikiExchange sets field value
-func (o *Item) SetWikiExchange(v string) {
-	o.WikiExchange.Set(&v)
-}
-
 // GetEquipment returns the Equipment field value
 // If the value is explicit nil, the zero value for ItemEquipment will be returned
 func (o *Item) GetEquipment() ItemEquipment {
@@ -934,6 +932,9 @@ func (o Item) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["name"] = o.Name
+	}
+	if true {
+		toSerialize["last_updated"] = o.LastUpdated
 	}
 	if true {
 		toSerialize["incomplete"] = o.Incomplete
@@ -1015,9 +1016,6 @@ func (o Item) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["wiki_url"] = o.WikiUrl.Get()
-	}
-	if true {
-		toSerialize["wiki_exchange"] = o.WikiExchange.Get()
 	}
 	if true {
 		toSerialize["equipment"] = o.Equipment.Get()

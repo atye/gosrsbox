@@ -11,7 +11,7 @@ info:
   title: osrsbox-api
   version: "1.0"
 servers:
-- url: api.osrsbox.com
+- url: https://api.osrsbox.com
 security:
 - BasicAuth: []
 tags:
@@ -24,6 +24,21 @@ tags:
 - name: Icons_prayer
 paths:
   /items:
+    delete:
+      operationId: deleteitems
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all items
+      tags:
+      - Item
     get:
       operationId: getitems
       parameters:
@@ -85,7 +100,56 @@ paths:
       summary: Retrieves one or more items
       tags:
       - Item
+    post:
+      operationId: postitems
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Item'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more items.
+      tags:
+      - Item
   /items/{itemId}:
+    delete:
+      operationId: deleteItemItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Item document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Item document
+      tags:
+      - Item
     get:
       operationId: getItemItem
       parameters:
@@ -114,7 +178,56 @@ paths:
       summary: Retrieves a Item document
       tags:
       - Item
+    put:
+      operationId: putItemItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Item'
+      responses:
+        "200":
+          description: Item document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Item document
+      tags:
+      - Item
   /weapons:
+    delete:
+      operationId: deleteweapons
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all weapons
+      tags:
+      - Weapon
     get:
       operationId: getweapons
       parameters:
@@ -176,7 +289,56 @@ paths:
       summary: Retrieves one or more weapons
       tags:
       - Weapon
+    post:
+      operationId: postweapons
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Weapon'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more weapons.
+      tags:
+      - Weapon
   /weapons/{weaponId}:
+    delete:
+      operationId: deleteWeaponItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: weaponId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Weapon document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Weapon document
+      tags:
+      - Weapon
     get:
       operationId: getWeaponItem
       parameters:
@@ -205,7 +367,56 @@ paths:
       summary: Retrieves a Weapon document
       tags:
       - Weapon
+    put:
+      operationId: putWeaponItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: weaponId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Weapon'
+      responses:
+        "200":
+          description: Weapon document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Weapon document
+      tags:
+      - Weapon
   /equipment:
+    delete:
+      operationId: deleteequipment
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all equipment
+      tags:
+      - Equipment
     get:
       operationId: getequipment
       parameters:
@@ -267,7 +478,56 @@ paths:
       summary: Retrieves one or more equipment
       tags:
       - Equipment
+    post:
+      operationId: postequipment
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Equipment'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more equipment.
+      tags:
+      - Equipment
   /equipment/{equipmentId}:
+    delete:
+      operationId: deleteEquipmentItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: equipmentId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Equipment document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Equipment document
+      tags:
+      - Equipment
     get:
       operationId: getEquipmentItem
       parameters:
@@ -296,7 +556,56 @@ paths:
       summary: Retrieves a Equipment document
       tags:
       - Equipment
+    put:
+      operationId: putEquipmentItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: equipmentId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Equipment'
+      responses:
+        "200":
+          description: Equipment document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Equipment document
+      tags:
+      - Equipment
   /monsters:
+    delete:
+      operationId: deletemonsters
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all monsters
+      tags:
+      - Monster
     get:
       operationId: getmonsters
       parameters:
@@ -358,11 +667,60 @@ paths:
       summary: Retrieves one or more monsters
       tags:
       - Monster
+    post:
+      operationId: postmonsters
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Monster'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more monsters.
+      tags:
+      - Monster
   /monsters/{monsterId}:
+    delete:
+      operationId: deleteMonsterItem
+      parameters:
+      - description: Unique OSRS monster ID number.
+        example: ""
+        explode: false
+        in: path
+        name: monsterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Monster document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Monster document
+      tags:
+      - Monster
     get:
       operationId: getMonsterItem
       parameters:
-      - description: Unique OSRS item ID number.
+      - description: Unique OSRS monster ID number.
         example: ""
         explode: false
         in: path
@@ -387,7 +745,56 @@ paths:
       summary: Retrieves a Monster document
       tags:
       - Monster
+    put:
+      operationId: putMonsterItem
+      parameters:
+      - description: Unique OSRS monster ID number.
+        example: ""
+        explode: false
+        in: path
+        name: monsterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Monster'
+      responses:
+        "200":
+          description: Monster document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Monster document
+      tags:
+      - Monster
   /prayers:
+    delete:
+      operationId: deleteprayers
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all prayers
+      tags:
+      - Prayer
     get:
       operationId: getprayers
       parameters:
@@ -449,7 +856,56 @@ paths:
       summary: Retrieves one or more prayers
       tags:
       - Prayer
+    post:
+      operationId: postprayers
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Prayer'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more prayers.
+      tags:
+      - Prayer
   /prayers/{prayerId}:
+    delete:
+      operationId: deletePrayerItem
+      parameters:
+      - description: Unique prayer ID number.
+        example: ""
+        explode: false
+        in: path
+        name: prayerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Prayer document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Prayer document
+      tags:
+      - Prayer
     get:
       operationId: getPrayerItem
       parameters:
@@ -478,7 +934,56 @@ paths:
       summary: Retrieves a Prayer document
       tags:
       - Prayer
+    put:
+      operationId: putPrayerItem
+      parameters:
+      - description: Unique prayer ID number.
+        example: ""
+        explode: false
+        in: path
+        name: prayerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Prayer'
+      responses:
+        "200":
+          description: Prayer document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Prayer document
+      tags:
+      - Prayer
   /icons_items:
+    delete:
+      operationId: deleteicons_items
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all icons_items
+      tags:
+      - Icons_item
     get:
       operationId: geticons_items
       parameters:
@@ -540,7 +1045,56 @@ paths:
       summary: Retrieves one or more icons_items
       tags:
       - Icons_item
+    post:
+      operationId: posticons_items
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Icons_item'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more icons_items.
+      tags:
+      - Icons_item
   /icons_items/{icons_itemId}:
+    delete:
+      operationId: deleteIcons_itemItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: icons_itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Icons_item document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Icons_item document
+      tags:
+      - Icons_item
     get:
       operationId: getIcons_itemItem
       parameters:
@@ -569,7 +1123,56 @@ paths:
       summary: Retrieves a Icons_item document
       tags:
       - Icons_item
+    put:
+      operationId: putIcons_itemItem
+      parameters:
+      - description: Unique OSRS item ID number.
+        example: ""
+        explode: false
+        in: path
+        name: icons_itemId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Icons_item'
+      responses:
+        "200":
+          description: Icons_item document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Icons_item document
+      tags:
+      - Icons_item
   /icons_prayers:
+    delete:
+      operationId: deleteicons_prayers
+      parameters: []
+      responses:
+        "204":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes all icons_prayers
+      tags:
+      - Icons_prayer
     get:
       operationId: geticons_prayers
       parameters:
@@ -631,7 +1234,56 @@ paths:
       summary: Retrieves one or more icons_prayers
       tags:
       - Icons_prayer
+    post:
+      operationId: posticons_prayers
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/Icons_prayer'
+      responses:
+        "201":
+          description: operation has been successful
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Stores one or more icons_prayers.
+      tags:
+      - Icons_prayer
   /icons_prayers/{icons_prayerId}:
+    delete:
+      operationId: deleteIcons_prayerItem
+      parameters:
+      - description: Unique OSRS prayer ID number.
+        example: ""
+        explode: false
+        in: path
+        name: icons_prayerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Icons_prayer document deleted successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Deletes a Icons_prayer document
+      tags:
+      - Icons_prayer
     get:
       operationId: getIcons_prayerItem
       parameters:
@@ -658,6 +1310,40 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error message
       summary: Retrieves a Icons_prayer document
+      tags:
+      - Icons_prayer
+    put:
+      operationId: putIcons_prayerItem
+      parameters:
+      - description: Unique OSRS prayer ID number.
+        example: ""
+        explode: false
+        in: path
+        name: icons_prayerId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Current value of the _etag field
+        explode: false
+        in: header
+        name: If-Match
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        $ref: '#/components/requestBodies/Icons_prayer'
+      responses:
+        "200":
+          description: Icons_prayer document replaced successfully
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error message
+      summary: Replaces a Icons_prayer document
       tags:
       - Icons_prayer
 components:
@@ -722,7 +1408,7 @@ components:
         type: string
       style: simple
     Monster_id:
-      description: Unique OSRS item ID number.
+      description: Unique OSRS monster ID number.
       example: ""
       explode: false
       in: path
@@ -899,7 +1585,7 @@ components:
     Item:
       example:
         equipable_weapon: true
-        stacked: 6
+        stacked: 0
         quest_item: true
         examine: examine
         wiki_url: wiki_url
@@ -908,8 +1594,8 @@ components:
         linked_id_placeholder: 5
         noteable: true
         weapon:
-          weapon_type: pickaxes
-          attack_speed: 9
+          weapon_type: axe
+          attack_speed: 8
           stances:
           - attack_type: spellcasting
             combat_style: impale
@@ -925,39 +1611,39 @@ components:
         equipable_by_player: true
         members: true
         tradeable: true
-        id: "0"
+        id: id
         placeholder: true
-        highalch: 9
+        highalch: 7
         stackable: true
-        lowalch: 7
-        cost: 2
+        lowalch: 2
+        last_updated: last_updated
+        cost: 5
         equipable: true
-        weight: 3.6160767
+        weight: 9.301444
         equipment:
           requirements: '{}'
-          defence_ranged: 5
+          defence_ranged: 4
           ranged_strength: 9
-          defence_stab: 6
-          defence_magic: 4
+          defence_stab: 1
+          defence_magic: 1
           attack_magic: 1
-          attack_stab: 4
+          attack_stab: 2
           slot: 2h
           attack_ranged: 1
-          prayer: 8
-          defence_crush: 1
-          defence_slash: 7
-          melee_strength: 9
-          magic_damage: 6
-          attack_slash: 7
-          attack_crush: 1
+          prayer: 6
+          defence_crush: 7
+          defence_slash: 6
+          melee_strength: 5
+          magic_damage: 9
+          attack_slash: 4
+          attack_crush: 7
         duplicate: true
-        wiki_exchange: wiki_exchange
-        linked_id_item: 1
-        buy_limit: 2
+        linked_id_item: 6
+        buy_limit: 3
         noted: true
         release_date: release_date
         name: name
-        linked_id_noted: 5
+        linked_id_noted: 1
         wiki_name: wiki_name
       properties:
         id:
@@ -967,6 +1653,11 @@ components:
         name:
           description: The name of the item.
           nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          nullable: false
+          pattern: ^(20[0-9]{2})-([012][0-9])-([0123][0-9])$
           type: string
         incomplete:
           description: If the item has incomplete wiki data.
@@ -1078,10 +1769,6 @@ components:
           description: The OSRS Wiki URL (possibly including anchor link).
           nullable: true
           type: string
-        wiki_exchange:
-          description: The OSRS Wiki Exchange URL.
-          nullable: true
-          type: string
         equipment:
           $ref: '#/components/schemas/Item_equipment'
         weapon:
@@ -1099,6 +1786,7 @@ components:
       - icon
       - id
       - incomplete
+      - last_updated
       - linked_id_item
       - linked_id_noted
       - linked_id_placeholder
@@ -1116,14 +1804,13 @@ components:
       - tradeable_on_ge
       - weapon
       - weight
-      - wiki_exchange
       - wiki_name
       - wiki_url
       type: object
     Weapon:
       example:
         equipable_weapon: true
-        stacked: 6
+        stacked: 0
         quest_item: true
         examine: examine
         wiki_url: wiki_url
@@ -1132,8 +1819,8 @@ components:
         linked_id_placeholder: 5
         noteable: true
         weapon:
-          weapon_type: pickaxes
-          attack_speed: 9
+          weapon_type: axe
+          attack_speed: 8
           stances:
           - attack_type: spellcasting
             combat_style: impale
@@ -1149,39 +1836,39 @@ components:
         equipable_by_player: true
         members: true
         tradeable: true
-        id: 0
+        id: id
         placeholder: true
-        highalch: 9
+        highalch: 7
         stackable: true
-        lowalch: 7
-        cost: 2
+        lowalch: 2
+        last_updated: last_updated
+        cost: 5
         equipable: true
-        weight: 3.6160767
+        weight: 9.301444
         equipment:
           requirements: '{}'
-          defence_ranged: 5
+          defence_ranged: 4
           ranged_strength: 9
-          defence_stab: 6
-          defence_magic: 4
+          defence_stab: 1
+          defence_magic: 1
           attack_magic: 1
-          attack_stab: 4
+          attack_stab: 2
           slot: 2h
           attack_ranged: 1
-          prayer: 8
-          defence_crush: 1
-          defence_slash: 7
-          melee_strength: 9
-          magic_damage: 6
-          attack_slash: 7
-          attack_crush: 1
+          prayer: 6
+          defence_crush: 7
+          defence_slash: 6
+          melee_strength: 5
+          magic_damage: 9
+          attack_slash: 4
+          attack_crush: 7
         duplicate: true
-        wiki_exchange: wiki_exchange
-        linked_id_item: 1
-        buy_limit: 2
+        linked_id_item: 6
+        buy_limit: 3
         noted: true
         release_date: release_date
         name: name
-        linked_id_noted: 5
+        linked_id_noted: 1
         wiki_name: wiki_name
       properties:
         id:
@@ -1191,6 +1878,11 @@ components:
         name:
           description: The name of the item.
           nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          nullable: false
+          pattern: ^(20[0-9]{2})-([012][0-9])-([0123][0-9])$
           type: string
         incomplete:
           description: If the item has incomplete wiki data.
@@ -1302,10 +1994,6 @@ components:
           description: The OSRS Wiki URL (possibly including anchor link).
           nullable: true
           type: string
-        wiki_exchange:
-          description: The OSRS Wiki Exchange URL.
-          nullable: true
-          type: string
         equipment:
           $ref: '#/components/schemas/Item_equipment'
         weapon:
@@ -1323,6 +2011,7 @@ components:
       - icon
       - id
       - incomplete
+      - last_updated
       - linked_id_item
       - linked_id_noted
       - linked_id_placeholder
@@ -1340,14 +2029,13 @@ components:
       - tradeable_on_ge
       - weapon
       - weight
-      - wiki_exchange
       - wiki_name
       - wiki_url
       type: object
     Equipment:
       example:
         equipable_weapon: true
-        stacked: 6
+        stacked: 0
         quest_item: true
         examine: examine
         wiki_url: wiki_url
@@ -1356,8 +2044,8 @@ components:
         linked_id_placeholder: 5
         noteable: true
         weapon:
-          weapon_type: pickaxes
-          attack_speed: 9
+          weapon_type: axe
+          attack_speed: 8
           stances:
           - attack_type: spellcasting
             combat_style: impale
@@ -1373,39 +2061,39 @@ components:
         equipable_by_player: true
         members: true
         tradeable: true
-        id: 0
+        id: id
         placeholder: true
-        highalch: 9
+        highalch: 7
         stackable: true
-        lowalch: 7
-        cost: 2
+        lowalch: 2
+        last_updated: last_updated
+        cost: 5
         equipable: true
-        weight: 3.6160767
+        weight: 9.301444
         equipment:
           requirements: '{}'
-          defence_ranged: 5
+          defence_ranged: 4
           ranged_strength: 9
-          defence_stab: 6
-          defence_magic: 4
+          defence_stab: 1
+          defence_magic: 1
           attack_magic: 1
-          attack_stab: 4
+          attack_stab: 2
           slot: 2h
           attack_ranged: 1
-          prayer: 8
-          defence_crush: 1
-          defence_slash: 7
-          melee_strength: 9
-          magic_damage: 6
-          attack_slash: 7
-          attack_crush: 1
+          prayer: 6
+          defence_crush: 7
+          defence_slash: 6
+          melee_strength: 5
+          magic_damage: 9
+          attack_slash: 4
+          attack_crush: 7
         duplicate: true
-        wiki_exchange: wiki_exchange
-        linked_id_item: 1
-        buy_limit: 2
+        linked_id_item: 6
+        buy_limit: 3
         noted: true
         release_date: release_date
         name: name
-        linked_id_noted: 5
+        linked_id_noted: 1
         wiki_name: wiki_name
       properties:
         id:
@@ -1415,6 +2103,11 @@ components:
         name:
           description: The name of the item.
           nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          nullable: false
+          pattern: ^(20[0-9]{2})-([012][0-9])-([0123][0-9])$
           type: string
         incomplete:
           description: If the item has incomplete wiki data.
@@ -1526,10 +2219,6 @@ components:
           description: The OSRS Wiki URL (possibly including anchor link).
           nullable: true
           type: string
-        wiki_exchange:
-          description: The OSRS Wiki Exchange URL.
-          nullable: true
-          type: string
         equipment:
           $ref: '#/components/schemas/Item_equipment'
         weapon:
@@ -1547,6 +2236,7 @@ components:
       - icon
       - id
       - incomplete
+      - last_updated
       - linked_id_item
       - linked_id_noted
       - linked_id_placeholder
@@ -1564,88 +2254,91 @@ components:
       - tradeable_on_ge
       - weapon
       - weight
-      - wiki_exchange
       - wiki_name
       - wiki_url
       type: object
     Monster:
       example:
+        attack_bonus: 1
         attack_type:
         - attack_type
         - attack_type
         examine: examine
         wiki_url: wiki_url
         defence_magic: 9
-        icon: icon
-        attack_magic: 7
-        attack_speed: 2
-        attack_stab: 1
+        attack_magic: 1
+        attack_speed: 5
         poisonous: true
-        combat_level: 6
-        hitpoints: 5
+        combat_level: 0
+        hitpoints: 1
         slayer_monster: true
         incomplete: true
-        ranged_level: 1
+        ranged_level: 7
+        strength_bonus: 1
         drops:
         - noted: true
           quantity: quantity
           members: true
           name: name
-          id: 6
-          drop_requirements: krystilia-task-only
-          rarity: 1.284659
+          id: 8
+          rolls: 6
+          rarity: 9.018348
         - noted: true
           quantity: quantity
           members: true
           name: name
-          id: 6
-          drop_requirements: krystilia-task-only
-          rarity: 1.284659
-        slayer_level: 7
+          id: 8
+          rolls: 6
+          rarity: 9.018348
+        slayer_level: 2
+        venomous: true
         members: true
-        attack_accuracy: 8
-        id: 0
+        id: id
         aggressive: true
+        magic_bonus: 6
         defence_slash: 5
-        melee_strength: 9
-        magic_damage: 3
-        attack_slash: 1
-        slayer_xp: 9.301444
+        slayer_xp: 7.0614014
+        last_updated: last_updated
         defence_ranged: 6
-        ranged_strength: 6
         defence_stab: 4
         immune_poison: true
         immune_venom: true
         duplicate: true
-        magic_level: 7
+        magic_level: 4
         max_hit: 5
-        attack_ranged: 1
-        size: 1
+        attack_ranged: 7
+        ranged_bonus: 1
+        size: 6
         release_date: release_date
         name: name
-        defence_level: 4
+        defence_level: 2
         defence_crush: 9
         attributes:
         - attributes
         - attributes
         wiki_name: wiki_name
-        strength_level: 2
+        strength_level: 3
         slayer_masters:
         - slayer_masters
         - slayer_masters
         category:
         - category
         - category
-        attack_level: 3
-        attack_crush: 6
+        attack_level: 9
       properties:
         id:
-          description: Unique OSRS item ID number.
+          description: Unique OSRS monster ID number.
           nullable: false
           type: string
         name:
           description: The name of the monster.
           nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the monster was updated (in ISO8601 date
+            format).
+          nullable: true
+          pattern: ^(20[0-9]{2})-([012][0-9])-([0123][0-9])$
           type: string
         incomplete:
           description: If the monster has incomplete wiki data.
@@ -1656,7 +2349,7 @@ components:
           nullable: false
           type: boolean
         release_date:
-          description: The release date of the monster (in ISO8601 format).
+          description: The release date of the monster (in ISO8601 date format).
           nullable: true
           pattern: ^(2[0-9]{3})-([012][0-9])-([0123][0-9])$
           type: string
@@ -1670,14 +2363,14 @@ components:
           type: integer
         hitpoints:
           description: The number of hitpoints a monster has.
-          nullable: false
+          nullable: true
           type: integer
         max_hit:
           description: The maximum hit of the monster.
-          nullable: false
+          nullable: true
           type: integer
         attack_type:
-          description: The attack style (melee, magic, range) of the monster.
+          description: The attack style (e.g., melee, magic, range) of the monster.
           items:
             type: string
           nullable: false
@@ -1692,6 +2385,10 @@ components:
           type: boolean
         poisonous:
           description: If the monster poisons, or not
+          nullable: false
+          type: boolean
+        venomous:
+          description: If the monster poisons using venom, or not
           nullable: false
           type: boolean
         immune_poison:
@@ -1790,7 +2487,7 @@ components:
           - lava dragon
           - lesser demon
           - lizardmen
-          - lizards
+          - lizard
           - magic axe
           - mammoth
           - minotaur
@@ -1812,7 +2509,7 @@ components:
           - rogue
           - rune dragon
           - sand crab
-          - scabarites
+          - scabarite
           - scorpion
           - sea snake
           - shade
@@ -1820,9 +2517,9 @@ components:
           - skeletal wyvern
           - skeleton
           - smoke devil
-          - sourhogs
+          - sourhog
           - spider
-          - spiritual creatures
+          - spiritual creature
           - steel dragon
           - suqah
           - terror dog
@@ -1830,11 +2527,11 @@ components:
           - turoth
           - tzhaar
           - vampyre
-          - wall beasts
+          - wall beast
           - waterfiend
           - werewolf
           - wolf
-          - wyrms
+          - wyrm
           - zombie
           items:
             type: string
@@ -1877,10 +2574,6 @@ components:
           description: The examine text of the monster.
           nullable: false
           type: string
-        icon:
-          description: The monster icon  (in base64 encoding).
-          nullable: true
-          type: string
         wiki_name:
           description: The OSRS Wiki name for the monster.
           nullable: false
@@ -1909,24 +2602,28 @@ components:
           description: The ranged level of the monster.
           nullable: false
           type: integer
-        attack_stab:
-          description: The attack stab bonus of the monster.
+        attack_bonus:
+          description: The attack bonus of the monster.
           nullable: false
           type: integer
-        attack_slash:
-          description: The attack slash bonus of the monster.
-          nullable: false
-          type: integer
-        attack_crush:
-          description: The attack crush bonus of the monster.
+        strength_bonus:
+          description: The strength bonus of the monster.
           nullable: false
           type: integer
         attack_magic:
-          description: The attack magic bonus of the monster.
+          description: The magic attack of the monster.
+          nullable: false
+          type: integer
+        magic_bonus:
+          description: The magic bonus of the monster.
           nullable: false
           type: integer
         attack_ranged:
-          description: The attack ranged bonus of the monster.
+          description: The ranged attack of the monster.
+          nullable: false
+          type: integer
+        ranged_bonus:
+          description: The ranged bonus of the monster.
           nullable: false
           type: integer
         defence_stab:
@@ -1949,22 +2646,6 @@ components:
           description: The defence ranged bonus of the monster.
           nullable: false
           type: integer
-        attack_accuracy:
-          description: The attack accuracy bonus of the monster.
-          nullable: false
-          type: integer
-        melee_strength:
-          description: The melee strength bonus of the monster.
-          nullable: false
-          type: integer
-        ranged_strength:
-          description: The ranged strength bonus of the monster.
-          nullable: false
-          type: integer
-        magic_damage:
-          description: The magic damage bonus of the monster.
-          nullable: false
-          type: integer
         drops:
           description: An array of monster drop objects.
           items:
@@ -1973,14 +2654,11 @@ components:
           type: array
       required:
       - aggressive
-      - attack_accuracy
-      - attack_crush
+      - attack_bonus
       - attack_level
       - attack_magic
       - attack_ranged
-      - attack_slash
       - attack_speed
-      - attack_stab
       - attack_type
       - attributes
       - category
@@ -1995,40 +2673,41 @@ components:
       - duplicate
       - examine
       - hitpoints
-      - icon
       - id
       - immune_poison
       - immune_venom
       - incomplete
-      - magic_damage
+      - last_updated
+      - magic_bonus
       - magic_level
       - max_hit
-      - melee_strength
       - members
       - name
       - poisonous
+      - ranged_bonus
       - ranged_level
-      - ranged_strength
       - release_date
       - size
       - slayer_level
       - slayer_masters
       - slayer_monster
       - slayer_xp
+      - strength_bonus
       - strength_level
+      - venomous
       - wiki_name
       - wiki_url
       type: object
     Prayer:
       example:
-        drain_per_minute: 6.0274563
+        drain_per_minute: 0.8008282
         requirements: '{}'
         wiki_url: wiki_url
         members: true
         name: name
         icon: icon
         description: description
-        id: "0"
+        id: id
         bonuses: '{}'
       properties:
         id:
@@ -2082,7 +2761,7 @@ components:
     Icons_item:
       example:
         icon: icon
-        id: 0
+        id: id
       properties:
         id:
           description: Unique OSRS item ID number.
@@ -2099,12 +2778,12 @@ components:
     Icons_prayer:
       example:
         icon: icon
-        id: 0
+        id: id
       properties:
         id:
           description: Unique OSRS prayer ID number.
           nullable: false
-          type: integer
+          type: string
         icon:
           description: The icon image (in base64 encoding) of the prayer.
           nullable: false
@@ -2126,12 +2805,12 @@ components:
       type: object
     respone_metadata:
       example:
-        total: 6
-        max_results: 3
-        page: 1
+        total: 9
+        max_results: 6
+        page: ""
       properties:
         page:
-          type: integer
+          type: int
         total:
           type: integer
         max_results:
@@ -2161,12 +2840,12 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2175,8 +2854,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2192,42 +2871,42 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2236,8 +2915,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2253,39 +2932,39 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
       properties:
         _items:
@@ -2307,12 +2986,12 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: page
+          total: 9
+          max_results: 6
+          page: ""
         _items:
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2321,8 +3000,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2338,42 +3017,42 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2382,8 +3061,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2399,39 +3078,39 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
       properties:
         _items:
@@ -2453,12 +3132,12 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2467,8 +3146,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2484,42 +3163,42 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
         - equipable_weapon: true
-          stacked: 6
+          stacked: 0
           quest_item: true
           examine: examine
           wiki_url: wiki_url
@@ -2528,8 +3207,8 @@ components:
           linked_id_placeholder: 5
           noteable: true
           weapon:
-            weapon_type: pickaxes
-            attack_speed: 9
+            weapon_type: axe
+            attack_speed: 8
             stances:
             - attack_type: spellcasting
               combat_style: impale
@@ -2545,39 +3224,39 @@ components:
           equipable_by_player: true
           members: true
           tradeable: true
-          id: 0
+          id: id
           placeholder: true
-          highalch: 9
+          highalch: 7
           stackable: true
-          lowalch: 7
-          cost: 2
+          lowalch: 2
+          last_updated: last_updated
+          cost: 5
           equipable: true
-          weight: 3.6160767
+          weight: 9.301444
           equipment:
             requirements: '{}'
-            defence_ranged: 5
+            defence_ranged: 4
             ranged_strength: 9
-            defence_stab: 6
-            defence_magic: 4
+            defence_stab: 1
+            defence_magic: 1
             attack_magic: 1
-            attack_stab: 4
+            attack_stab: 2
             slot: 2h
             attack_ranged: 1
-            prayer: 8
-            defence_crush: 1
-            defence_slash: 7
-            melee_strength: 9
-            magic_damage: 6
-            attack_slash: 7
-            attack_crush: 1
+            prayer: 6
+            defence_crush: 7
+            defence_slash: 6
+            melee_strength: 5
+            magic_damage: 9
+            attack_slash: 4
+            attack_crush: 7
           duplicate: true
-          wiki_exchange: wiki_exchange
-          linked_id_item: 1
-          buy_limit: 2
+          linked_id_item: 6
+          buy_limit: 3
           noted: true
           release_date: release_date
           name: name
-          linked_id_noted: 5
+          linked_id_noted: 1
           wiki_name: wiki_name
       properties:
         _items:
@@ -2599,146 +3278,142 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
-        - attack_type:
+        - attack_bonus: 1
+          attack_type:
           - attack_type
           - attack_type
           examine: examine
           wiki_url: wiki_url
           defence_magic: 9
-          icon: icon
-          attack_magic: 7
-          attack_speed: 2
-          attack_stab: 1
+          attack_magic: 1
+          attack_speed: 5
           poisonous: true
-          combat_level: 6
-          hitpoints: 5
+          combat_level: 0
+          hitpoints: 1
           slayer_monster: true
           incomplete: true
-          ranged_level: 1
+          ranged_level: 7
+          strength_bonus: 1
           drops:
           - noted: true
             quantity: quantity
             members: true
             name: name
-            id: 6
-            drop_requirements: krystilia-task-only
-            rarity: 1.284659
+            id: 8
+            rolls: 6
+            rarity: 9.018348
           - noted: true
             quantity: quantity
             members: true
             name: name
-            id: 6
-            drop_requirements: krystilia-task-only
-            rarity: 1.284659
-          slayer_level: 7
+            id: 8
+            rolls: 6
+            rarity: 9.018348
+          slayer_level: 2
+          venomous: true
           members: true
-          attack_accuracy: 8
-          id: 0
+          id: id
           aggressive: true
+          magic_bonus: 6
           defence_slash: 5
-          melee_strength: 9
-          magic_damage: 3
-          attack_slash: 1
-          slayer_xp: 9.301444
+          slayer_xp: 7.0614014
+          last_updated: last_updated
           defence_ranged: 6
-          ranged_strength: 6
           defence_stab: 4
           immune_poison: true
           immune_venom: true
           duplicate: true
-          magic_level: 7
+          magic_level: 4
           max_hit: 5
-          attack_ranged: 1
-          size: 1
+          attack_ranged: 7
+          ranged_bonus: 1
+          size: 6
           release_date: release_date
           name: name
-          defence_level: 4
+          defence_level: 2
           defence_crush: 9
           attributes:
           - attributes
           - attributes
           wiki_name: wiki_name
-          strength_level: 2
+          strength_level: 3
           slayer_masters:
           - slayer_masters
           - slayer_masters
           category:
           - category
           - category
-          attack_level: 3
-          attack_crush: 6
-        - attack_type:
+          attack_level: 9
+        - attack_bonus: 1
+          attack_type:
           - attack_type
           - attack_type
           examine: examine
           wiki_url: wiki_url
           defence_magic: 9
-          icon: icon
-          attack_magic: 7
-          attack_speed: 2
-          attack_stab: 1
+          attack_magic: 1
+          attack_speed: 5
           poisonous: true
-          combat_level: 6
-          hitpoints: 5
+          combat_level: 0
+          hitpoints: 1
           slayer_monster: true
           incomplete: true
-          ranged_level: 1
+          ranged_level: 7
+          strength_bonus: 1
           drops:
           - noted: true
             quantity: quantity
             members: true
             name: name
-            id: 6
-            drop_requirements: krystilia-task-only
-            rarity: 1.284659
+            id: 8
+            rolls: 6
+            rarity: 9.018348
           - noted: true
             quantity: quantity
             members: true
             name: name
-            id: 6
-            drop_requirements: krystilia-task-only
-            rarity: 1.284659
-          slayer_level: 7
+            id: 8
+            rolls: 6
+            rarity: 9.018348
+          slayer_level: 2
+          venomous: true
           members: true
-          attack_accuracy: 8
-          id: 0
+          id: id
           aggressive: true
+          magic_bonus: 6
           defence_slash: 5
-          melee_strength: 9
-          magic_damage: 3
-          attack_slash: 1
-          slayer_xp: 9.301444
+          slayer_xp: 7.0614014
+          last_updated: last_updated
           defence_ranged: 6
-          ranged_strength: 6
           defence_stab: 4
           immune_poison: true
           immune_venom: true
           duplicate: true
-          magic_level: 7
+          magic_level: 4
           max_hit: 5
-          attack_ranged: 1
-          size: 1
+          attack_ranged: 7
+          ranged_bonus: 1
+          size: 6
           release_date: release_date
           name: name
-          defence_level: 4
+          defence_level: 2
           defence_crush: 9
           attributes:
           - attributes
           - attributes
           wiki_name: wiki_name
-          strength_level: 2
+          strength_level: 3
           slayer_masters:
           - slayer_masters
           - slayer_masters
           category:
           - category
           - category
-          attack_level: 3
-          attack_crush: 6
+          attack_level: 9
       properties:
         _items:
           items:
@@ -2759,27 +3434,27 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
-        - drain_per_minute: 6.0274563
+        - drain_per_minute: 0.8008282
           requirements: '{}'
           wiki_url: wiki_url
           members: true
           name: name
           icon: icon
           description: description
-          id: 0
+          id: id
           bonuses: '{}'
-        - drain_per_minute: 6.0274563
+        - drain_per_minute: 0.8008282
           requirements: '{}'
           wiki_url: wiki_url
           members: true
           name: name
           icon: icon
           description: description
-          id: 0
+          id: id
           bonuses: '{}'
       properties:
         _items:
@@ -2801,14 +3476,14 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
         - icon: icon
-          id: 0
+          id: id
         - icon: icon
-          id: 0
+          id: id
       properties:
         _items:
           items:
@@ -2829,14 +3504,14 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 6
-          max_results: 3
-          page: 1
+          total: 9
+          max_results: 6
+          page: ""
         _items:
         - icon: icon
-          id: 0
+          id: id
         - icon: icon
-          id: 0
+          id: id
       properties:
         _items:
           items:
@@ -2851,21 +3526,21 @@ components:
       description: The equipment bonuses of equipable armour/weapons.
       example:
         requirements: '{}'
-        defence_ranged: 5
+        defence_ranged: 4
         ranged_strength: 9
-        defence_stab: 6
-        defence_magic: 4
+        defence_stab: 1
+        defence_magic: 1
         attack_magic: 1
-        attack_stab: 4
+        attack_stab: 2
         slot: 2h
         attack_ranged: 1
-        prayer: 8
-        defence_crush: 1
-        defence_slash: 7
-        melee_strength: 9
-        magic_damage: 6
-        attack_slash: 7
-        attack_crush: 1
+        prayer: 6
+        defence_crush: 7
+        defence_slash: 6
+        melee_strength: 5
+        magic_damage: 9
+        attack_slash: 4
+        attack_crush: 7
       nullable: true
       properties:
         attack_stab:
@@ -3058,8 +3733,8 @@ components:
     Item_weapon:
       description: The weapon bonuses including attack speed, type and stance.
       example:
-        weapon_type: pickaxes
-        attack_speed: 9
+        weapon_type: axe
+        attack_speed: 8
         stances:
         - attack_type: spellcasting
           combat_style: impale
@@ -3080,31 +3755,33 @@ components:
         weapon_type:
           description: The weapon classification (e.g., axes)
           enum:
-          - pickaxes
-          - thrown_weapons
-          - whips
-          - stabbing_swords
-          - blunt_weapons
-          - staves
+          - axe
+          - blunt
+          - bludgeon
+          - bulwark
+          - claw
+          - polearm
+          - pickaxe
+          - scythe
+          - slash_sword
+          - spear
+          - spiked
+          - stab_sword
+          - 2h_sword
+          - whip
+          - bow
           - chinchompas
-          - banners
-          - bladed_staves
-          - slashing_swords
-          - bows
-          - polestaves
-          - crossbows
-          - spears
-          - two-handed_swords
-          - guns
-          - bulwarks
-          - axes
-          - spiked_weapons
+          - crossbow
+          - thrown
+          - staff
+          - bladed_staff
+          - powered_staff
+          - banner
+          - blaster
+          - gun
+          - polestaff
+          - salamander
           - unarmed
-          - halberds
-          - claws
-          - trident-class_weapons
-          - scythes
-          - salamanders
           nullable: false
           type: string
         stances:
@@ -3124,9 +3801,9 @@ components:
         quantity: quantity
         members: true
         name: name
-        id: 6
-        drop_requirements: krystilia-task-only
-        rarity: 1.284659
+        id: 8
+        rolls: 6
+        rarity: 9.018348
       properties:
         id:
           description: The ID number of the item drop.
@@ -3153,29 +3830,20 @@ components:
         rarity:
           description: The rarity of the item drop (as a float out of 1.0).
           format: float
-          nullable: true
+          nullable: false
           type: number
-        drop_requirements:
-          description: If there are any requirements to getting the specific drop.
-          enum:
-          - krystilia-task-only
-          - superior-only
-          - catacombs-only
-          - konar-task-only
-          - treasure-trails-only
-          - iorwerth-dungeon-only
-          - forthos-dungeon-only
-          - revenants-only
-          nullable: true
-          type: string
+        rolls:
+          description: Number of rolls from the drop.
+          nullable: false
+          type: integer
       required:
-      - drop_requirements
       - id
       - members
       - name
       - noted
       - quantity
       - rarity
+      - rolls
       type: object
     Error__error:
       properties:

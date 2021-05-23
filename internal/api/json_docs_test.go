@@ -51,7 +51,7 @@ func Test_GetJSONFiles(t *testing.T) {
 		"npcs-summary": func(t *testing.T) func() {
 			return func() {
 				var data map[string]NPCSummary
-				err := api.GetJSONFiles(context.Background(), []string{"testdata/json-docs/npcs-summary.json"}, &data)
+				err := api.GetDocument(context.Background(), "testdata/json-docs/npcs-summary.json", &data)
 				if err != nil {
 					t.Fatal(err)
 				}

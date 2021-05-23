@@ -11,23 +11,24 @@ import (
 	"testing"
 
 	openapi "github.com/atye/gosrsbox/internal/openapi/api"
+	"github.com/atye/gosrsbox/osrsbox"
 )
 
 func Test_Monsters(t *testing.T) {
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
-	t.Run("GetMonstersByID", test_GetMonstersByID)
-	t.Run("GetMonstersByName", test_GetMonstersByName)
-	t.Run("GetMonstersThatDrop", test_GetMonstersThatDrop)
+	t.Run("GetMonstersByID", testGetMonstersByID)
+	t.Run("GetMonstersByName", testGetMonstersByName)
+	t.Run("GetMonstersThatDrop", testGetMonstersThatDrop)
 }
 
-func test_GetMonstersByID(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedIDs []string, err error)
+func testGetMonstersByID(t *testing.T) {
+	type checkFn func(t *testing.T, monsters []osrsbox.Monster, expectedIDs []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterID := func(t *testing.T, monsters []openapi.Monster, expectedIDs []string, err error) {
+	verifyMonsterID := func(t *testing.T, monsters []osrsbox.Monster, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -37,8 +38,8 @@ func test_GetMonstersByID(t *testing.T) {
 		}
 
 		for i, monster := range monsters {
-			if monster.GetId() != expectedIDs[i] {
-				t.Errorf("expected name %s, got %s", expectedIDs[i], monster.GetName())
+			if monster.Id != expectedIDs[i] {
+				t.Errorf("expected name %s, got %s", expectedIDs[i], monster.Name)
 			}
 		}
 	}
@@ -67,13 +68,13 @@ func test_GetMonstersByID(t *testing.T) {
 	}
 }
 
-func test_GetMonstersByName(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
+func testGetMonstersByName(t *testing.T) {
+	type checkFn func(t *testing.T, monsters []osrsbox.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []osrsbox.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -113,13 +114,13 @@ func test_GetMonstersByName(t *testing.T) {
 	}
 }
 
-func test_GetMonstersThatDrop(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error)
+func testGetMonstersThatDrop(t *testing.T) {
+	type checkFn func(t *testing.T, monsters []osrsbox.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []openapi.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []osrsbox.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}

@@ -27,6 +27,224 @@ var (
 // PrayerApiService PrayerApi service
 type PrayerApiService service
 
+type ApiDeletePrayerItemRequest struct {
+	ctx _context.Context
+	ApiService *PrayerApiService
+	prayerId string
+	ifMatch *string
+}
+
+func (r ApiDeletePrayerItemRequest) IfMatch(ifMatch string) ApiDeletePrayerItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+
+func (r ApiDeletePrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeletePrayerItemExecute(r)
+}
+
+/*
+ * DeletePrayerItem Deletes a Prayer document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param prayerId Unique prayer ID number.
+ * @return ApiDeletePrayerItemRequest
+ */
+func (a *PrayerApiService) DeletePrayerItem(ctx _context.Context, prayerId string) ApiDeletePrayerItemRequest {
+	return ApiDeletePrayerItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		prayerId: prayerId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.DeletePrayerItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/prayers/{prayerId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"prayerId"+"}", _neturl.PathEscape(parameterToString(r.prayerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiDeleteprayersRequest struct {
+	ctx _context.Context
+	ApiService *PrayerApiService
+}
+
+
+func (r ApiDeleteprayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.DeleteprayersExecute(r)
+}
+
+/*
+ * Deleteprayers Deletes all prayers
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiDeleteprayersRequest
+ */
+func (a *PrayerApiService) Deleteprayers(ctx _context.Context) ApiDeleteprayersRequest {
+	return ApiDeleteprayersRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *PrayerApiService) DeleteprayersExecute(r ApiDeleteprayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodDelete
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.Deleteprayers")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/prayers"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
 type ApiGetPrayerItemRequest struct {
 	ctx _context.Context
 	ApiService *PrayerApiService
@@ -295,4 +513,244 @@ func (a *PrayerApiService) GetprayersExecute(r ApiGetprayersRequest) (InlineResp
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, executionError
+}
+
+type ApiPostprayersRequest struct {
+	ctx _context.Context
+	ApiService *PrayerApiService
+	prayer *Prayer
+}
+
+func (r ApiPostprayersRequest) Prayer(prayer Prayer) ApiPostprayersRequest {
+	r.prayer = &prayer
+	return r
+}
+
+func (r ApiPostprayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PostprayersExecute(r)
+}
+
+/*
+ * Postprayers Stores one or more prayers.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @return ApiPostprayersRequest
+ */
+func (a *PrayerApiService) Postprayers(ctx _context.Context) ApiPostprayersRequest {
+	return ApiPostprayersRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.Postprayers")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/prayers"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.prayer == nil {
+		executionError.error = "prayer is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.prayer
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
+}
+
+type ApiPutPrayerItemRequest struct {
+	ctx _context.Context
+	ApiService *PrayerApiService
+	prayerId string
+	ifMatch *string
+	prayer *Prayer
+}
+
+func (r ApiPutPrayerItemRequest) IfMatch(ifMatch string) ApiPutPrayerItemRequest {
+	r.ifMatch = &ifMatch
+	return r
+}
+func (r ApiPutPrayerItemRequest) Prayer(prayer Prayer) ApiPutPrayerItemRequest {
+	r.prayer = &prayer
+	return r
+}
+
+func (r ApiPutPrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+	return r.ApiService.PutPrayerItemExecute(r)
+}
+
+/*
+ * PutPrayerItem Replaces a Prayer document
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param prayerId Unique prayer ID number.
+ * @return ApiPutPrayerItemRequest
+ */
+func (a *PrayerApiService) PutPrayerItem(ctx _context.Context, prayerId string) ApiPutPrayerItemRequest {
+	return ApiPutPrayerItemRequest{
+		ApiService: a,
+		ctx: ctx,
+		prayerId: prayerId,
+	}
+}
+
+/*
+ * Execute executes the request
+ */
+func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPut
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		executionError       GenericOpenAPIError
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.PutPrayerItem")
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarPath := localBasePath + "/prayers/{prayerId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"prayerId"+"}", _neturl.PathEscape(parameterToString(r.prayerId, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+	if r.ifMatch == nil {
+		executionError.error = "ifMatch is required and must be specified"
+		return nil, executionError
+	}
+	if r.prayer == nil {
+		executionError.error = "prayer is required and must be specified"
+		return nil, executionError
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
+	// body params
+	localVarPostBody = r.prayer
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		executionError.error = err.Error()
+		return nil, executionError
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		executionError.error = err.Error()
+		return localVarHTTPResponse, executionError
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, executionError
 }

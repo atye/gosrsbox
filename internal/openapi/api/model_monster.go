@@ -16,25 +16,27 @@ import (
 
 // Monster struct for Monster
 type Monster struct {
-	// Unique OSRS item ID number.
+	// Unique OSRS monster ID number.
 	Id string `json:"id"`
 	// The name of the monster.
 	Name string `json:"name"`
+	// The last time (UTC) the monster was updated (in ISO8601 date format).
+	LastUpdated NullableString `json:"last_updated"`
 	// If the monster has incomplete wiki data.
 	Incomplete bool `json:"incomplete"`
 	// If the monster is members only, or not.
 	Members bool `json:"members"`
-	// The release date of the monster (in ISO8601 format).
+	// The release date of the monster (in ISO8601 date format).
 	ReleaseDate NullableString `json:"release_date"`
 	// The combat level of the monster.
 	CombatLevel int32 `json:"combat_level"`
 	// The size, in tiles, of the monster.
 	Size int32 `json:"size"`
 	// The number of hitpoints a monster has.
-	Hitpoints int32 `json:"hitpoints"`
+	Hitpoints NullableInt32 `json:"hitpoints"`
 	// The maximum hit of the monster.
-	MaxHit int32 `json:"max_hit"`
-	// The attack style (melee, magic, range) of the monster.
+	MaxHit NullableInt32 `json:"max_hit"`
+	// The attack style (e.g., melee, magic, range) of the monster.
 	AttackType []string `json:"attack_type"`
 	// The attack speed (in game ticks) of the monster.
 	AttackSpeed NullableInt32 `json:"attack_speed"`
@@ -42,6 +44,8 @@ type Monster struct {
 	Aggressive bool `json:"aggressive"`
 	// If the monster poisons, or not
 	Poisonous bool `json:"poisonous"`
+	// If the monster poisons using venom, or not
+	Venomous bool `json:"venomous"`
 	// If the monster is immune to poison, or not
 	ImmunePoison bool `json:"immune_poison"`
 	// If the monster is immune to venom, or not
@@ -62,8 +66,6 @@ type Monster struct {
 	Duplicate bool `json:"duplicate"`
 	// The examine text of the monster.
 	Examine string `json:"examine"`
-	// The monster icon  (in base64 encoding).
-	Icon NullableString `json:"icon"`
 	// The OSRS Wiki name for the monster.
 	WikiName string `json:"wiki_name"`
 	// The OSRS Wiki URL (possibly including anchor link).
@@ -78,16 +80,18 @@ type Monster struct {
 	MagicLevel int32 `json:"magic_level"`
 	// The ranged level of the monster.
 	RangedLevel int32 `json:"ranged_level"`
-	// The attack stab bonus of the monster.
-	AttackStab int32 `json:"attack_stab"`
-	// The attack slash bonus of the monster.
-	AttackSlash int32 `json:"attack_slash"`
-	// The attack crush bonus of the monster.
-	AttackCrush int32 `json:"attack_crush"`
-	// The attack magic bonus of the monster.
+	// The attack bonus of the monster.
+	AttackBonus int32 `json:"attack_bonus"`
+	// The strength bonus of the monster.
+	StrengthBonus int32 `json:"strength_bonus"`
+	// The magic attack of the monster.
 	AttackMagic int32 `json:"attack_magic"`
-	// The attack ranged bonus of the monster.
+	// The magic bonus of the monster.
+	MagicBonus int32 `json:"magic_bonus"`
+	// The ranged attack of the monster.
 	AttackRanged int32 `json:"attack_ranged"`
+	// The ranged bonus of the monster.
+	RangedBonus int32 `json:"ranged_bonus"`
 	// The defence stab bonus of the monster.
 	DefenceStab int32 `json:"defence_stab"`
 	// The defence slash bonus of the monster.
@@ -98,14 +102,6 @@ type Monster struct {
 	DefenceMagic int32 `json:"defence_magic"`
 	// The defence ranged bonus of the monster.
 	DefenceRanged int32 `json:"defence_ranged"`
-	// The attack accuracy bonus of the monster.
-	AttackAccuracy int32 `json:"attack_accuracy"`
-	// The melee strength bonus of the monster.
-	MeleeStrength int32 `json:"melee_strength"`
-	// The ranged strength bonus of the monster.
-	RangedStrength int32 `json:"ranged_strength"`
-	// The magic damage bonus of the monster.
-	MagicDamage int32 `json:"magic_damage"`
 	// An array of monster drop objects.
 	Drops []MonsterDrops `json:"drops"`
 }
@@ -114,10 +110,11 @@ type Monster struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMonster(id string, name string, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints int32, maxHit int32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, icon NullableString, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackStab int32, attackSlash int32, attackCrush int32, attackMagic int32, attackRanged int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, attackAccuracy int32, meleeStrength int32, rangedStrength int32, magicDamage int32, drops []MonsterDrops, ) *Monster {
+func NewMonster(id string, name string, lastUpdated NullableString, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints NullableInt32, maxHit NullableInt32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, venomous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackBonus int32, strengthBonus int32, attackMagic int32, magicBonus int32, attackRanged int32, rangedBonus int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, drops []MonsterDrops, ) *Monster {
 	this := Monster{}
 	this.Id = id
 	this.Name = name
+	this.LastUpdated = lastUpdated
 	this.Incomplete = incomplete
 	this.Members = members
 	this.ReleaseDate = releaseDate
@@ -129,6 +126,7 @@ func NewMonster(id string, name string, incomplete bool, members bool, releaseDa
 	this.AttackSpeed = attackSpeed
 	this.Aggressive = aggressive
 	this.Poisonous = poisonous
+	this.Venomous = venomous
 	this.ImmunePoison = immunePoison
 	this.ImmuneVenom = immuneVenom
 	this.Attributes = attributes
@@ -139,7 +137,6 @@ func NewMonster(id string, name string, incomplete bool, members bool, releaseDa
 	this.SlayerMasters = slayerMasters
 	this.Duplicate = duplicate
 	this.Examine = examine
-	this.Icon = icon
 	this.WikiName = wikiName
 	this.WikiUrl = wikiUrl
 	this.AttackLevel = attackLevel
@@ -147,20 +144,17 @@ func NewMonster(id string, name string, incomplete bool, members bool, releaseDa
 	this.DefenceLevel = defenceLevel
 	this.MagicLevel = magicLevel
 	this.RangedLevel = rangedLevel
-	this.AttackStab = attackStab
-	this.AttackSlash = attackSlash
-	this.AttackCrush = attackCrush
+	this.AttackBonus = attackBonus
+	this.StrengthBonus = strengthBonus
 	this.AttackMagic = attackMagic
+	this.MagicBonus = magicBonus
 	this.AttackRanged = attackRanged
+	this.RangedBonus = rangedBonus
 	this.DefenceStab = defenceStab
 	this.DefenceSlash = defenceSlash
 	this.DefenceCrush = defenceCrush
 	this.DefenceMagic = defenceMagic
 	this.DefenceRanged = defenceRanged
-	this.AttackAccuracy = attackAccuracy
-	this.MeleeStrength = meleeStrength
-	this.RangedStrength = rangedStrength
-	this.MagicDamage = magicDamage
 	this.Drops = drops
 	return &this
 }
@@ -219,6 +213,32 @@ func (o *Monster) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *Monster) SetName(v string) {
 	o.Name = v
+}
+
+// GetLastUpdated returns the LastUpdated field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *Monster) GetLastUpdated() string {
+	if o == nil || o.LastUpdated.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.LastUpdated.Get()
+}
+
+// GetLastUpdatedOk returns a tuple with the LastUpdated field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Monster) GetLastUpdatedOk() (*string, bool) {
+	if o == nil  {
+		return nil, false
+	}
+	return o.LastUpdated.Get(), o.LastUpdated.IsSet()
+}
+
+// SetLastUpdated sets field value
+func (o *Monster) SetLastUpdated(v string) {
+	o.LastUpdated.Set(&v)
 }
 
 // GetIncomplete returns the Incomplete field value
@@ -344,51 +364,55 @@ func (o *Monster) SetSize(v int32) {
 }
 
 // GetHitpoints returns the Hitpoints field value
+// If the value is explicit nil, the zero value for int32 will be returned
 func (o *Monster) GetHitpoints() int32 {
-	if o == nil  {
+	if o == nil || o.Hitpoints.Get() == nil {
 		var ret int32
 		return ret
 	}
 
-	return o.Hitpoints
+	return *o.Hitpoints.Get()
 }
 
 // GetHitpointsOk returns a tuple with the Hitpoints field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Monster) GetHitpointsOk() (*int32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return &o.Hitpoints, true
+	return o.Hitpoints.Get(), o.Hitpoints.IsSet()
 }
 
 // SetHitpoints sets field value
 func (o *Monster) SetHitpoints(v int32) {
-	o.Hitpoints = v
+	o.Hitpoints.Set(&v)
 }
 
 // GetMaxHit returns the MaxHit field value
+// If the value is explicit nil, the zero value for int32 will be returned
 func (o *Monster) GetMaxHit() int32 {
-	if o == nil  {
+	if o == nil || o.MaxHit.Get() == nil {
 		var ret int32
 		return ret
 	}
 
-	return o.MaxHit
+	return *o.MaxHit.Get()
 }
 
 // GetMaxHitOk returns a tuple with the MaxHit field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Monster) GetMaxHitOk() (*int32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return &o.MaxHit, true
+	return o.MaxHit.Get(), o.MaxHit.IsSet()
 }
 
 // SetMaxHit sets field value
 func (o *Monster) SetMaxHit(v int32) {
-	o.MaxHit = v
+	o.MaxHit.Set(&v)
 }
 
 // GetAttackType returns the AttackType field value
@@ -487,6 +511,30 @@ func (o *Monster) GetPoisonousOk() (*bool, bool) {
 // SetPoisonous sets field value
 func (o *Monster) SetPoisonous(v bool) {
 	o.Poisonous = v
+}
+
+// GetVenomous returns the Venomous field value
+func (o *Monster) GetVenomous() bool {
+	if o == nil  {
+		var ret bool
+		return ret
+	}
+
+	return o.Venomous
+}
+
+// GetVenomousOk returns a tuple with the Venomous field value
+// and a boolean to check if the value has been set.
+func (o *Monster) GetVenomousOk() (*bool, bool) {
+	if o == nil  {
+		return nil, false
+	}
+	return &o.Venomous, true
+}
+
+// SetVenomous sets field value
+func (o *Monster) SetVenomous(v bool) {
+	o.Venomous = v
 }
 
 // GetImmunePoison returns the ImmunePoison field value
@@ -733,32 +781,6 @@ func (o *Monster) SetExamine(v string) {
 	o.Examine = v
 }
 
-// GetIcon returns the Icon field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *Monster) GetIcon() string {
-	if o == nil || o.Icon.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.Icon.Get()
-}
-
-// GetIconOk returns a tuple with the Icon field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Monster) GetIconOk() (*string, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return o.Icon.Get(), o.Icon.IsSet()
-}
-
-// SetIcon sets field value
-func (o *Monster) SetIcon(v string) {
-	o.Icon.Set(&v)
-}
-
 // GetWikiName returns the WikiName field value
 func (o *Monster) GetWikiName() string {
 	if o == nil  {
@@ -927,76 +949,52 @@ func (o *Monster) SetRangedLevel(v int32) {
 	o.RangedLevel = v
 }
 
-// GetAttackStab returns the AttackStab field value
-func (o *Monster) GetAttackStab() int32 {
+// GetAttackBonus returns the AttackBonus field value
+func (o *Monster) GetAttackBonus() int32 {
 	if o == nil  {
 		var ret int32
 		return ret
 	}
 
-	return o.AttackStab
+	return o.AttackBonus
 }
 
-// GetAttackStabOk returns a tuple with the AttackStab field value
+// GetAttackBonusOk returns a tuple with the AttackBonus field value
 // and a boolean to check if the value has been set.
-func (o *Monster) GetAttackStabOk() (*int32, bool) {
+func (o *Monster) GetAttackBonusOk() (*int32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return &o.AttackStab, true
+	return &o.AttackBonus, true
 }
 
-// SetAttackStab sets field value
-func (o *Monster) SetAttackStab(v int32) {
-	o.AttackStab = v
+// SetAttackBonus sets field value
+func (o *Monster) SetAttackBonus(v int32) {
+	o.AttackBonus = v
 }
 
-// GetAttackSlash returns the AttackSlash field value
-func (o *Monster) GetAttackSlash() int32 {
+// GetStrengthBonus returns the StrengthBonus field value
+func (o *Monster) GetStrengthBonus() int32 {
 	if o == nil  {
 		var ret int32
 		return ret
 	}
 
-	return o.AttackSlash
+	return o.StrengthBonus
 }
 
-// GetAttackSlashOk returns a tuple with the AttackSlash field value
+// GetStrengthBonusOk returns a tuple with the StrengthBonus field value
 // and a boolean to check if the value has been set.
-func (o *Monster) GetAttackSlashOk() (*int32, bool) {
+func (o *Monster) GetStrengthBonusOk() (*int32, bool) {
 	if o == nil  {
 		return nil, false
 	}
-	return &o.AttackSlash, true
+	return &o.StrengthBonus, true
 }
 
-// SetAttackSlash sets field value
-func (o *Monster) SetAttackSlash(v int32) {
-	o.AttackSlash = v
-}
-
-// GetAttackCrush returns the AttackCrush field value
-func (o *Monster) GetAttackCrush() int32 {
-	if o == nil  {
-		var ret int32
-		return ret
-	}
-
-	return o.AttackCrush
-}
-
-// GetAttackCrushOk returns a tuple with the AttackCrush field value
-// and a boolean to check if the value has been set.
-func (o *Monster) GetAttackCrushOk() (*int32, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return &o.AttackCrush, true
-}
-
-// SetAttackCrush sets field value
-func (o *Monster) SetAttackCrush(v int32) {
-	o.AttackCrush = v
+// SetStrengthBonus sets field value
+func (o *Monster) SetStrengthBonus(v int32) {
+	o.StrengthBonus = v
 }
 
 // GetAttackMagic returns the AttackMagic field value
@@ -1023,6 +1021,30 @@ func (o *Monster) SetAttackMagic(v int32) {
 	o.AttackMagic = v
 }
 
+// GetMagicBonus returns the MagicBonus field value
+func (o *Monster) GetMagicBonus() int32 {
+	if o == nil  {
+		var ret int32
+		return ret
+	}
+
+	return o.MagicBonus
+}
+
+// GetMagicBonusOk returns a tuple with the MagicBonus field value
+// and a boolean to check if the value has been set.
+func (o *Monster) GetMagicBonusOk() (*int32, bool) {
+	if o == nil  {
+		return nil, false
+	}
+	return &o.MagicBonus, true
+}
+
+// SetMagicBonus sets field value
+func (o *Monster) SetMagicBonus(v int32) {
+	o.MagicBonus = v
+}
+
 // GetAttackRanged returns the AttackRanged field value
 func (o *Monster) GetAttackRanged() int32 {
 	if o == nil  {
@@ -1045,6 +1067,30 @@ func (o *Monster) GetAttackRangedOk() (*int32, bool) {
 // SetAttackRanged sets field value
 func (o *Monster) SetAttackRanged(v int32) {
 	o.AttackRanged = v
+}
+
+// GetRangedBonus returns the RangedBonus field value
+func (o *Monster) GetRangedBonus() int32 {
+	if o == nil  {
+		var ret int32
+		return ret
+	}
+
+	return o.RangedBonus
+}
+
+// GetRangedBonusOk returns a tuple with the RangedBonus field value
+// and a boolean to check if the value has been set.
+func (o *Monster) GetRangedBonusOk() (*int32, bool) {
+	if o == nil  {
+		return nil, false
+	}
+	return &o.RangedBonus, true
+}
+
+// SetRangedBonus sets field value
+func (o *Monster) SetRangedBonus(v int32) {
+	o.RangedBonus = v
 }
 
 // GetDefenceStab returns the DefenceStab field value
@@ -1167,102 +1213,6 @@ func (o *Monster) SetDefenceRanged(v int32) {
 	o.DefenceRanged = v
 }
 
-// GetAttackAccuracy returns the AttackAccuracy field value
-func (o *Monster) GetAttackAccuracy() int32 {
-	if o == nil  {
-		var ret int32
-		return ret
-	}
-
-	return o.AttackAccuracy
-}
-
-// GetAttackAccuracyOk returns a tuple with the AttackAccuracy field value
-// and a boolean to check if the value has been set.
-func (o *Monster) GetAttackAccuracyOk() (*int32, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return &o.AttackAccuracy, true
-}
-
-// SetAttackAccuracy sets field value
-func (o *Monster) SetAttackAccuracy(v int32) {
-	o.AttackAccuracy = v
-}
-
-// GetMeleeStrength returns the MeleeStrength field value
-func (o *Monster) GetMeleeStrength() int32 {
-	if o == nil  {
-		var ret int32
-		return ret
-	}
-
-	return o.MeleeStrength
-}
-
-// GetMeleeStrengthOk returns a tuple with the MeleeStrength field value
-// and a boolean to check if the value has been set.
-func (o *Monster) GetMeleeStrengthOk() (*int32, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return &o.MeleeStrength, true
-}
-
-// SetMeleeStrength sets field value
-func (o *Monster) SetMeleeStrength(v int32) {
-	o.MeleeStrength = v
-}
-
-// GetRangedStrength returns the RangedStrength field value
-func (o *Monster) GetRangedStrength() int32 {
-	if o == nil  {
-		var ret int32
-		return ret
-	}
-
-	return o.RangedStrength
-}
-
-// GetRangedStrengthOk returns a tuple with the RangedStrength field value
-// and a boolean to check if the value has been set.
-func (o *Monster) GetRangedStrengthOk() (*int32, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return &o.RangedStrength, true
-}
-
-// SetRangedStrength sets field value
-func (o *Monster) SetRangedStrength(v int32) {
-	o.RangedStrength = v
-}
-
-// GetMagicDamage returns the MagicDamage field value
-func (o *Monster) GetMagicDamage() int32 {
-	if o == nil  {
-		var ret int32
-		return ret
-	}
-
-	return o.MagicDamage
-}
-
-// GetMagicDamageOk returns a tuple with the MagicDamage field value
-// and a boolean to check if the value has been set.
-func (o *Monster) GetMagicDamageOk() (*int32, bool) {
-	if o == nil  {
-		return nil, false
-	}
-	return &o.MagicDamage, true
-}
-
-// SetMagicDamage sets field value
-func (o *Monster) SetMagicDamage(v int32) {
-	o.MagicDamage = v
-}
-
 // GetDrops returns the Drops field value
 func (o *Monster) GetDrops() []MonsterDrops {
 	if o == nil  {
@@ -1296,6 +1246,9 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 		toSerialize["name"] = o.Name
 	}
 	if true {
+		toSerialize["last_updated"] = o.LastUpdated.Get()
+	}
+	if true {
 		toSerialize["incomplete"] = o.Incomplete
 	}
 	if true {
@@ -1311,10 +1264,10 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 		toSerialize["size"] = o.Size
 	}
 	if true {
-		toSerialize["hitpoints"] = o.Hitpoints
+		toSerialize["hitpoints"] = o.Hitpoints.Get()
 	}
 	if true {
-		toSerialize["max_hit"] = o.MaxHit
+		toSerialize["max_hit"] = o.MaxHit.Get()
 	}
 	if true {
 		toSerialize["attack_type"] = o.AttackType
@@ -1327,6 +1280,9 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["poisonous"] = o.Poisonous
+	}
+	if true {
+		toSerialize["venomous"] = o.Venomous
 	}
 	if true {
 		toSerialize["immune_poison"] = o.ImmunePoison
@@ -1359,9 +1315,6 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 		toSerialize["examine"] = o.Examine
 	}
 	if true {
-		toSerialize["icon"] = o.Icon.Get()
-	}
-	if true {
 		toSerialize["wiki_name"] = o.WikiName
 	}
 	if true {
@@ -1383,19 +1336,22 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 		toSerialize["ranged_level"] = o.RangedLevel
 	}
 	if true {
-		toSerialize["attack_stab"] = o.AttackStab
+		toSerialize["attack_bonus"] = o.AttackBonus
 	}
 	if true {
-		toSerialize["attack_slash"] = o.AttackSlash
-	}
-	if true {
-		toSerialize["attack_crush"] = o.AttackCrush
+		toSerialize["strength_bonus"] = o.StrengthBonus
 	}
 	if true {
 		toSerialize["attack_magic"] = o.AttackMagic
 	}
 	if true {
+		toSerialize["magic_bonus"] = o.MagicBonus
+	}
+	if true {
 		toSerialize["attack_ranged"] = o.AttackRanged
+	}
+	if true {
+		toSerialize["ranged_bonus"] = o.RangedBonus
 	}
 	if true {
 		toSerialize["defence_stab"] = o.DefenceStab
@@ -1411,18 +1367,6 @@ func (o Monster) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["defence_ranged"] = o.DefenceRanged
-	}
-	if true {
-		toSerialize["attack_accuracy"] = o.AttackAccuracy
-	}
-	if true {
-		toSerialize["melee_strength"] = o.MeleeStrength
-	}
-	if true {
-		toSerialize["ranged_strength"] = o.RangedStrength
-	}
-	if true {
-		toSerialize["magic_damage"] = o.MagicDamage
 	}
 	if true {
 		toSerialize["drops"] = o.Drops
