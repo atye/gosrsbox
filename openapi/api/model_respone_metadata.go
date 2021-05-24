@@ -16,7 +16,7 @@ import (
 
 // ResponeMetadata struct for ResponeMetadata
 type ResponeMetadata struct {
-	Page *int `json:"page,omitempty"`
+	Page *int32 `json:"page,omitempty"`
 	Total *int32 `json:"total,omitempty"`
 	MaxResults *int32 `json:"max_results,omitempty"`
 }
@@ -39,9 +39,9 @@ func NewResponeMetadataWithDefaults() *ResponeMetadata {
 }
 
 // GetPage returns the Page field value if set, zero value otherwise.
-func (o *ResponeMetadata) GetPage() int {
+func (o *ResponeMetadata) GetPage() int32 {
 	if o == nil || o.Page == nil {
-		var ret int
+		var ret int32
 		return ret
 	}
 	return *o.Page
@@ -49,7 +49,7 @@ func (o *ResponeMetadata) GetPage() int {
 
 // GetPageOk returns a tuple with the Page field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ResponeMetadata) GetPageOk() (*int, bool) {
+func (o *ResponeMetadata) GetPageOk() (*int32, bool) {
 	if o == nil || o.Page == nil {
 		return nil, false
 	}
@@ -65,8 +65,8 @@ func (o *ResponeMetadata) HasPage() bool {
 	return false
 }
 
-// SetPage gets a reference to the given int and assigns it to the Page field.
-func (o *ResponeMetadata) SetPage(v int) {
+// SetPage gets a reference to the given int32 and assigns it to the Page field.
+func (o *ResponeMetadata) SetPage(v int32) {
 	o.Page = &v
 }
 
