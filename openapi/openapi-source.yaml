@@ -1,0 +1,2666 @@
+---
+openapi: 3.0.0
+info:
+  title: osrsbox-api
+  description: An open, free, complete and up-to-date RESTful API for Old School RuneScape
+    (OSRS) items, monsters and prayers.
+  contact:
+    name: osrsbox-api
+    url: https://api.osrsbox.com
+  license:
+    name: GNU General Public License v3.0
+    url: https://github.com/osrsbox/osrsbox-api/blob/master/LICENSE
+  version: '1.0'
+servers:
+- url: https://api.osrsbox.com
+paths:
+  "/items":
+    get:
+      summary: Retrieves one or more items
+      responses:
+        '200':
+          description: An array of items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Item"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: getitems
+      tags:
+      - Item
+    post:
+      summary: Stores one or more items.
+      requestBody:
+        "$ref": "#/components/requestBodies/Item"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: postitems
+      tags:
+      - Item
+    delete:
+      summary: Deletes all items
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteitems
+      tags:
+      - Item
+  "/items/{itemId}":
+    get:
+      summary: Retrieves a Item document
+      responses:
+        '200':
+          description: Item document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Item"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Item_id"
+      operationId: getItemItem
+      tags:
+      - Item
+    put:
+      summary: Replaces a Item document
+      responses:
+        '200':
+          description: Item document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Item"
+      parameters:
+      - "$ref": "#/components/parameters/Item_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putItemItem
+      tags:
+      - Item
+    delete:
+      summary: Deletes a Item document
+      responses:
+        '204':
+          description: Item document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Item_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteItemItem
+      tags:
+      - Item
+  "/weapons":
+    get:
+      summary: Retrieves one or more weapons
+      responses:
+        '200':
+          description: An array of weapons
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Weapon"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: getweapons
+      tags:
+      - Weapon
+    post:
+      summary: Stores one or more weapons.
+      requestBody:
+        "$ref": "#/components/requestBodies/Weapon"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: postweapons
+      tags:
+      - Weapon
+    delete:
+      summary: Deletes all weapons
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteweapons
+      tags:
+      - Weapon
+  "/weapons/{weaponId}":
+    get:
+      summary: Retrieves a Weapon document
+      responses:
+        '200':
+          description: Weapon document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Weapon"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Weapon_id"
+      operationId: getWeaponItem
+      tags:
+      - Weapon
+    put:
+      summary: Replaces a Weapon document
+      responses:
+        '200':
+          description: Weapon document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Weapon"
+      parameters:
+      - "$ref": "#/components/parameters/Weapon_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putWeaponItem
+      tags:
+      - Weapon
+    delete:
+      summary: Deletes a Weapon document
+      responses:
+        '204':
+          description: Weapon document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Weapon_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteWeaponItem
+      tags:
+      - Weapon
+  "/equipment":
+    get:
+      summary: Retrieves one or more equipment
+      responses:
+        '200':
+          description: An array of equipment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Equipment"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: getequipment
+      tags:
+      - Equipment
+    post:
+      summary: Stores one or more equipment.
+      requestBody:
+        "$ref": "#/components/requestBodies/Equipment"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: postequipment
+      tags:
+      - Equipment
+    delete:
+      summary: Deletes all equipment
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteequipment
+      tags:
+      - Equipment
+  "/equipment/{equipmentId}":
+    get:
+      summary: Retrieves a Equipment document
+      responses:
+        '200':
+          description: Equipment document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Equipment"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Equipment_id"
+      operationId: getEquipmentItem
+      tags:
+      - Equipment
+    put:
+      summary: Replaces a Equipment document
+      responses:
+        '200':
+          description: Equipment document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Equipment"
+      parameters:
+      - "$ref": "#/components/parameters/Equipment_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putEquipmentItem
+      tags:
+      - Equipment
+    delete:
+      summary: Deletes a Equipment document
+      responses:
+        '204':
+          description: Equipment document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Equipment_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteEquipmentItem
+      tags:
+      - Equipment
+  "/monsters":
+    get:
+      summary: Retrieves one or more monsters
+      responses:
+        '200':
+          description: An array of monsters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Monster"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: getmonsters
+      tags:
+      - Monster
+    post:
+      summary: Stores one or more monsters.
+      requestBody:
+        "$ref": "#/components/requestBodies/Monster"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: postmonsters
+      tags:
+      - Monster
+    delete:
+      summary: Deletes all monsters
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deletemonsters
+      tags:
+      - Monster
+  "/monsters/{monsterId}":
+    get:
+      summary: Retrieves a Monster document
+      responses:
+        '200':
+          description: Monster document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Monster"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Monster_id"
+      operationId: getMonsterItem
+      tags:
+      - Monster
+    put:
+      summary: Replaces a Monster document
+      responses:
+        '200':
+          description: Monster document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Monster"
+      parameters:
+      - "$ref": "#/components/parameters/Monster_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putMonsterItem
+      tags:
+      - Monster
+    delete:
+      summary: Deletes a Monster document
+      responses:
+        '204':
+          description: Monster document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Monster_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteMonsterItem
+      tags:
+      - Monster
+  "/prayers":
+    get:
+      summary: Retrieves one or more prayers
+      responses:
+        '200':
+          description: An array of prayers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Prayer"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: getprayers
+      tags:
+      - Prayer
+    post:
+      summary: Stores one or more prayers.
+      requestBody:
+        "$ref": "#/components/requestBodies/Prayer"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: postprayers
+      tags:
+      - Prayer
+    delete:
+      summary: Deletes all prayers
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteprayers
+      tags:
+      - Prayer
+  "/prayers/{prayerId}":
+    get:
+      summary: Retrieves a Prayer document
+      responses:
+        '200':
+          description: Prayer document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Prayer"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Prayer_id"
+      operationId: getPrayerItem
+      tags:
+      - Prayer
+    put:
+      summary: Replaces a Prayer document
+      responses:
+        '200':
+          description: Prayer document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Prayer"
+      parameters:
+      - "$ref": "#/components/parameters/Prayer_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putPrayerItem
+      tags:
+      - Prayer
+    delete:
+      summary: Deletes a Prayer document
+      responses:
+        '204':
+          description: Prayer document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Prayer_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deletePrayerItem
+      tags:
+      - Prayer
+  "/icons_items":
+    get:
+      summary: Retrieves one or more icons_items
+      responses:
+        '200':
+          description: An array of icons_items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Icons_item"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: geticons_items
+      tags:
+      - Icons_item
+    post:
+      summary: Stores one or more icons_items.
+      requestBody:
+        "$ref": "#/components/requestBodies/Icons_item"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: posticons_items
+      tags:
+      - Icons_item
+    delete:
+      summary: Deletes all icons_items
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteicons_items
+      tags:
+      - Icons_item
+  "/icons_items/{icons_itemId}":
+    get:
+      summary: Retrieves a Icons_item document
+      responses:
+        '200':
+          description: Icons_item document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Icons_item"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_item_id"
+      operationId: getIcons_itemItem
+      tags:
+      - Icons_item
+    put:
+      summary: Replaces a Icons_item document
+      responses:
+        '200':
+          description: Icons_item document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Icons_item"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_item_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putIcons_itemItem
+      tags:
+      - Icons_item
+    delete:
+      summary: Deletes a Icons_item document
+      responses:
+        '204':
+          description: Icons_item document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_item_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteIcons_itemItem
+      tags:
+      - Icons_item
+  "/icons_prayers":
+    get:
+      summary: Retrieves one or more icons_prayers
+      responses:
+        '200':
+          description: An array of icons_prayers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _items:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Icons_prayer"
+                  _meta:
+                    "$ref": "#/components/schemas/respone_metadata"
+                  _links:
+                    "$ref": "#/components/schemas/respone_links"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/query__where"
+      - "$ref": "#/components/parameters/query__projections"
+      - "$ref": "#/components/parameters/query__sort"
+      - "$ref": "#/components/parameters/query__page"
+      - "$ref": "#/components/parameters/query__max_results"
+      operationId: geticons_prayers
+      tags:
+      - Icons_prayer
+    post:
+      summary: Stores one or more icons_prayers.
+      requestBody:
+        "$ref": "#/components/requestBodies/Icons_prayer"
+      responses:
+        '201':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: posticons_prayers
+      tags:
+      - Icons_prayer
+    delete:
+      summary: Deletes all icons_prayers
+      responses:
+        '204':
+          description: operation has been successful
+        default:
+          "$ref": "#/components/responses/error"
+      parameters: []
+      operationId: deleteicons_prayers
+      tags:
+      - Icons_prayer
+  "/icons_prayers/{icons_prayerId}":
+    get:
+      summary: Retrieves a Icons_prayer document
+      responses:
+        '200':
+          description: Icons_prayer document fetched successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Icons_prayer"
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_prayer_id"
+      operationId: getIcons_prayerItem
+      tags:
+      - Icons_prayer
+    put:
+      summary: Replaces a Icons_prayer document
+      responses:
+        '200':
+          description: Icons_prayer document replaced successfully
+        default:
+          "$ref": "#/components/responses/error"
+      requestBody:
+        "$ref": "#/components/requestBodies/Icons_prayer"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_prayer_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: putIcons_prayerItem
+      tags:
+      - Icons_prayer
+    delete:
+      summary: Deletes a Icons_prayer document
+      responses:
+        '204':
+          description: Icons_prayer document deleted successfully
+        default:
+          "$ref": "#/components/responses/error"
+      parameters:
+      - "$ref": "#/components/parameters/Icons_prayer_id"
+      - "$ref": "#/components/parameters/If-Match"
+      operationId: deleteIcons_prayerItem
+      tags:
+      - Icons_prayer
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS item ID number.
+          nullable: false
+          type: integer
+        name:
+          description: The name of the item.
+          nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          pattern: "^(20[0-9]{2})-([012][0-9])-([0123][0-9])$"
+          nullable: false
+          type: string
+        incomplete:
+          description: If the item has incomplete wiki data.
+          nullable: false
+          type: boolean
+        members:
+          description: If the item is a members-only.
+          nullable: false
+          type: boolean
+        tradeable:
+          description: If the item is tradeable (between players and on the GE).
+          nullable: false
+          type: boolean
+        tradeable_on_ge:
+          description: If the item is tradeable (only on GE).
+          nullable: false
+          type: boolean
+        stackable:
+          description: If the item is stackable (in inventory).
+          nullable: false
+          type: boolean
+        stacked:
+          description: If the item is stacked, indicated by the stack count.
+          nullable: true
+          type: integer
+        noted:
+          description: If the item is noted.
+          nullable: false
+          type: boolean
+        noteable:
+          description: If the item is noteable.
+          nullable: false
+          type: boolean
+        linked_id_item:
+          description: The linked ID of the actual item (if noted/placeholder).
+          nullable: true
+          type: integer
+        linked_id_noted:
+          description: The linked ID of an item in noted form.
+          nullable: true
+          type: integer
+        linked_id_placeholder:
+          description: The linked ID of an item in placeholder form.
+          nullable: true
+          type: integer
+        placeholder:
+          description: If the item is a placeholder.
+          nullable: false
+          type: boolean
+        equipable:
+          description: If the item is equipable (based on right-click menu entry).
+          nullable: false
+          type: boolean
+        equipable_by_player:
+          description: If the item is equipable in-game by a player.
+          nullable: false
+          type: boolean
+        equipable_weapon:
+          description: If the item is an equipable weapon.
+          nullable: false
+          type: boolean
+        cost:
+          description: The store price of an item.
+          nullable: false
+          type: integer
+        lowalch:
+          description: The low alchemy value of the item (cost * 0.4).
+          nullable: true
+          type: integer
+        highalch:
+          description: The high alchemy value of the item (cost * 0.6).
+          nullable: true
+          type: integer
+        weight:
+          description: The weight (in kilograms) of the item.
+          nullable: true
+          type: number
+          format: float
+        buy_limit:
+          description: The Grand Exchange buy limit of the item.
+          nullable: true
+          type: integer
+        quest_item:
+          description: If the item is associated with a quest.
+          nullable: false
+          type: boolean
+        release_date:
+          description: Date the item was released (in ISO8601 format).
+          pattern: "^(2[0-9]{3})-([012][0-9])-([0123][0-9])$"
+          nullable: true
+          type: string
+        duplicate:
+          description: If the item is a duplicate.
+          nullable: false
+          type: boolean
+        examine:
+          description: The examine text for the item.
+          nullable: true
+          type: string
+        icon:
+          description: The item icon (in base64 encoding).
+          nullable: false
+          type: string
+        wiki_name:
+          description: The OSRS Wiki name for the item.
+          nullable: true
+          type: string
+        wiki_url:
+          description: The OSRS Wiki URL (possibly including anchor link).
+          nullable: true
+          type: string
+        equipment:
+          description: The equipment bonuses of equipable armour/weapons.
+          nullable: true
+          type: object
+          properties:
+            attack_stab:
+              description: The attack stab bonus of the item.
+              nullable: false
+              type: integer
+            attack_slash:
+              description: The attack slash bonus of the item.
+              nullable: false
+              type: integer
+            attack_crush:
+              description: The attack crush bonus of the item.
+              nullable: false
+              type: integer
+            attack_magic:
+              description: The attack magic bonus of the item.
+              nullable: false
+              type: integer
+            attack_ranged:
+              description: The attack ranged bonus of the item.
+              nullable: false
+              type: integer
+            defence_stab:
+              description: The defence stab bonus of the item.
+              nullable: false
+              type: integer
+            defence_slash:
+              description: The defence slash bonus of the item.
+              nullable: false
+              type: integer
+            defence_crush:
+              description: The defence crush bonus of the item.
+              nullable: false
+              type: integer
+            defence_magic:
+              description: The defence magic bonus of the item.
+              nullable: false
+              type: integer
+            defence_ranged:
+              description: The defence ranged bonus of the item.
+              nullable: false
+              type: integer
+            melee_strength:
+              description: The melee strength bonus of the item.
+              nullable: false
+              type: integer
+            ranged_strength:
+              description: The ranged strength bonus of the item.
+              nullable: false
+              type: integer
+            magic_damage:
+              description: The magic damage bonus of the item.
+              nullable: false
+              type: integer
+            prayer:
+              description: The prayer bonus of the item.
+              nullable: false
+              type: integer
+            slot:
+              description: The equipment slot associated with the item (e.g., head).
+              enum:
+              - 2h
+              - ammo
+              - body
+              - cape
+              - feet
+              - hands
+              - head
+              - legs
+              - neck
+              - ring
+              - shield
+              - weapon
+              nullable: false
+              type: string
+            requirements:
+              description: 'An object of requirements {skill: level}.'
+              nullable: true
+              type: object
+          required:
+          - attack_stab
+          - attack_slash
+          - attack_crush
+          - attack_magic
+          - attack_ranged
+          - defence_stab
+          - defence_slash
+          - defence_crush
+          - defence_magic
+          - defence_ranged
+          - melee_strength
+          - ranged_strength
+          - magic_damage
+          - prayer
+          - slot
+          - requirements
+        weapon:
+          description: The weapon bonuses including attack speed, type and stance.
+          nullable: true
+          type: object
+          properties:
+            attack_speed:
+              description: The attack speed of a weapon (in game ticks).
+              nullable: false
+              type: integer
+            weapon_type:
+              description: The weapon classification (e.g., axes)
+              enum:
+              - axe
+              - blunt
+              - bludgeon
+              - bulwark
+              - claw
+              - polearm
+              - pickaxe
+              - scythe
+              - slash_sword
+              - spear
+              - spiked
+              - stab_sword
+              - 2h_sword
+              - whip
+              - bow
+              - chinchompas
+              - crossbow
+              - thrown
+              - staff
+              - bladed_staff
+              - powered_staff
+              - banner
+              - blaster
+              - gun
+              - polestaff
+              - salamander
+              - unarmed
+              nullable: false
+              type: string
+            stances:
+              description: An array of weapon stance information.
+              nullable: false
+              type: array
+              items:
+                type: object
+                properties:
+                  combat_style:
+                    enum:
+                    - impale
+                    - aim and fire
+                    - reap
+                    - bash
+                    - long fuse
+                    - pummel
+                    - smash
+                    - blaze
+                    - flare
+                    - rapid
+                    - lunge
+                    - stab
+                    - swipe
+                    - short fuse
+                    - punch
+                    - kick
+                    - spike
+                    - scorch
+                    - focus
+                    - deflect
+                    - fend
+                    - block
+                    - medium fuse
+                    - flick
+                    - slash
+                    - longrange
+                    - hack
+                    - accurate
+                    - pound
+                    - chop
+                    - jab
+                    - lash
+                    - spell
+                    - spell (defensive)
+                    nullable: false
+                    type: string
+                  attack_type:
+                    enum:
+                    - spellcasting
+                    - stab
+                    - ranged
+                    - slash
+                    - crush
+                    - magic
+                    - defensive casting
+                    nullable: true
+                    type: string
+                  attack_style:
+                    enum:
+                    - aggressive
+                    - defensive
+                    - magic
+                    - controlled
+                    - accurate
+                    nullable: true
+                    type: string
+                  experience:
+                    enum:
+                    - defence
+                    - ranged and defence
+                    - ranged
+                    - shared
+                    - magic and defence
+                    - magic
+                    - strength
+                    - attack
+                    nullable: true
+                    type: string
+                  boosts:
+                    enum:
+                    - attack speed by 1 tick
+                    - attack range by 2 squares
+                    - accuracy and damage
+                    nullable: true
+                    type: string
+                required:
+                - combat_style
+                - attack_type
+                - attack_style
+                - experience
+                - boosts
+          required:
+          - attack_speed
+          - weapon_type
+          - stances
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - name
+      - last_updated
+      - incomplete
+      - members
+      - tradeable
+      - tradeable_on_ge
+      - stackable
+      - stacked
+      - noted
+      - noteable
+      - linked_id_item
+      - linked_id_noted
+      - linked_id_placeholder
+      - placeholder
+      - equipable
+      - equipable_by_player
+      - equipable_weapon
+      - cost
+      - lowalch
+      - highalch
+      - weight
+      - buy_limit
+      - quest_item
+      - release_date
+      - duplicate
+      - examine
+      - icon
+      - wiki_name
+      - wiki_url
+      - equipment
+      - weapon
+    Weapon:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS item ID number.
+          nullable: false
+          type: integer
+        name:
+          description: The name of the item.
+          nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          pattern: "^(20[0-9]{2})-([012][0-9])-([0123][0-9])$"
+          nullable: false
+          type: string
+        incomplete:
+          description: If the item has incomplete wiki data.
+          nullable: false
+          type: boolean
+        members:
+          description: If the item is a members-only.
+          nullable: false
+          type: boolean
+        tradeable:
+          description: If the item is tradeable (between players and on the GE).
+          nullable: false
+          type: boolean
+        tradeable_on_ge:
+          description: If the item is tradeable (only on GE).
+          nullable: false
+          type: boolean
+        stackable:
+          description: If the item is stackable (in inventory).
+          nullable: false
+          type: boolean
+        stacked:
+          description: If the item is stacked, indicated by the stack count.
+          nullable: true
+          type: integer
+        noted:
+          description: If the item is noted.
+          nullable: false
+          type: boolean
+        noteable:
+          description: If the item is noteable.
+          nullable: false
+          type: boolean
+        linked_id_item:
+          description: The linked ID of the actual item (if noted/placeholder).
+          nullable: true
+          type: integer
+        linked_id_noted:
+          description: The linked ID of an item in noted form.
+          nullable: true
+          type: integer
+        linked_id_placeholder:
+          description: The linked ID of an item in placeholder form.
+          nullable: true
+          type: integer
+        placeholder:
+          description: If the item is a placeholder.
+          nullable: false
+          type: boolean
+        equipable:
+          description: If the item is equipable (based on right-click menu entry).
+          nullable: false
+          type: boolean
+        equipable_by_player:
+          description: If the item is equipable in-game by a player.
+          nullable: false
+          type: boolean
+        equipable_weapon:
+          description: If the item is an equipable weapon.
+          nullable: false
+          type: boolean
+        cost:
+          description: The store price of an item.
+          nullable: false
+          type: integer
+        lowalch:
+          description: The low alchemy value of the item (cost * 0.4).
+          nullable: true
+          type: integer
+        highalch:
+          description: The high alchemy value of the item (cost * 0.6).
+          nullable: true
+          type: integer
+        weight:
+          description: The weight (in kilograms) of the item.
+          nullable: true
+          type: number
+          format: float
+        buy_limit:
+          description: The Grand Exchange buy limit of the item.
+          nullable: true
+          type: integer
+        quest_item:
+          description: If the item is associated with a quest.
+          nullable: false
+          type: boolean
+        release_date:
+          description: Date the item was released (in ISO8601 format).
+          pattern: "^(2[0-9]{3})-([012][0-9])-([0123][0-9])$"
+          nullable: true
+          type: string
+        duplicate:
+          description: If the item is a duplicate.
+          nullable: false
+          type: boolean
+        examine:
+          description: The examine text for the item.
+          nullable: true
+          type: string
+        icon:
+          description: The item icon (in base64 encoding).
+          nullable: false
+          type: string
+        wiki_name:
+          description: The OSRS Wiki name for the item.
+          nullable: true
+          type: string
+        wiki_url:
+          description: The OSRS Wiki URL (possibly including anchor link).
+          nullable: true
+          type: string
+        equipment:
+          description: The equipment bonuses of equipable armour/weapons.
+          nullable: true
+          type: object
+          properties:
+            attack_stab:
+              description: The attack stab bonus of the item.
+              nullable: false
+              type: integer
+            attack_slash:
+              description: The attack slash bonus of the item.
+              nullable: false
+              type: integer
+            attack_crush:
+              description: The attack crush bonus of the item.
+              nullable: false
+              type: integer
+            attack_magic:
+              description: The attack magic bonus of the item.
+              nullable: false
+              type: integer
+            attack_ranged:
+              description: The attack ranged bonus of the item.
+              nullable: false
+              type: integer
+            defence_stab:
+              description: The defence stab bonus of the item.
+              nullable: false
+              type: integer
+            defence_slash:
+              description: The defence slash bonus of the item.
+              nullable: false
+              type: integer
+            defence_crush:
+              description: The defence crush bonus of the item.
+              nullable: false
+              type: integer
+            defence_magic:
+              description: The defence magic bonus of the item.
+              nullable: false
+              type: integer
+            defence_ranged:
+              description: The defence ranged bonus of the item.
+              nullable: false
+              type: integer
+            melee_strength:
+              description: The melee strength bonus of the item.
+              nullable: false
+              type: integer
+            ranged_strength:
+              description: The ranged strength bonus of the item.
+              nullable: false
+              type: integer
+            magic_damage:
+              description: The magic damage bonus of the item.
+              nullable: false
+              type: integer
+            prayer:
+              description: The prayer bonus of the item.
+              nullable: false
+              type: integer
+            slot:
+              description: The equipment slot associated with the item (e.g., head).
+              enum:
+              - 2h
+              - ammo
+              - body
+              - cape
+              - feet
+              - hands
+              - head
+              - legs
+              - neck
+              - ring
+              - shield
+              - weapon
+              nullable: false
+              type: string
+            requirements:
+              description: 'An object of requirements {skill: level}.'
+              nullable: true
+              type: object
+          required:
+          - attack_stab
+          - attack_slash
+          - attack_crush
+          - attack_magic
+          - attack_ranged
+          - defence_stab
+          - defence_slash
+          - defence_crush
+          - defence_magic
+          - defence_ranged
+          - melee_strength
+          - ranged_strength
+          - magic_damage
+          - prayer
+          - slot
+          - requirements
+        weapon:
+          description: The weapon bonuses including attack speed, type and stance.
+          nullable: true
+          type: object
+          properties:
+            attack_speed:
+              description: The attack speed of a weapon (in game ticks).
+              nullable: false
+              type: integer
+            weapon_type:
+              description: The weapon classification (e.g., axes)
+              enum:
+              - axe
+              - blunt
+              - bludgeon
+              - bulwark
+              - claw
+              - polearm
+              - pickaxe
+              - scythe
+              - slash_sword
+              - spear
+              - spiked
+              - stab_sword
+              - 2h_sword
+              - whip
+              - bow
+              - chinchompas
+              - crossbow
+              - thrown
+              - staff
+              - bladed_staff
+              - powered_staff
+              - banner
+              - blaster
+              - gun
+              - polestaff
+              - salamander
+              - unarmed
+              nullable: false
+              type: string
+            stances:
+              description: An array of weapon stance information.
+              nullable: false
+              type: array
+              items:
+                type: object
+                properties:
+                  combat_style:
+                    enum:
+                    - impale
+                    - aim and fire
+                    - reap
+                    - bash
+                    - long fuse
+                    - pummel
+                    - smash
+                    - blaze
+                    - flare
+                    - rapid
+                    - lunge
+                    - stab
+                    - swipe
+                    - short fuse
+                    - punch
+                    - kick
+                    - spike
+                    - scorch
+                    - focus
+                    - deflect
+                    - fend
+                    - block
+                    - medium fuse
+                    - flick
+                    - slash
+                    - longrange
+                    - hack
+                    - accurate
+                    - pound
+                    - chop
+                    - jab
+                    - lash
+                    - spell
+                    - spell (defensive)
+                    nullable: false
+                    type: string
+                  attack_type:
+                    enum:
+                    - spellcasting
+                    - stab
+                    - ranged
+                    - slash
+                    - crush
+                    - magic
+                    - defensive casting
+                    nullable: true
+                    type: string
+                  attack_style:
+                    enum:
+                    - aggressive
+                    - defensive
+                    - magic
+                    - controlled
+                    - accurate
+                    nullable: true
+                    type: string
+                  experience:
+                    enum:
+                    - defence
+                    - ranged and defence
+                    - ranged
+                    - shared
+                    - magic and defence
+                    - magic
+                    - strength
+                    - attack
+                    nullable: true
+                    type: string
+                  boosts:
+                    enum:
+                    - attack speed by 1 tick
+                    - attack range by 2 squares
+                    - accuracy and damage
+                    nullable: true
+                    type: string
+                required:
+                - combat_style
+                - attack_type
+                - attack_style
+                - experience
+                - boosts
+          required:
+          - attack_speed
+          - weapon_type
+          - stances
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - name
+      - last_updated
+      - incomplete
+      - members
+      - tradeable
+      - tradeable_on_ge
+      - stackable
+      - stacked
+      - noted
+      - noteable
+      - linked_id_item
+      - linked_id_noted
+      - linked_id_placeholder
+      - placeholder
+      - equipable
+      - equipable_by_player
+      - equipable_weapon
+      - cost
+      - lowalch
+      - highalch
+      - weight
+      - buy_limit
+      - quest_item
+      - release_date
+      - duplicate
+      - examine
+      - icon
+      - wiki_name
+      - wiki_url
+      - equipment
+      - weapon
+    Equipment:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS item ID number.
+          nullable: false
+          type: integer
+        name:
+          description: The name of the item.
+          nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the item was updated (in ISO8601 date format).
+          pattern: "^(20[0-9]{2})-([012][0-9])-([0123][0-9])$"
+          nullable: false
+          type: string
+        incomplete:
+          description: If the item has incomplete wiki data.
+          nullable: false
+          type: boolean
+        members:
+          description: If the item is a members-only.
+          nullable: false
+          type: boolean
+        tradeable:
+          description: If the item is tradeable (between players and on the GE).
+          nullable: false
+          type: boolean
+        tradeable_on_ge:
+          description: If the item is tradeable (only on GE).
+          nullable: false
+          type: boolean
+        stackable:
+          description: If the item is stackable (in inventory).
+          nullable: false
+          type: boolean
+        stacked:
+          description: If the item is stacked, indicated by the stack count.
+          nullable: true
+          type: integer
+        noted:
+          description: If the item is noted.
+          nullable: false
+          type: boolean
+        noteable:
+          description: If the item is noteable.
+          nullable: false
+          type: boolean
+        linked_id_item:
+          description: The linked ID of the actual item (if noted/placeholder).
+          nullable: true
+          type: integer
+        linked_id_noted:
+          description: The linked ID of an item in noted form.
+          nullable: true
+          type: integer
+        linked_id_placeholder:
+          description: The linked ID of an item in placeholder form.
+          nullable: true
+          type: integer
+        placeholder:
+          description: If the item is a placeholder.
+          nullable: false
+          type: boolean
+        equipable:
+          description: If the item is equipable (based on right-click menu entry).
+          nullable: false
+          type: boolean
+        equipable_by_player:
+          description: If the item is equipable in-game by a player.
+          nullable: false
+          type: boolean
+        equipable_weapon:
+          description: If the item is an equipable weapon.
+          nullable: false
+          type: boolean
+        cost:
+          description: The store price of an item.
+          nullable: false
+          type: integer
+        lowalch:
+          description: The low alchemy value of the item (cost * 0.4).
+          nullable: true
+          type: integer
+        highalch:
+          description: The high alchemy value of the item (cost * 0.6).
+          nullable: true
+          type: integer
+        weight:
+          description: The weight (in kilograms) of the item.
+          nullable: true
+          type: number
+          format: float
+        buy_limit:
+          description: The Grand Exchange buy limit of the item.
+          nullable: true
+          type: integer
+        quest_item:
+          description: If the item is associated with a quest.
+          nullable: false
+          type: boolean
+        release_date:
+          description: Date the item was released (in ISO8601 format).
+          pattern: "^(2[0-9]{3})-([012][0-9])-([0123][0-9])$"
+          nullable: true
+          type: string
+        duplicate:
+          description: If the item is a duplicate.
+          nullable: false
+          type: boolean
+        examine:
+          description: The examine text for the item.
+          nullable: true
+          type: string
+        icon:
+          description: The item icon (in base64 encoding).
+          nullable: false
+          type: string
+        wiki_name:
+          description: The OSRS Wiki name for the item.
+          nullable: true
+          type: string
+        wiki_url:
+          description: The OSRS Wiki URL (possibly including anchor link).
+          nullable: true
+          type: string
+        equipment:
+          description: The equipment bonuses of equipable armour/weapons.
+          nullable: true
+          type: object
+          properties:
+            attack_stab:
+              description: The attack stab bonus of the item.
+              nullable: false
+              type: integer
+            attack_slash:
+              description: The attack slash bonus of the item.
+              nullable: false
+              type: integer
+            attack_crush:
+              description: The attack crush bonus of the item.
+              nullable: false
+              type: integer
+            attack_magic:
+              description: The attack magic bonus of the item.
+              nullable: false
+              type: integer
+            attack_ranged:
+              description: The attack ranged bonus of the item.
+              nullable: false
+              type: integer
+            defence_stab:
+              description: The defence stab bonus of the item.
+              nullable: false
+              type: integer
+            defence_slash:
+              description: The defence slash bonus of the item.
+              nullable: false
+              type: integer
+            defence_crush:
+              description: The defence crush bonus of the item.
+              nullable: false
+              type: integer
+            defence_magic:
+              description: The defence magic bonus of the item.
+              nullable: false
+              type: integer
+            defence_ranged:
+              description: The defence ranged bonus of the item.
+              nullable: false
+              type: integer
+            melee_strength:
+              description: The melee strength bonus of the item.
+              nullable: false
+              type: integer
+            ranged_strength:
+              description: The ranged strength bonus of the item.
+              nullable: false
+              type: integer
+            magic_damage:
+              description: The magic damage bonus of the item.
+              nullable: false
+              type: integer
+            prayer:
+              description: The prayer bonus of the item.
+              nullable: false
+              type: integer
+            slot:
+              description: The equipment slot associated with the item (e.g., head).
+              enum:
+              - 2h
+              - ammo
+              - body
+              - cape
+              - feet
+              - hands
+              - head
+              - legs
+              - neck
+              - ring
+              - shield
+              - weapon
+              nullable: false
+              type: string
+            requirements:
+              description: 'An object of requirements {skill: level}.'
+              nullable: true
+              type: object
+          required:
+          - attack_stab
+          - attack_slash
+          - attack_crush
+          - attack_magic
+          - attack_ranged
+          - defence_stab
+          - defence_slash
+          - defence_crush
+          - defence_magic
+          - defence_ranged
+          - melee_strength
+          - ranged_strength
+          - magic_damage
+          - prayer
+          - slot
+          - requirements
+        weapon:
+          description: The weapon bonuses including attack speed, type and stance.
+          nullable: true
+          type: object
+          properties:
+            attack_speed:
+              description: The attack speed of a weapon (in game ticks).
+              nullable: false
+              type: integer
+            weapon_type:
+              description: The weapon classification (e.g., axes)
+              enum:
+              - axe
+              - blunt
+              - bludgeon
+              - bulwark
+              - claw
+              - polearm
+              - pickaxe
+              - scythe
+              - slash_sword
+              - spear
+              - spiked
+              - stab_sword
+              - 2h_sword
+              - whip
+              - bow
+              - chinchompas
+              - crossbow
+              - thrown
+              - staff
+              - bladed_staff
+              - powered_staff
+              - banner
+              - blaster
+              - gun
+              - polestaff
+              - salamander
+              - unarmed
+              nullable: false
+              type: string
+            stances:
+              description: An array of weapon stance information.
+              nullable: false
+              type: array
+              items:
+                type: object
+                properties:
+                  combat_style:
+                    enum:
+                    - impale
+                    - aim and fire
+                    - reap
+                    - bash
+                    - long fuse
+                    - pummel
+                    - smash
+                    - blaze
+                    - flare
+                    - rapid
+                    - lunge
+                    - stab
+                    - swipe
+                    - short fuse
+                    - punch
+                    - kick
+                    - spike
+                    - scorch
+                    - focus
+                    - deflect
+                    - fend
+                    - block
+                    - medium fuse
+                    - flick
+                    - slash
+                    - longrange
+                    - hack
+                    - accurate
+                    - pound
+                    - chop
+                    - jab
+                    - lash
+                    - spell
+                    - spell (defensive)
+                    nullable: false
+                    type: string
+                  attack_type:
+                    enum:
+                    - spellcasting
+                    - stab
+                    - ranged
+                    - slash
+                    - crush
+                    - magic
+                    - defensive casting
+                    nullable: true
+                    type: string
+                  attack_style:
+                    enum:
+                    - aggressive
+                    - defensive
+                    - magic
+                    - controlled
+                    - accurate
+                    nullable: true
+                    type: string
+                  experience:
+                    enum:
+                    - defence
+                    - ranged and defence
+                    - ranged
+                    - shared
+                    - magic and defence
+                    - magic
+                    - strength
+                    - attack
+                    nullable: true
+                    type: string
+                  boosts:
+                    enum:
+                    - attack speed by 1 tick
+                    - attack range by 2 squares
+                    - accuracy and damage
+                    nullable: true
+                    type: string
+                required:
+                - combat_style
+                - attack_type
+                - attack_style
+                - experience
+                - boosts
+          required:
+          - attack_speed
+          - weapon_type
+          - stances
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - name
+      - last_updated
+      - incomplete
+      - members
+      - tradeable
+      - tradeable_on_ge
+      - stackable
+      - stacked
+      - noted
+      - noteable
+      - linked_id_item
+      - linked_id_noted
+      - linked_id_placeholder
+      - placeholder
+      - equipable
+      - equipable_by_player
+      - equipable_weapon
+      - cost
+      - lowalch
+      - highalch
+      - weight
+      - buy_limit
+      - quest_item
+      - release_date
+      - duplicate
+      - examine
+      - icon
+      - wiki_name
+      - wiki_url
+      - equipment
+      - weapon
+    Monster:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS monster ID number.
+          nullable: false
+          type: integer
+        name:
+          description: The name of the monster.
+          nullable: false
+          type: string
+        last_updated:
+          description: The last time (UTC) the monster was updated (in ISO8601 date
+            format).
+          pattern: "^(20[0-9]{2})-([012][0-9])-([0123][0-9])$"
+          nullable: true
+          type: string
+        incomplete:
+          description: If the monster has incomplete wiki data.
+          nullable: false
+          type: boolean
+        members:
+          description: If the monster is members only, or not.
+          nullable: false
+          type: boolean
+        release_date:
+          description: The release date of the monster (in ISO8601 date format).
+          pattern: "^(2[0-9]{3})-([012][0-9])-([0123][0-9])$"
+          nullable: true
+          type: string
+        combat_level:
+          description: The combat level of the monster.
+          nullable: false
+          type: integer
+        size:
+          description: The size, in tiles, of the monster.
+          nullable: false
+          type: integer
+        hitpoints:
+          description: The number of hitpoints a monster has.
+          nullable: true
+          type: integer
+        max_hit:
+          description: The maximum hit of the monster.
+          nullable: true
+          type: integer
+        attack_type:
+          description: The attack style (e.g., melee, magic, range) of the monster.
+          nullable: false
+          type: array
+          items:
+            type: string
+        attack_speed:
+          description: The attack speed (in game ticks) of the monster.
+          nullable: true
+          type: integer
+        aggressive:
+          description: If the monster is aggressive, or not.
+          nullable: false
+          type: boolean
+        poisonous:
+          description: If the monster poisons, or not
+          nullable: false
+          type: boolean
+        venomous:
+          description: If the monster poisons using venom, or not
+          nullable: false
+          type: boolean
+        immune_poison:
+          description: If the monster is immune to poison, or not
+          nullable: false
+          type: boolean
+        immune_venom:
+          description: If the monster is immune to venom, or not
+          nullable: false
+          type: boolean
+        attributes:
+          description: An array of monster attributes.
+          enum:
+          - demon
+          - dragon
+          - fiery
+          - kalphite
+          - leafy
+          - penance
+          - shade
+          - undead
+          - vampyre
+          - xerician
+          nullable: false
+          type: array
+          items:
+            type: string
+        category:
+          description: An array of monster category.
+          enum:
+          - aberrant spectre
+          - abyssal demon
+          - adamant dragon
+          - ankou
+          - aviansie
+          - bandit
+          - banshee
+          - basilisk
+          - bat
+          - bear
+          - bird
+          - black demon
+          - black dragon
+          - black knight
+          - bloodveld
+          - blue dragon
+          - boss
+          - brine rat
+          - bronze dragon
+          - catablepon
+          - cave bug
+          - cave crawler
+          - cave horror
+          - cave kraken
+          - cave slime
+          - chaos druid
+          - cockatrice
+          - cow
+          - crawling hand
+          - crocodile
+          - dagannoth
+          - dark beast
+          - dark warrior
+          - dog
+          - drake
+          - dust devil
+          - dwarf
+          - earth warrior
+          - elemental
+          - elves
+          - fever spider
+          - fire giant
+          - flesh crawler
+          - fossil island wyvern
+          - gargoyle
+          - ghost
+          - ghoul
+          - goblin
+          - greater demon
+          - green dragon
+          - harpie bug swarm
+          - hellhound
+          - hill giant
+          - hobgoblin
+          - hydras
+          - ice giant
+          - ice warrior
+          - icefiend
+          - infernal mage
+          - iron dragon
+          - jelly
+          - jungle horror
+          - kalphite
+          - killerwatt
+          - kurask
+          - lava dragon
+          - lesser demon
+          - lizardmen
+          - lizard
+          - magic axe
+          - mammoth
+          - minotaur
+          - mithril dragon
+          - mogre
+          - molanisk
+          - monkey
+          - moss giant
+          - mutated zygomite
+          - nechryael
+          - ogre
+          - otherworldly being
+          - pirate
+          - pyrefiend
+          - rat
+          - red dragon
+          - revenant
+          - rockslug
+          - rogue
+          - rune dragon
+          - sand crab
+          - scabarite
+          - scorpion
+          - sea snake
+          - shade
+          - shadow warrior
+          - skeletal wyvern
+          - skeleton
+          - smoke devil
+          - sourhog
+          - spider
+          - spiritual creature
+          - steel dragon
+          - suqah
+          - terror dog
+          - troll
+          - turoth
+          - tzhaar
+          - vampyre
+          - wall beast
+          - waterfiend
+          - werewolf
+          - wolf
+          - wyrm
+          - zombie
+          nullable: false
+          type: array
+          items:
+            type: string
+        slayer_monster:
+          description: If the monster is a potential slayer task.
+          nullable: false
+          type: boolean
+        slayer_level:
+          description: The slayer level required to kill the monster.
+          nullable: true
+          type: integer
+        slayer_xp:
+          description: The slayer XP rewarded for a monster kill.
+          nullable: true
+          type: number
+          format: float
+        slayer_masters:
+          description: The slayer masters who can assign the monster.
+          enum:
+          - turael
+          - spria
+          - krystilia
+          - mazchna
+          - vannaka
+          - chaeldar
+          - konar
+          - nieve
+          - duradel
+          nullable: false
+          type: array
+          items:
+            type: string
+        duplicate:
+          description: If the monster is a duplicate.
+          nullable: false
+          type: boolean
+        examine:
+          description: The examine text of the monster.
+          nullable: false
+          type: string
+        wiki_name:
+          description: The OSRS Wiki name for the monster.
+          nullable: false
+          type: string
+        wiki_url:
+          description: The OSRS Wiki URL (possibly including anchor link).
+          nullable: false
+          type: string
+        attack_level:
+          description: The attack level of the monster.
+          nullable: false
+          type: integer
+        strength_level:
+          description: The strength level of the monster.
+          nullable: false
+          type: integer
+        defence_level:
+          description: The defence level of the monster.
+          nullable: false
+          type: integer
+        magic_level:
+          description: The magic level of the monster.
+          nullable: false
+          type: integer
+        ranged_level:
+          description: The ranged level of the monster.
+          nullable: false
+          type: integer
+        attack_bonus:
+          description: The attack bonus of the monster.
+          nullable: false
+          type: integer
+        strength_bonus:
+          description: The strength bonus of the monster.
+          nullable: false
+          type: integer
+        attack_magic:
+          description: The magic attack of the monster.
+          nullable: false
+          type: integer
+        magic_bonus:
+          description: The magic bonus of the monster.
+          nullable: false
+          type: integer
+        attack_ranged:
+          description: The ranged attack of the monster.
+          nullable: false
+          type: integer
+        ranged_bonus:
+          description: The ranged bonus of the monster.
+          nullable: false
+          type: integer
+        defence_stab:
+          description: The defence stab bonus of the monster.
+          nullable: false
+          type: integer
+        defence_slash:
+          description: The defence slash bonus of the monster.
+          nullable: false
+          type: integer
+        defence_crush:
+          description: The defence crush bonus of the monster.
+          nullable: false
+          type: integer
+        defence_magic:
+          description: The defence magic bonus of the monster.
+          nullable: false
+          type: integer
+        defence_ranged:
+          description: The defence ranged bonus of the monster.
+          nullable: false
+          type: integer
+        drops:
+          description: An array of monster drop objects.
+          nullable: false
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                description: The ID number of the item drop.
+                nullable: false
+                type: integer
+              name:
+                description: The name of the item drop.
+                nullable: false
+                type: string
+              members:
+                description: If the drop is a members-only item.
+                nullable: false
+                type: boolean
+              quantity:
+                description: The quantity of the item drop (integer, comma-separated
+                  or range).
+                pattern: "^((([0-9]+)|([0-9]+-[0-9]+))(,(([0-9]+)|([0-9]+-[0-9]+)))*)$"
+                nullable: true
+                type: string
+              noted:
+                description: If the item drop is noted, or not.
+                nullable: false
+                type: boolean
+              rarity:
+                description: The rarity of the item drop (as a float out of 1.0).
+                nullable: false
+                type: number
+                format: float
+              rolls:
+                description: Number of rolls from the drop.
+                nullable: false
+                type: integer
+            required:
+            - id
+            - name
+            - members
+            - quantity
+            - noted
+            - rarity
+            - rolls
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - name
+      - last_updated
+      - incomplete
+      - members
+      - release_date
+      - combat_level
+      - size
+      - hitpoints
+      - max_hit
+      - attack_type
+      - attack_speed
+      - aggressive
+      - poisonous
+      - venomous
+      - immune_poison
+      - immune_venom
+      - attributes
+      - category
+      - slayer_monster
+      - slayer_level
+      - slayer_xp
+      - slayer_masters
+      - duplicate
+      - examine
+      - wiki_name
+      - wiki_url
+      - attack_level
+      - strength_level
+      - defence_level
+      - magic_level
+      - ranged_level
+      - attack_bonus
+      - strength_bonus
+      - attack_magic
+      - magic_bonus
+      - attack_ranged
+      - ranged_bonus
+      - defence_stab
+      - defence_slash
+      - defence_crush
+      - defence_magic
+      - defence_ranged
+      - drops
+    Prayer:
+      type: object
+      properties:
+        id:
+          description: Unique prayer ID number.
+          nullable: false
+          type: integer
+        name:
+          description: The name of the prayer.
+          nullable: false
+          type: string
+        members:
+          description: If the prayer is members-only.
+          nullable: false
+          type: boolean
+        description:
+          description: The prayer description (as show in-game).
+          nullable: false
+          type: string
+        drain_per_minute:
+          description: The prayer point drain rate per minute.
+          nullable: false
+          type: number
+          format: float
+        wiki_url:
+          description: The OSRS Wiki URL.
+          nullable: false
+          type: string
+        requirements:
+          description: The stat requirements to use the prayer.
+          nullable: false
+          type: object
+        bonuses:
+          description: The bonuses a prayer provides.
+          nullable: false
+          type: object
+        icon:
+          description: The prayer icon.
+          nullable: false
+          type: string
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - name
+      - members
+      - description
+      - drain_per_minute
+      - wiki_url
+      - requirements
+      - bonuses
+      - icon
+    Icons_item:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS item ID number.
+          nullable: false
+          type: integer
+        icon:
+          description: The icon image (in base64 encoding) of the item.
+          nullable: false
+          type: string
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - icon
+    Icons_prayer:
+      type: object
+      properties:
+        id:
+          description: Unique OSRS prayer ID number.
+          nullable: false
+          type: integer
+        icon:
+          description: The icon image (in base64 encoding) of the prayer.
+          nullable: false
+          type: string
+        _id:
+          type: string
+          format: objectid
+      required:
+      - id
+      - icon
+    Error:
+      type: object
+      properties:
+        _status:
+          type: string
+          example: OK
+        _error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+      required:
+      - _status
+      - _error
+    respone_metadata:
+      type: object
+      properties:
+        page:
+          type: string
+        total:
+          type: integer
+        max_results:
+          type: integer
+    respone_links:
+      type: object
+      properties:
+        parent:
+          type: object
+          properties:
+            title:
+              type: string
+              format: uri
+            href:
+              type: string
+              format: uri
+        self:
+          type: object
+          properties:
+            title:
+              type: string
+              format: uri
+            href:
+              type: string
+              format: uri
+  responses:
+    error:
+      description: An error message
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+  parameters:
+    Item_id:
+      in: path
+      name: itemId
+      required: true
+      description: Unique OSRS item ID number.
+      example: ''
+      schema:
+        type: string
+    Weapon_id:
+      in: path
+      name: weaponId
+      required: true
+      description: Unique OSRS item ID number.
+      example: ''
+      schema:
+        type: string
+    Equipment_id:
+      in: path
+      name: equipmentId
+      required: true
+      description: Unique OSRS item ID number.
+      example: ''
+      schema:
+        type: string
+    Monster_id:
+      in: path
+      name: monsterId
+      required: true
+      description: Unique OSRS monster ID number.
+      example: ''
+      schema:
+        type: string
+    Prayer_id:
+      in: path
+      name: prayerId
+      required: true
+      description: Unique prayer ID number.
+      example: ''
+      schema:
+        type: string
+    Icons_item_id:
+      in: path
+      name: icons_itemId
+      required: true
+      description: Unique OSRS item ID number.
+      example: ''
+      schema:
+        type: string
+    Icons_prayer_id:
+      in: path
+      name: icons_prayerId
+      required: true
+      description: Unique OSRS prayer ID number.
+      example: ''
+      schema:
+        type: string
+    If-Match:
+      in: header
+      name: If-Match
+      description: Current value of the _etag field
+      required: true
+      schema:
+        type: string
+    query__where:
+      in: query
+      name: where
+      description: 'the filters query parameter (ex.: {"number": 10})'
+      schema:
+        type: string
+    query__projections:
+      in: query
+      name: projection
+      description: 'the projections query parameter (ex.: {"name": 1})'
+      schema:
+        type: string
+    query__sort:
+      in: query
+      name: sort
+      description: 'the sort query parameter (ex.: "city,-lastname")'
+      schema:
+        type: string
+    query__page:
+      in: query
+      name: page
+      description: the pages query parameter
+      schema:
+        type: integer
+        example: 1
+    query__max_results:
+      in: query
+      name: max_results
+      description: the max results query parameter
+      schema:
+        type: integer
+        example: 25
+  examples:
+    Item:
+      summary: An example {0} document.
+      description: An example for Item documents request bodies. Used in POST, PUT,
+        PATCH methods.
+    Weapon:
+      summary: An example {0} document.
+      description: An example for Weapon documents request bodies. Used in POST, PUT,
+        PATCH methods.
+    Equipment:
+      summary: An example {0} document.
+      description: An example for Equipment documents request bodies. Used in POST,
+        PUT, PATCH methods.
+    Monster:
+      summary: An example {0} document.
+      description: An example for Monster documents request bodies. Used in POST,
+        PUT, PATCH methods.
+    Prayer:
+      summary: An example {0} document.
+      description: An example for Prayer documents request bodies. Used in POST, PUT,
+        PATCH methods.
+    Icons_item:
+      summary: An example {0} document.
+      description: An example for Icons_item documents request bodies. Used in POST,
+        PUT, PATCH methods.
+    Icons_prayer:
+      summary: An example {0} document.
+      description: An example for Icons_prayer documents request bodies. Used in POST,
+        PUT, PATCH methods.
+  requestBodies:
+    Item:
+      description: A Item or list of Item documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Item"
+          examples:
+            Item:
+              "$ref": "#/components/examples/Item"
+    Weapon:
+      description: A Weapon or list of Weapon documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Weapon"
+          examples:
+            Weapon:
+              "$ref": "#/components/examples/Weapon"
+    Equipment:
+      description: A Equipment or list of Equipment documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Equipment"
+          examples:
+            Equipment:
+              "$ref": "#/components/examples/Equipment"
+    Monster:
+      description: A Monster or list of Monster documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Monster"
+          examples:
+            Monster:
+              "$ref": "#/components/examples/Monster"
+    Prayer:
+      description: A Prayer or list of Prayer documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Prayer"
+          examples:
+            Prayer:
+              "$ref": "#/components/examples/Prayer"
+    Icons_item:
+      description: A Icons_item or list of Icons_item documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Icons_item"
+          examples:
+            Icons_item:
+              "$ref": "#/components/examples/Icons_item"
+    Icons_prayer:
+      description: A Icons_prayer or list of Icons_prayer documents
+      required: true
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Icons_prayer"
+          examples:
+            Icons_prayer:
+              "$ref": "#/components/examples/Icons_prayer"
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+- BasicAuth: []
+tags:
+- name: Item
+- name: Weapon
+- name: Equipment
+- name: Monster
+- name: Prayer
+- name: Icons_item
+- name: Icons_prayer
