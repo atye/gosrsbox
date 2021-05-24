@@ -1204,7 +1204,7 @@
                "id": {
                   "description": "Unique OSRS item ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "name": {
                   "description": "The name of the item.",
@@ -1627,10 +1627,6 @@
                      "weapon_type",
                      "stances"
                   ]
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -1674,7 +1670,7 @@
                "id": {
                   "description": "Unique OSRS item ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "name": {
                   "description": "The name of the item.",
@@ -2097,10 +2093,6 @@
                      "weapon_type",
                      "stances"
                   ]
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -2144,7 +2136,7 @@
                "id": {
                   "description": "Unique OSRS item ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "name": {
                   "description": "The name of the item.",
@@ -2567,10 +2559,6 @@
                      "weapon_type",
                      "stances"
                   ]
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -2614,7 +2602,7 @@
                "id": {
                   "description": "Unique OSRS monster ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "name": {
                   "description": "The name of the monster.",
@@ -3035,10 +3023,6 @@
                         "rolls"
                      ]
                   }
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -3094,7 +3078,7 @@
                "id": {
                   "description": "Unique prayer ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "name": {
                   "description": "The name of the prayer.",
@@ -3136,10 +3120,6 @@
                   "description": "The prayer icon.",
                   "nullable": false,
                   "type": "string"
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -3160,16 +3140,12 @@
                "id": {
                   "description": "Unique OSRS item ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "icon": {
                   "description": "The icon image (in base64 encoding) of the item.",
                   "nullable": false,
                   "type": "string"
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -3183,16 +3159,12 @@
                "id": {
                   "description": "Unique OSRS prayer ID number.",
                   "nullable": false,
-                  "type": "integer"
+                  "type": "string"
                },
                "icon": {
                   "description": "The icon image (in base64 encoding) of the prayer.",
                   "nullable": false,
                   "type": "string"
-               },
-               "_id": {
-                  "type": "string",
-                  "format": "objectid"
                }
             },
             "required": [
@@ -3228,7 +3200,7 @@
             "type": "object",
             "properties": {
                "page": {
-                  "type": "string"
+                  "type": "integer"
                },
                "total": {
                   "type": "integer"

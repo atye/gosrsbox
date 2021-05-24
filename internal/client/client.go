@@ -43,8 +43,8 @@ func (c *client) doItemsRequest(ctx context.Context, req api.ApiGetitemsRequest)
 	}
 	defer c.sem.Release(1)
 
-	inline, _, openAPIErr := req.Execute()
-	err = checkError(openAPIErr)
+	inline, _, err := req.Execute()
+	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse200{}, err
 	}
@@ -59,8 +59,8 @@ func (c *client) doMonstersRequest(ctx context.Context, req api.ApiGetmonstersRe
 	}
 	defer c.sem.Release(1)
 
-	inline, _, openAPIErr := req.Execute()
-	err = checkError(openAPIErr)
+	inline, _, err := req.Execute()
+	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2003{}, err
 	}
@@ -75,8 +75,8 @@ func (c *client) doPrayersRequest(ctx context.Context, req api.ApiGetprayersRequ
 	}
 	defer c.sem.Release(1)
 
-	inline, _, openAPIErr := req.Execute()
-	err = checkError(openAPIErr)
+	inline, _, err := req.Execute()
+	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2004{}, err
 	}
@@ -103,19 +103,24 @@ func (c *client) doDocumentRequest(ctx context.Context, url string) (*http.Respo
 	return resp, nil
 }
 
-func checkError(openAPIErr api.GenericOpenAPIError) error {
-	if openAPIErr.Error() == "" {
+func checkError(executeErr error) error {
+	if executeErr == nil {
 		return nil
 	}
 
+	var genericErr api.GenericOpenAPIError
+	if !errors.As(executeErr, &genericErr) {
+		return executeErr
+	}
+
 	var apiErr api.Error
-	err := json.Unmarshal(openAPIErr.Body(), &apiErr)
+	err := json.Unmarshal(genericErr.Body(), &apiErr)
 	if err != nil {
-		return openAPIErr
+		return err
 	}
 
 	if apiErr.Error.GetCode() == 0 && apiErr.Error.GetMessage() == "" {
-		return openAPIErr
+		return executeErr
 	}
 	return fmt.Errorf("code %d, message: %s", apiErr.Error.GetCode(), apiErr.Error.GetMessage())
 }

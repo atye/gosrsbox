@@ -34,8 +34,8 @@ Name | Type | Description | Notes
 **Icon** | **string** | The item icon (in base64 encoding). | 
 **WikiName** | **NullableString** | The OSRS Wiki name for the item. | 
 **WikiUrl** | **NullableString** | The OSRS Wiki URL (possibly including anchor link). | 
-**Equipment** | [**NullableItemEquipment**](Item_equipment.md) |  | 
-**Weapon** | [**NullableItemWeapon**](Item_weapon.md) |  | 
+**Equipment** | [**NullableItemEquipment**](ItemEquipment.md) |  | 
+**Weapon** | [**NullableItemWeapon**](ItemWeapon.md) |  | 
 
 ## Methods
 

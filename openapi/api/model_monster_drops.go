@@ -36,7 +36,7 @@ type MonsterDrops struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity float32, rolls int32, ) *MonsterDrops {
+func NewMonsterDrops(id int32, name string, members bool, quantity NullableString, noted bool, rarity float32, rolls int32) *MonsterDrops {
 	this := MonsterDrops{}
 	this.Id = id
 	this.Name = name
@@ -58,7 +58,7 @@ func NewMonsterDropsWithDefaults() *MonsterDrops {
 
 // GetId returns the Id field value
 func (o *MonsterDrops) GetId() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -82,7 +82,7 @@ func (o *MonsterDrops) SetId(v int32) {
 
 // GetName returns the Name field value
 func (o *MonsterDrops) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -106,7 +106,7 @@ func (o *MonsterDrops) SetName(v string) {
 
 // GetMembers returns the Members field value
 func (o *MonsterDrops) GetMembers() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -156,7 +156,7 @@ func (o *MonsterDrops) SetQuantity(v string) {
 
 // GetNoted returns the Noted field value
 func (o *MonsterDrops) GetNoted() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -180,7 +180,7 @@ func (o *MonsterDrops) SetNoted(v bool) {
 
 // GetRarity returns the Rarity field value
 func (o *MonsterDrops) GetRarity() float32 {
-	if o == nil  {
+	if o == nil {
 		var ret float32
 		return ret
 	}
@@ -204,7 +204,7 @@ func (o *MonsterDrops) SetRarity(v float32) {
 
 // GetRolls returns the Rolls field value
 func (o *MonsterDrops) GetRolls() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}

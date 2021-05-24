@@ -39,7 +39,7 @@ func (r ApiDeleteItemItemRequest) IfMatch(ifMatch string) ApiDeleteItemItemReque
 	return r
 }
 
-func (r ApiDeleteItemItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteItemItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteItemItemExecute(r)
 }
 
@@ -60,20 +60,18 @@ func (a *ItemApiService) DeleteItemItem(ctx _context.Context, itemId string) Api
 /*
  * Execute executes the request
  */
-func (a *ItemApiService) DeleteItemItemExecute(r ApiDeleteItemItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) DeleteItemItemExecute(r ApiDeleteItemItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.DeleteItemItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items/{itemId}"
@@ -83,8 +81,7 @@ func (a *ItemApiService) DeleteItemItemExecute(r ApiDeleteItemItemRequest) (*_ne
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,22 +104,19 @@ func (a *ItemApiService) DeleteItemItemExecute(r ApiDeleteItemItemRequest) (*_ne
 	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -140,7 +134,7 @@ func (a *ItemApiService) DeleteItemItemExecute(r ApiDeleteItemItemRequest) (*_ne
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiDeleteitemsRequest struct {
@@ -149,7 +143,7 @@ type ApiDeleteitemsRequest struct {
 }
 
 
-func (r ApiDeleteitemsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteitemsRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteitemsExecute(r)
 }
 
@@ -168,20 +162,18 @@ func (a *ItemApiService) Deleteitems(ctx _context.Context) ApiDeleteitemsRequest
 /*
  * Execute executes the request
  */
-func (a *ItemApiService) DeleteitemsExecute(r ApiDeleteitemsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) DeleteitemsExecute(r ApiDeleteitemsRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.Deleteitems")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items"
@@ -209,22 +201,19 @@ func (a *ItemApiService) DeleteitemsExecute(r ApiDeleteitemsRequest) (*_nethttp.
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -242,7 +231,7 @@ func (a *ItemApiService) DeleteitemsExecute(r ApiDeleteitemsRequest) (*_nethttp.
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetItemItemRequest struct {
@@ -252,7 +241,7 @@ type ApiGetItemItemRequest struct {
 }
 
 
-func (r ApiGetItemItemRequest) Execute() (Item, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetItemItemRequest) Execute() (Item, *_nethttp.Response, error) {
 	return r.ApiService.GetItemItemExecute(r)
 }
 
@@ -274,21 +263,19 @@ func (a *ItemApiService) GetItemItem(ctx _context.Context, itemId string) ApiGet
  * Execute executes the request
  * @return Item
  */
-func (a *ItemApiService) GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  Item
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.GetItemItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items/{itemId}"
@@ -317,22 +304,19 @@ func (a *ItemApiService) GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_ne
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -359,7 +343,7 @@ func (a *ItemApiService) GetItemItemExecute(r ApiGetItemItemRequest) (Item, *_ne
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGetitemsRequest struct {
@@ -393,7 +377,7 @@ func (r ApiGetitemsRequest) MaxResults(maxResults int32) ApiGetitemsRequest {
 	return r
 }
 
-func (r ApiGetitemsRequest) Execute() (InlineResponse200, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetitemsRequest) Execute() (InlineResponse200, *_nethttp.Response, error) {
 	return r.ApiService.GetitemsExecute(r)
 }
 
@@ -413,21 +397,19 @@ func (a *ItemApiService) Getitems(ctx _context.Context) ApiGetitemsRequest {
  * Execute executes the request
  * @return InlineResponse200
  */
-func (a *ItemApiService) GetitemsExecute(r ApiGetitemsRequest) (InlineResponse200, *_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) GetitemsExecute(r ApiGetitemsRequest) (InlineResponse200, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  InlineResponse200
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.Getitems")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items"
@@ -470,22 +452,19 @@ func (a *ItemApiService) GetitemsExecute(r ApiGetitemsRequest) (InlineResponse20
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -512,7 +491,7 @@ func (a *ItemApiService) GetitemsExecute(r ApiGetitemsRequest) (InlineResponse20
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiPostitemsRequest struct {
@@ -526,7 +505,7 @@ func (r ApiPostitemsRequest) Item(item Item) ApiPostitemsRequest {
 	return r
 }
 
-func (r ApiPostitemsRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPostitemsRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PostitemsExecute(r)
 }
 
@@ -545,20 +524,18 @@ func (a *ItemApiService) Postitems(ctx _context.Context) ApiPostitemsRequest {
 /*
  * Execute executes the request
  */
-func (a *ItemApiService) PostitemsExecute(r ApiPostitemsRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) PostitemsExecute(r ApiPostitemsRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.Postitems")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items"
@@ -567,8 +544,7 @@ func (a *ItemApiService) PostitemsExecute(r ApiPostitemsRequest) (*_nethttp.Resp
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.item == nil {
-		executionError.error = "item is required and must be specified"
-		return nil, executionError
+		return nil, reportError("item is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -592,22 +568,19 @@ func (a *ItemApiService) PostitemsExecute(r ApiPostitemsRequest) (*_nethttp.Resp
 	localVarPostBody = r.item
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -625,7 +598,7 @@ func (a *ItemApiService) PostitemsExecute(r ApiPostitemsRequest) (*_nethttp.Resp
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiPutItemItemRequest struct {
@@ -645,7 +618,7 @@ func (r ApiPutItemItemRequest) Item(item Item) ApiPutItemItemRequest {
 	return r
 }
 
-func (r ApiPutItemItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPutItemItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PutItemItemExecute(r)
 }
 
@@ -666,20 +639,18 @@ func (a *ItemApiService) PutItemItem(ctx _context.Context, itemId string) ApiPut
 /*
  * Execute executes the request
  */
-func (a *ItemApiService) PutItemItemExecute(r ApiPutItemItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *ItemApiService) PutItemItemExecute(r ApiPutItemItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ItemApiService.PutItemItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/items/{itemId}"
@@ -689,12 +660,10 @@ func (a *ItemApiService) PutItemItemExecute(r ApiPutItemItemRequest) (*_nethttp.
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 	if r.item == nil {
-		executionError.error = "item is required and must be specified"
-		return nil, executionError
+		return nil, reportError("item is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -719,22 +688,19 @@ func (a *ItemApiService) PutItemItemExecute(r ApiPutItemItemRequest) (*_nethttp.
 	localVarPostBody = r.item
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -752,5 +718,5 @@ func (a *ItemApiService) PutItemItemExecute(r ApiPutItemItemRequest) (*_nethttp.
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }

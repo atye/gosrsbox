@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Items** | Pointer to [**[]Monster**](Monster.md) |  | [optional] 
-**Meta** | Pointer to [**ResponeMetadata**](respone_metadata.md) |  | [optional] 
-**Links** | Pointer to [**ResponeLinks**](respone_links.md) |  | [optional] 
+**Meta** | Pointer to [**ResponeMetadata**](ResponeMetadata.md) |  | [optional] 
+**Links** | Pointer to [**ResponeLinks**](ResponeLinks.md) |  | [optional] 
 
 ## Methods
 

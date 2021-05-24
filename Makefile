@@ -6,8 +6,8 @@ OPENAPI_DIR=openapi
  # response meta page must be int
  .PHONY: openapi
 openapi:
-	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
-    -i /local/${OPENAPI_DIR}/openapi-json.json \
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.1.1 generate \
+    -i /local/${OPENAPI_DIR}/openapi.json \
     -g go \
 	--package-name api \
     -o /local/${OPENAPI_DIR}/api

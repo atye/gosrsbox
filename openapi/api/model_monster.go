@@ -110,7 +110,7 @@ type Monster struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMonster(id string, name string, lastUpdated NullableString, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints NullableInt32, maxHit NullableInt32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, venomous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackBonus int32, strengthBonus int32, attackMagic int32, magicBonus int32, attackRanged int32, rangedBonus int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, drops []MonsterDrops, ) *Monster {
+func NewMonster(id string, name string, lastUpdated NullableString, incomplete bool, members bool, releaseDate NullableString, combatLevel int32, size int32, hitpoints NullableInt32, maxHit NullableInt32, attackType []string, attackSpeed NullableInt32, aggressive bool, poisonous bool, venomous bool, immunePoison bool, immuneVenom bool, attributes []string, category []string, slayerMonster bool, slayerLevel NullableInt32, slayerXp NullableFloat32, slayerMasters []string, duplicate bool, examine string, wikiName string, wikiUrl string, attackLevel int32, strengthLevel int32, defenceLevel int32, magicLevel int32, rangedLevel int32, attackBonus int32, strengthBonus int32, attackMagic int32, magicBonus int32, attackRanged int32, rangedBonus int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, drops []MonsterDrops) *Monster {
 	this := Monster{}
 	this.Id = id
 	this.Name = name
@@ -169,7 +169,7 @@ func NewMonsterWithDefaults() *Monster {
 
 // GetId returns the Id field value
 func (o *Monster) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -193,7 +193,7 @@ func (o *Monster) SetId(v string) {
 
 // GetName returns the Name field value
 func (o *Monster) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -243,7 +243,7 @@ func (o *Monster) SetLastUpdated(v string) {
 
 // GetIncomplete returns the Incomplete field value
 func (o *Monster) GetIncomplete() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -267,7 +267,7 @@ func (o *Monster) SetIncomplete(v bool) {
 
 // GetMembers returns the Members field value
 func (o *Monster) GetMembers() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -317,7 +317,7 @@ func (o *Monster) SetReleaseDate(v string) {
 
 // GetCombatLevel returns the CombatLevel field value
 func (o *Monster) GetCombatLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -341,7 +341,7 @@ func (o *Monster) SetCombatLevel(v int32) {
 
 // GetSize returns the Size field value
 func (o *Monster) GetSize() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -417,7 +417,7 @@ func (o *Monster) SetMaxHit(v int32) {
 
 // GetAttackType returns the AttackType field value
 func (o *Monster) GetAttackType() []string {
-	if o == nil  {
+	if o == nil {
 		var ret []string
 		return ret
 	}
@@ -467,7 +467,7 @@ func (o *Monster) SetAttackSpeed(v int32) {
 
 // GetAggressive returns the Aggressive field value
 func (o *Monster) GetAggressive() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -491,7 +491,7 @@ func (o *Monster) SetAggressive(v bool) {
 
 // GetPoisonous returns the Poisonous field value
 func (o *Monster) GetPoisonous() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -515,7 +515,7 @@ func (o *Monster) SetPoisonous(v bool) {
 
 // GetVenomous returns the Venomous field value
 func (o *Monster) GetVenomous() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -539,7 +539,7 @@ func (o *Monster) SetVenomous(v bool) {
 
 // GetImmunePoison returns the ImmunePoison field value
 func (o *Monster) GetImmunePoison() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -563,7 +563,7 @@ func (o *Monster) SetImmunePoison(v bool) {
 
 // GetImmuneVenom returns the ImmuneVenom field value
 func (o *Monster) GetImmuneVenom() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -587,7 +587,7 @@ func (o *Monster) SetImmuneVenom(v bool) {
 
 // GetAttributes returns the Attributes field value
 func (o *Monster) GetAttributes() []string {
-	if o == nil  {
+	if o == nil {
 		var ret []string
 		return ret
 	}
@@ -611,7 +611,7 @@ func (o *Monster) SetAttributes(v []string) {
 
 // GetCategory returns the Category field value
 func (o *Monster) GetCategory() []string {
-	if o == nil  {
+	if o == nil {
 		var ret []string
 		return ret
 	}
@@ -635,7 +635,7 @@ func (o *Monster) SetCategory(v []string) {
 
 // GetSlayerMonster returns the SlayerMonster field value
 func (o *Monster) GetSlayerMonster() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -711,7 +711,7 @@ func (o *Monster) SetSlayerXp(v float32) {
 
 // GetSlayerMasters returns the SlayerMasters field value
 func (o *Monster) GetSlayerMasters() []string {
-	if o == nil  {
+	if o == nil {
 		var ret []string
 		return ret
 	}
@@ -735,7 +735,7 @@ func (o *Monster) SetSlayerMasters(v []string) {
 
 // GetDuplicate returns the Duplicate field value
 func (o *Monster) GetDuplicate() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -759,7 +759,7 @@ func (o *Monster) SetDuplicate(v bool) {
 
 // GetExamine returns the Examine field value
 func (o *Monster) GetExamine() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -783,7 +783,7 @@ func (o *Monster) SetExamine(v string) {
 
 // GetWikiName returns the WikiName field value
 func (o *Monster) GetWikiName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -807,7 +807,7 @@ func (o *Monster) SetWikiName(v string) {
 
 // GetWikiUrl returns the WikiUrl field value
 func (o *Monster) GetWikiUrl() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -831,7 +831,7 @@ func (o *Monster) SetWikiUrl(v string) {
 
 // GetAttackLevel returns the AttackLevel field value
 func (o *Monster) GetAttackLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -855,7 +855,7 @@ func (o *Monster) SetAttackLevel(v int32) {
 
 // GetStrengthLevel returns the StrengthLevel field value
 func (o *Monster) GetStrengthLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -879,7 +879,7 @@ func (o *Monster) SetStrengthLevel(v int32) {
 
 // GetDefenceLevel returns the DefenceLevel field value
 func (o *Monster) GetDefenceLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -903,7 +903,7 @@ func (o *Monster) SetDefenceLevel(v int32) {
 
 // GetMagicLevel returns the MagicLevel field value
 func (o *Monster) GetMagicLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -927,7 +927,7 @@ func (o *Monster) SetMagicLevel(v int32) {
 
 // GetRangedLevel returns the RangedLevel field value
 func (o *Monster) GetRangedLevel() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -951,7 +951,7 @@ func (o *Monster) SetRangedLevel(v int32) {
 
 // GetAttackBonus returns the AttackBonus field value
 func (o *Monster) GetAttackBonus() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -975,7 +975,7 @@ func (o *Monster) SetAttackBonus(v int32) {
 
 // GetStrengthBonus returns the StrengthBonus field value
 func (o *Monster) GetStrengthBonus() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -999,7 +999,7 @@ func (o *Monster) SetStrengthBonus(v int32) {
 
 // GetAttackMagic returns the AttackMagic field value
 func (o *Monster) GetAttackMagic() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1023,7 +1023,7 @@ func (o *Monster) SetAttackMagic(v int32) {
 
 // GetMagicBonus returns the MagicBonus field value
 func (o *Monster) GetMagicBonus() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1047,7 +1047,7 @@ func (o *Monster) SetMagicBonus(v int32) {
 
 // GetAttackRanged returns the AttackRanged field value
 func (o *Monster) GetAttackRanged() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1071,7 +1071,7 @@ func (o *Monster) SetAttackRanged(v int32) {
 
 // GetRangedBonus returns the RangedBonus field value
 func (o *Monster) GetRangedBonus() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1095,7 +1095,7 @@ func (o *Monster) SetRangedBonus(v int32) {
 
 // GetDefenceStab returns the DefenceStab field value
 func (o *Monster) GetDefenceStab() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1119,7 +1119,7 @@ func (o *Monster) SetDefenceStab(v int32) {
 
 // GetDefenceSlash returns the DefenceSlash field value
 func (o *Monster) GetDefenceSlash() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1143,7 +1143,7 @@ func (o *Monster) SetDefenceSlash(v int32) {
 
 // GetDefenceCrush returns the DefenceCrush field value
 func (o *Monster) GetDefenceCrush() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1167,7 +1167,7 @@ func (o *Monster) SetDefenceCrush(v int32) {
 
 // GetDefenceMagic returns the DefenceMagic field value
 func (o *Monster) GetDefenceMagic() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1191,7 +1191,7 @@ func (o *Monster) SetDefenceMagic(v int32) {
 
 // GetDefenceRanged returns the DefenceRanged field value
 func (o *Monster) GetDefenceRanged() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -1215,7 +1215,7 @@ func (o *Monster) SetDefenceRanged(v int32) {
 
 // GetDrops returns the Drops field value
 func (o *Monster) GetDrops() []MonsterDrops {
-	if o == nil  {
+	if o == nil {
 		var ret []MonsterDrops
 		return ret
 	}
