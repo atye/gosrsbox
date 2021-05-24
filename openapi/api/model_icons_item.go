@@ -26,7 +26,7 @@ type IconsItem struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIconsItem(id string, icon string, ) *IconsItem {
+func NewIconsItem(id string, icon string) *IconsItem {
 	this := IconsItem{}
 	this.Id = id
 	this.Icon = icon
@@ -43,7 +43,7 @@ func NewIconsItemWithDefaults() *IconsItem {
 
 // GetId returns the Id field value
 func (o *IconsItem) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -67,7 +67,7 @@ func (o *IconsItem) SetId(v string) {
 
 // GetIcon returns the Icon field value
 func (o *IconsItem) GetIcon() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}

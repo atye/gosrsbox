@@ -39,7 +39,7 @@ func (r ApiDeleteIconsPrayerItemRequest) IfMatch(ifMatch string) ApiDeleteIconsP
 	return r
 }
 
-func (r ApiDeleteIconsPrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteIconsPrayerItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteIconsPrayerItemExecute(r)
 }
 
@@ -60,20 +60,18 @@ func (a *IconsPrayerApiService) DeleteIconsPrayerItem(ctx _context.Context, icon
 /*
  * Execute executes the request
  */
-func (a *IconsPrayerApiService) DeleteIconsPrayerItemExecute(r ApiDeleteIconsPrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) DeleteIconsPrayerItemExecute(r ApiDeleteIconsPrayerItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.DeleteIconsPrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers/{icons_prayerId}"
@@ -83,8 +81,7 @@ func (a *IconsPrayerApiService) DeleteIconsPrayerItemExecute(r ApiDeleteIconsPra
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,22 +104,19 @@ func (a *IconsPrayerApiService) DeleteIconsPrayerItemExecute(r ApiDeleteIconsPra
 	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -140,7 +134,7 @@ func (a *IconsPrayerApiService) DeleteIconsPrayerItemExecute(r ApiDeleteIconsPra
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiDeleteiconsPrayersRequest struct {
@@ -149,7 +143,7 @@ type ApiDeleteiconsPrayersRequest struct {
 }
 
 
-func (r ApiDeleteiconsPrayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteiconsPrayersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteiconsPrayersExecute(r)
 }
 
@@ -168,20 +162,18 @@ func (a *IconsPrayerApiService) DeleteiconsPrayers(ctx _context.Context) ApiDele
 /*
  * Execute executes the request
  */
-func (a *IconsPrayerApiService) DeleteiconsPrayersExecute(r ApiDeleteiconsPrayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) DeleteiconsPrayersExecute(r ApiDeleteiconsPrayersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.DeleteiconsPrayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers"
@@ -209,22 +201,19 @@ func (a *IconsPrayerApiService) DeleteiconsPrayersExecute(r ApiDeleteiconsPrayer
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -242,7 +231,7 @@ func (a *IconsPrayerApiService) DeleteiconsPrayersExecute(r ApiDeleteiconsPrayer
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetIconsPrayerItemRequest struct {
@@ -252,7 +241,7 @@ type ApiGetIconsPrayerItemRequest struct {
 }
 
 
-func (r ApiGetIconsPrayerItemRequest) Execute() (IconsPrayer, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetIconsPrayerItemRequest) Execute() (IconsPrayer, *_nethttp.Response, error) {
 	return r.ApiService.GetIconsPrayerItemExecute(r)
 }
 
@@ -274,21 +263,19 @@ func (a *IconsPrayerApiService) GetIconsPrayerItem(ctx _context.Context, iconsPr
  * Execute executes the request
  * @return IconsPrayer
  */
-func (a *IconsPrayerApiService) GetIconsPrayerItemExecute(r ApiGetIconsPrayerItemRequest) (IconsPrayer, *_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) GetIconsPrayerItemExecute(r ApiGetIconsPrayerItemRequest) (IconsPrayer, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  IconsPrayer
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.GetIconsPrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers/{icons_prayerId}"
@@ -317,22 +304,19 @@ func (a *IconsPrayerApiService) GetIconsPrayerItemExecute(r ApiGetIconsPrayerIte
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -359,7 +343,7 @@ func (a *IconsPrayerApiService) GetIconsPrayerItemExecute(r ApiGetIconsPrayerIte
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGeticonsPrayersRequest struct {
@@ -393,7 +377,7 @@ func (r ApiGeticonsPrayersRequest) MaxResults(maxResults int32) ApiGeticonsPraye
 	return r
 }
 
-func (r ApiGeticonsPrayersRequest) Execute() (InlineResponse2006, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGeticonsPrayersRequest) Execute() (InlineResponse2006, *_nethttp.Response, error) {
 	return r.ApiService.GeticonsPrayersExecute(r)
 }
 
@@ -413,21 +397,19 @@ func (a *IconsPrayerApiService) GeticonsPrayers(ctx _context.Context) ApiGeticon
  * Execute executes the request
  * @return InlineResponse2006
  */
-func (a *IconsPrayerApiService) GeticonsPrayersExecute(r ApiGeticonsPrayersRequest) (InlineResponse2006, *_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) GeticonsPrayersExecute(r ApiGeticonsPrayersRequest) (InlineResponse2006, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  InlineResponse2006
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.GeticonsPrayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers"
@@ -470,22 +452,19 @@ func (a *IconsPrayerApiService) GeticonsPrayersExecute(r ApiGeticonsPrayersReque
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -512,7 +491,7 @@ func (a *IconsPrayerApiService) GeticonsPrayersExecute(r ApiGeticonsPrayersReque
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiPosticonsPrayersRequest struct {
@@ -526,7 +505,7 @@ func (r ApiPosticonsPrayersRequest) IconsPrayer(iconsPrayer IconsPrayer) ApiPost
 	return r
 }
 
-func (r ApiPosticonsPrayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPosticonsPrayersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PosticonsPrayersExecute(r)
 }
 
@@ -545,20 +524,18 @@ func (a *IconsPrayerApiService) PosticonsPrayers(ctx _context.Context) ApiPostic
 /*
  * Execute executes the request
  */
-func (a *IconsPrayerApiService) PosticonsPrayersExecute(r ApiPosticonsPrayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) PosticonsPrayersExecute(r ApiPosticonsPrayersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.PosticonsPrayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers"
@@ -567,8 +544,7 @@ func (a *IconsPrayerApiService) PosticonsPrayersExecute(r ApiPosticonsPrayersReq
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.iconsPrayer == nil {
-		executionError.error = "iconsPrayer is required and must be specified"
-		return nil, executionError
+		return nil, reportError("iconsPrayer is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -592,22 +568,19 @@ func (a *IconsPrayerApiService) PosticonsPrayersExecute(r ApiPosticonsPrayersReq
 	localVarPostBody = r.iconsPrayer
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -625,7 +598,7 @@ func (a *IconsPrayerApiService) PosticonsPrayersExecute(r ApiPosticonsPrayersReq
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiPutIconsPrayerItemRequest struct {
@@ -645,7 +618,7 @@ func (r ApiPutIconsPrayerItemRequest) IconsPrayer(iconsPrayer IconsPrayer) ApiPu
 	return r
 }
 
-func (r ApiPutIconsPrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPutIconsPrayerItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PutIconsPrayerItemExecute(r)
 }
 
@@ -666,20 +639,18 @@ func (a *IconsPrayerApiService) PutIconsPrayerItem(ctx _context.Context, iconsPr
 /*
  * Execute executes the request
  */
-func (a *IconsPrayerApiService) PutIconsPrayerItemExecute(r ApiPutIconsPrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *IconsPrayerApiService) PutIconsPrayerItemExecute(r ApiPutIconsPrayerItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IconsPrayerApiService.PutIconsPrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/icons_prayers/{icons_prayerId}"
@@ -689,12 +660,10 @@ func (a *IconsPrayerApiService) PutIconsPrayerItemExecute(r ApiPutIconsPrayerIte
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 	if r.iconsPrayer == nil {
-		executionError.error = "iconsPrayer is required and must be specified"
-		return nil, executionError
+		return nil, reportError("iconsPrayer is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -719,22 +688,19 @@ func (a *IconsPrayerApiService) PutIconsPrayerItemExecute(r ApiPutIconsPrayerIte
 	localVarPostBody = r.iconsPrayer
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -752,5 +718,5 @@ func (a *IconsPrayerApiService) PutIconsPrayerItemExecute(r ApiPutIconsPrayerIte
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }

@@ -38,7 +38,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.DeleteMonsterItem(context.Background(), monsterId).IfMatch(ifMatch).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.DeleteMonsterItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -104,7 +104,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.Deletemonsters(context.Background()).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.Deletemonsters``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -162,7 +162,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.GetMonsterItem(context.Background(), monsterId).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.GetMonsterItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -234,7 +234,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.Getmonsters(context.Background()).Where(where).Projection(projection).Sort(sort).Page(page).MaxResults(maxResults).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.Getmonsters``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -262,7 +262,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2003**](inline_response_200_3.md)
+[**InlineResponse2003**](InlineResponse2003.md)
 
 ### Authorization
 
@@ -297,12 +297,12 @@ import (
 )
 
 func main() {
-    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), int32(123), int32(123), []string{"AttackType_example"}, int32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, int32(123), float32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
+    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), NullableInt32(123), NullableInt32(123), []string{"AttackType_example"}, NullableInt32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, NullableInt32(123), NullableFloat32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.Postmonsters(context.Background()).Monster(monster).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.Postmonsters``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -361,12 +361,12 @@ import (
 func main() {
     monsterId := "monsterId_example" // string | Unique OSRS monster ID number.
     ifMatch := "ifMatch_example" // string | Current value of the _etag field
-    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), int32(123), int32(123), []string{"AttackType_example"}, int32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, int32(123), float32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
+    monster := *openapiclient.NewMonster("Id_example", "Name_example", "LastUpdated_example", false, false, "ReleaseDate_example", int32(123), int32(123), NullableInt32(123), NullableInt32(123), []string{"AttackType_example"}, NullableInt32(123), false, false, false, false, false, []string{"Attributes_example"}, []string{"Category_example"}, false, NullableInt32(123), NullableFloat32(123), []string{"SlayerMasters_example"}, false, "Examine_example", "WikiName_example", "WikiUrl_example", int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), []openapiclient.MonsterDrops{*openapiclient.NewMonsterDrops(int32(123), "Name_example", false, "Quantity_example", false, float32(123), int32(123))}) // Monster | A Monster or list of Monster documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.MonsterApi.PutMonsterItem(context.Background(), monsterId).IfMatch(ifMatch).Monster(monster).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `MonsterApi.PutMonsterItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }

@@ -38,7 +38,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.DeleteEquipmentItem(context.Background(), equipmentId).IfMatch(ifMatch).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.DeleteEquipmentItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -104,7 +104,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.Deleteequipment(context.Background()).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.Deleteequipment``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -162,7 +162,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.GetEquipmentItem(context.Background(), equipmentId).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.GetEquipmentItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -234,7 +234,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.Getequipment(context.Background()).Where(where).Projection(projection).Sort(sort).Page(page).MaxResults(maxResults).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.Getequipment``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -262,7 +262,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](inline_response_200_2.md)
+[**InlineResponse2002**](InlineResponse2002.md)
 
 ### Authorization
 
@@ -297,12 +297,12 @@ import (
 )
 
 func main() {
-    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Equipment | A Equipment or list of Equipment documents
+    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, NullableInt32(123), false, false, NullableInt32(123), NullableInt32(123), NullableInt32(123), false, false, false, false, int32(123), NullableInt32(123), NullableInt32(123), NullableFloat32(123), NullableInt32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", "TODO", "TODO") // Equipment | A Equipment or list of Equipment documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.Postequipment(context.Background()).Equipment(equipment).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.Postequipment``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -361,12 +361,12 @@ import (
 func main() {
     equipmentId := "equipmentId_example" // string | Unique OSRS item ID number.
     ifMatch := "ifMatch_example" // string | Current value of the _etag field
-    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Equipment | A Equipment or list of Equipment documents
+    equipment := *openapiclient.NewEquipment("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, NullableInt32(123), false, false, NullableInt32(123), NullableInt32(123), NullableInt32(123), false, false, false, false, int32(123), NullableInt32(123), NullableInt32(123), NullableFloat32(123), NullableInt32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", "TODO", "TODO") // Equipment | A Equipment or list of Equipment documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.EquipmentApi.PutEquipmentItem(context.Background(), equipmentId).IfMatch(ifMatch).Equipment(equipment).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `EquipmentApi.PutEquipmentItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }

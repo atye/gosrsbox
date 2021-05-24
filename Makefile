@@ -1,12 +1,13 @@
-OPENAPI_DIR=internal/openapi
+OPENAPI_DIR=openapi
  
  # openapi.yaml:
  # _id properties must be removed
  # id properties must be string, except for MonsterDrops
  # response meta page must be int
+ .PHONY: openapi
 openapi:
-	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
-    -i /local/${OPENAPI_DIR}/openapi.yaml \
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.1.1 generate \
+    -i /local/${OPENAPI_DIR}/openapi.json \
     -g go \
 	--package-name api \
     -o /local/${OPENAPI_DIR}/api
@@ -19,9 +20,11 @@ openapi:
 		${OPENAPI_DIR}/api/go.mod \
 		${OPENAPI_DIR}/api/go.sum
 
+.PHONY: test
 test:
 	go test -count=1 -v -cover -race ./...
 
+.PHONY: cover-profile
 cover-profile:
 	go test -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out

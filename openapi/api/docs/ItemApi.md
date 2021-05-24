@@ -38,7 +38,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.DeleteItemItem(context.Background(), itemId).IfMatch(ifMatch).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.DeleteItemItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -104,7 +104,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.Deleteitems(context.Background()).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.Deleteitems``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -162,7 +162,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.GetItemItem(context.Background(), itemId).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.GetItemItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -234,7 +234,7 @@ func main() {
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.Getitems(context.Background()).Where(where).Projection(projection).Sort(sort).Page(page).MaxResults(maxResults).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.Getitems``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -262,7 +262,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse200**](inline_response_200.md)
+[**InlineResponse200**](InlineResponse200.md)
 
 ### Authorization
 
@@ -297,12 +297,12 @@ import (
 )
 
 func main() {
-    item := *openapiclient.NewItem("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Item | A Item or list of Item documents
+    item := *openapiclient.NewItem("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, NullableInt32(123), false, false, NullableInt32(123), NullableInt32(123), NullableInt32(123), false, false, false, false, int32(123), NullableInt32(123), NullableInt32(123), NullableFloat32(123), NullableInt32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", "TODO", "TODO") // Item | A Item or list of Item documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.Postitems(context.Background()).Item(item).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.Postitems``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
@@ -361,12 +361,12 @@ import (
 func main() {
     itemId := "itemId_example" // string | Unique OSRS item ID number.
     ifMatch := "ifMatch_example" // string | Current value of the _etag field
-    item := *openapiclient.NewItem("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, int32(123), false, false, int32(123), int32(123), int32(123), false, false, false, false, int32(123), int32(123), int32(123), float32(123), int32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", *openapiclient.NewItemEquipment(int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), int32(123), "Slot_example", map[string]interface{}(123)), *openapiclient.NewItemWeapon(int32(123), "WeaponType_example", []openapiclient.ItemWeaponStances{*openapiclient.NewItemWeaponStances("CombatStyle_example", "AttackType_example", "AttackStyle_example", "Experience_example", "Boosts_example")})) // Item | A Item or list of Item documents
+    item := *openapiclient.NewItem("Id_example", "Name_example", "LastUpdated_example", false, false, false, false, false, NullableInt32(123), false, false, NullableInt32(123), NullableInt32(123), NullableInt32(123), false, false, false, false, int32(123), NullableInt32(123), NullableInt32(123), NullableFloat32(123), NullableInt32(123), false, "ReleaseDate_example", false, "Examine_example", "Icon_example", "WikiName_example", "WikiUrl_example", "TODO", "TODO") // Item | A Item or list of Item documents
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
     resp, r, err := api_client.ItemApi.PutItemItem(context.Background(), itemId).IfMatch(ifMatch).Item(item).Execute()
-    if err.Error() != "" {
+    if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ItemApi.PutItemItem``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }

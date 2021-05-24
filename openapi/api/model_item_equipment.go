@@ -54,7 +54,7 @@ type ItemEquipment struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewItemEquipment(attackStab int32, attackSlash int32, attackCrush int32, attackMagic int32, attackRanged int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, meleeStrength int32, rangedStrength int32, magicDamage int32, prayer int32, slot string, requirements map[string]interface{}, ) *ItemEquipment {
+func NewItemEquipment(attackStab int32, attackSlash int32, attackCrush int32, attackMagic int32, attackRanged int32, defenceStab int32, defenceSlash int32, defenceCrush int32, defenceMagic int32, defenceRanged int32, meleeStrength int32, rangedStrength int32, magicDamage int32, prayer int32, slot string, requirements map[string]interface{}) *ItemEquipment {
 	this := ItemEquipment{}
 	this.AttackStab = attackStab
 	this.AttackSlash = attackSlash
@@ -85,7 +85,7 @@ func NewItemEquipmentWithDefaults() *ItemEquipment {
 
 // GetAttackStab returns the AttackStab field value
 func (o *ItemEquipment) GetAttackStab() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -109,7 +109,7 @@ func (o *ItemEquipment) SetAttackStab(v int32) {
 
 // GetAttackSlash returns the AttackSlash field value
 func (o *ItemEquipment) GetAttackSlash() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -133,7 +133,7 @@ func (o *ItemEquipment) SetAttackSlash(v int32) {
 
 // GetAttackCrush returns the AttackCrush field value
 func (o *ItemEquipment) GetAttackCrush() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -157,7 +157,7 @@ func (o *ItemEquipment) SetAttackCrush(v int32) {
 
 // GetAttackMagic returns the AttackMagic field value
 func (o *ItemEquipment) GetAttackMagic() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -181,7 +181,7 @@ func (o *ItemEquipment) SetAttackMagic(v int32) {
 
 // GetAttackRanged returns the AttackRanged field value
 func (o *ItemEquipment) GetAttackRanged() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -205,7 +205,7 @@ func (o *ItemEquipment) SetAttackRanged(v int32) {
 
 // GetDefenceStab returns the DefenceStab field value
 func (o *ItemEquipment) GetDefenceStab() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -229,7 +229,7 @@ func (o *ItemEquipment) SetDefenceStab(v int32) {
 
 // GetDefenceSlash returns the DefenceSlash field value
 func (o *ItemEquipment) GetDefenceSlash() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -253,7 +253,7 @@ func (o *ItemEquipment) SetDefenceSlash(v int32) {
 
 // GetDefenceCrush returns the DefenceCrush field value
 func (o *ItemEquipment) GetDefenceCrush() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -277,7 +277,7 @@ func (o *ItemEquipment) SetDefenceCrush(v int32) {
 
 // GetDefenceMagic returns the DefenceMagic field value
 func (o *ItemEquipment) GetDefenceMagic() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -301,7 +301,7 @@ func (o *ItemEquipment) SetDefenceMagic(v int32) {
 
 // GetDefenceRanged returns the DefenceRanged field value
 func (o *ItemEquipment) GetDefenceRanged() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -325,7 +325,7 @@ func (o *ItemEquipment) SetDefenceRanged(v int32) {
 
 // GetMeleeStrength returns the MeleeStrength field value
 func (o *ItemEquipment) GetMeleeStrength() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -349,7 +349,7 @@ func (o *ItemEquipment) SetMeleeStrength(v int32) {
 
 // GetRangedStrength returns the RangedStrength field value
 func (o *ItemEquipment) GetRangedStrength() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -373,7 +373,7 @@ func (o *ItemEquipment) SetRangedStrength(v int32) {
 
 // GetMagicDamage returns the MagicDamage field value
 func (o *ItemEquipment) GetMagicDamage() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -397,7 +397,7 @@ func (o *ItemEquipment) SetMagicDamage(v int32) {
 
 // GetPrayer returns the Prayer field value
 func (o *ItemEquipment) GetPrayer() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -421,7 +421,7 @@ func (o *ItemEquipment) SetPrayer(v int32) {
 
 // GetSlot returns the Slot field value
 func (o *ItemEquipment) GetSlot() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -446,7 +446,7 @@ func (o *ItemEquipment) SetSlot(v string) {
 // GetRequirements returns the Requirements field value
 // If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *ItemEquipment) GetRequirements() map[string]interface{} {
-	if o == nil  {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}

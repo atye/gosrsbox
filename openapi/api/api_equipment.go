@@ -39,7 +39,7 @@ func (r ApiDeleteEquipmentItemRequest) IfMatch(ifMatch string) ApiDeleteEquipmen
 	return r
 }
 
-func (r ApiDeleteEquipmentItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteEquipmentItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteEquipmentItemExecute(r)
 }
 
@@ -60,20 +60,18 @@ func (a *EquipmentApiService) DeleteEquipmentItem(ctx _context.Context, equipmen
 /*
  * Execute executes the request
  */
-func (a *EquipmentApiService) DeleteEquipmentItemExecute(r ApiDeleteEquipmentItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) DeleteEquipmentItemExecute(r ApiDeleteEquipmentItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.DeleteEquipmentItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment/{equipmentId}"
@@ -83,8 +81,7 @@ func (a *EquipmentApiService) DeleteEquipmentItemExecute(r ApiDeleteEquipmentIte
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,22 +104,19 @@ func (a *EquipmentApiService) DeleteEquipmentItemExecute(r ApiDeleteEquipmentIte
 	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -140,7 +134,7 @@ func (a *EquipmentApiService) DeleteEquipmentItemExecute(r ApiDeleteEquipmentIte
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiDeleteequipmentRequest struct {
@@ -149,7 +143,7 @@ type ApiDeleteequipmentRequest struct {
 }
 
 
-func (r ApiDeleteequipmentRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteequipmentRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteequipmentExecute(r)
 }
 
@@ -168,20 +162,18 @@ func (a *EquipmentApiService) Deleteequipment(ctx _context.Context) ApiDeleteequ
 /*
  * Execute executes the request
  */
-func (a *EquipmentApiService) DeleteequipmentExecute(r ApiDeleteequipmentRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) DeleteequipmentExecute(r ApiDeleteequipmentRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.Deleteequipment")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment"
@@ -209,22 +201,19 @@ func (a *EquipmentApiService) DeleteequipmentExecute(r ApiDeleteequipmentRequest
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -242,7 +231,7 @@ func (a *EquipmentApiService) DeleteequipmentExecute(r ApiDeleteequipmentRequest
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetEquipmentItemRequest struct {
@@ -252,7 +241,7 @@ type ApiGetEquipmentItemRequest struct {
 }
 
 
-func (r ApiGetEquipmentItemRequest) Execute() (Equipment, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetEquipmentItemRequest) Execute() (Equipment, *_nethttp.Response, error) {
 	return r.ApiService.GetEquipmentItemExecute(r)
 }
 
@@ -274,21 +263,19 @@ func (a *EquipmentApiService) GetEquipmentItem(ctx _context.Context, equipmentId
  * Execute executes the request
  * @return Equipment
  */
-func (a *EquipmentApiService) GetEquipmentItemExecute(r ApiGetEquipmentItemRequest) (Equipment, *_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) GetEquipmentItemExecute(r ApiGetEquipmentItemRequest) (Equipment, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  Equipment
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.GetEquipmentItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment/{equipmentId}"
@@ -317,22 +304,19 @@ func (a *EquipmentApiService) GetEquipmentItemExecute(r ApiGetEquipmentItemReque
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -359,7 +343,7 @@ func (a *EquipmentApiService) GetEquipmentItemExecute(r ApiGetEquipmentItemReque
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGetequipmentRequest struct {
@@ -393,7 +377,7 @@ func (r ApiGetequipmentRequest) MaxResults(maxResults int32) ApiGetequipmentRequ
 	return r
 }
 
-func (r ApiGetequipmentRequest) Execute() (InlineResponse2002, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetequipmentRequest) Execute() (InlineResponse2002, *_nethttp.Response, error) {
 	return r.ApiService.GetequipmentExecute(r)
 }
 
@@ -413,21 +397,19 @@ func (a *EquipmentApiService) Getequipment(ctx _context.Context) ApiGetequipment
  * Execute executes the request
  * @return InlineResponse2002
  */
-func (a *EquipmentApiService) GetequipmentExecute(r ApiGetequipmentRequest) (InlineResponse2002, *_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) GetequipmentExecute(r ApiGetequipmentRequest) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  InlineResponse2002
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.Getequipment")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment"
@@ -470,22 +452,19 @@ func (a *EquipmentApiService) GetequipmentExecute(r ApiGetequipmentRequest) (Inl
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -512,7 +491,7 @@ func (a *EquipmentApiService) GetequipmentExecute(r ApiGetequipmentRequest) (Inl
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiPostequipmentRequest struct {
@@ -526,7 +505,7 @@ func (r ApiPostequipmentRequest) Equipment(equipment Equipment) ApiPostequipment
 	return r
 }
 
-func (r ApiPostequipmentRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPostequipmentRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PostequipmentExecute(r)
 }
 
@@ -545,20 +524,18 @@ func (a *EquipmentApiService) Postequipment(ctx _context.Context) ApiPostequipme
 /*
  * Execute executes the request
  */
-func (a *EquipmentApiService) PostequipmentExecute(r ApiPostequipmentRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) PostequipmentExecute(r ApiPostequipmentRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.Postequipment")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment"
@@ -567,8 +544,7 @@ func (a *EquipmentApiService) PostequipmentExecute(r ApiPostequipmentRequest) (*
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.equipment == nil {
-		executionError.error = "equipment is required and must be specified"
-		return nil, executionError
+		return nil, reportError("equipment is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -592,22 +568,19 @@ func (a *EquipmentApiService) PostequipmentExecute(r ApiPostequipmentRequest) (*
 	localVarPostBody = r.equipment
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -625,7 +598,7 @@ func (a *EquipmentApiService) PostequipmentExecute(r ApiPostequipmentRequest) (*
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiPutEquipmentItemRequest struct {
@@ -645,7 +618,7 @@ func (r ApiPutEquipmentItemRequest) Equipment(equipment Equipment) ApiPutEquipme
 	return r
 }
 
-func (r ApiPutEquipmentItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPutEquipmentItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PutEquipmentItemExecute(r)
 }
 
@@ -666,20 +639,18 @@ func (a *EquipmentApiService) PutEquipmentItem(ctx _context.Context, equipmentId
 /*
  * Execute executes the request
  */
-func (a *EquipmentApiService) PutEquipmentItemExecute(r ApiPutEquipmentItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *EquipmentApiService) PutEquipmentItemExecute(r ApiPutEquipmentItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EquipmentApiService.PutEquipmentItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/equipment/{equipmentId}"
@@ -689,12 +660,10 @@ func (a *EquipmentApiService) PutEquipmentItemExecute(r ApiPutEquipmentItemReque
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 	if r.equipment == nil {
-		executionError.error = "equipment is required and must be specified"
-		return nil, executionError
+		return nil, reportError("equipment is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -719,22 +688,19 @@ func (a *EquipmentApiService) PutEquipmentItemExecute(r ApiPutEquipmentItemReque
 	localVarPostBody = r.equipment
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -752,5 +718,5 @@ func (a *EquipmentApiService) PutEquipmentItemExecute(r ApiPutEquipmentItemReque
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }

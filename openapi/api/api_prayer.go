@@ -39,7 +39,7 @@ func (r ApiDeletePrayerItemRequest) IfMatch(ifMatch string) ApiDeletePrayerItemR
 	return r
 }
 
-func (r ApiDeletePrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeletePrayerItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeletePrayerItemExecute(r)
 }
 
@@ -60,20 +60,18 @@ func (a *PrayerApiService) DeletePrayerItem(ctx _context.Context, prayerId strin
 /*
  * Execute executes the request
  */
-func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.DeletePrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers/{prayerId}"
@@ -83,8 +81,7 @@ func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,22 +104,19 @@ func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest)
 	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -140,7 +134,7 @@ func (a *PrayerApiService) DeletePrayerItemExecute(r ApiDeletePrayerItemRequest)
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiDeleteprayersRequest struct {
@@ -149,7 +143,7 @@ type ApiDeleteprayersRequest struct {
 }
 
 
-func (r ApiDeleteprayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteprayersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteprayersExecute(r)
 }
 
@@ -168,20 +162,18 @@ func (a *PrayerApiService) Deleteprayers(ctx _context.Context) ApiDeleteprayersR
 /*
  * Execute executes the request
  */
-func (a *PrayerApiService) DeleteprayersExecute(r ApiDeleteprayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) DeleteprayersExecute(r ApiDeleteprayersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.Deleteprayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers"
@@ -209,22 +201,19 @@ func (a *PrayerApiService) DeleteprayersExecute(r ApiDeleteprayersRequest) (*_ne
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -242,7 +231,7 @@ func (a *PrayerApiService) DeleteprayersExecute(r ApiDeleteprayersRequest) (*_ne
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetPrayerItemRequest struct {
@@ -252,7 +241,7 @@ type ApiGetPrayerItemRequest struct {
 }
 
 
-func (r ApiGetPrayerItemRequest) Execute() (Prayer, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetPrayerItemRequest) Execute() (Prayer, *_nethttp.Response, error) {
 	return r.ApiService.GetPrayerItemExecute(r)
 }
 
@@ -274,21 +263,19 @@ func (a *PrayerApiService) GetPrayerItem(ctx _context.Context, prayerId string) 
  * Execute executes the request
  * @return Prayer
  */
-func (a *PrayerApiService) GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Prayer, *_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Prayer, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  Prayer
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.GetPrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers/{prayerId}"
@@ -317,22 +304,19 @@ func (a *PrayerApiService) GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Pray
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -359,7 +343,7 @@ func (a *PrayerApiService) GetPrayerItemExecute(r ApiGetPrayerItemRequest) (Pray
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGetprayersRequest struct {
@@ -393,7 +377,7 @@ func (r ApiGetprayersRequest) MaxResults(maxResults int32) ApiGetprayersRequest 
 	return r
 }
 
-func (r ApiGetprayersRequest) Execute() (InlineResponse2004, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetprayersRequest) Execute() (InlineResponse2004, *_nethttp.Response, error) {
 	return r.ApiService.GetprayersExecute(r)
 }
 
@@ -413,21 +397,19 @@ func (a *PrayerApiService) Getprayers(ctx _context.Context) ApiGetprayersRequest
  * Execute executes the request
  * @return InlineResponse2004
  */
-func (a *PrayerApiService) GetprayersExecute(r ApiGetprayersRequest) (InlineResponse2004, *_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) GetprayersExecute(r ApiGetprayersRequest) (InlineResponse2004, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  InlineResponse2004
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.Getprayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers"
@@ -470,22 +452,19 @@ func (a *PrayerApiService) GetprayersExecute(r ApiGetprayersRequest) (InlineResp
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -512,7 +491,7 @@ func (a *PrayerApiService) GetprayersExecute(r ApiGetprayersRequest) (InlineResp
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiPostprayersRequest struct {
@@ -526,7 +505,7 @@ func (r ApiPostprayersRequest) Prayer(prayer Prayer) ApiPostprayersRequest {
 	return r
 }
 
-func (r ApiPostprayersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPostprayersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PostprayersExecute(r)
 }
 
@@ -545,20 +524,18 @@ func (a *PrayerApiService) Postprayers(ctx _context.Context) ApiPostprayersReque
 /*
  * Execute executes the request
  */
-func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.Postprayers")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers"
@@ -567,8 +544,7 @@ func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethtt
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.prayer == nil {
-		executionError.error = "prayer is required and must be specified"
-		return nil, executionError
+		return nil, reportError("prayer is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -592,22 +568,19 @@ func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethtt
 	localVarPostBody = r.prayer
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -625,7 +598,7 @@ func (a *PrayerApiService) PostprayersExecute(r ApiPostprayersRequest) (*_nethtt
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiPutPrayerItemRequest struct {
@@ -645,7 +618,7 @@ func (r ApiPutPrayerItemRequest) Prayer(prayer Prayer) ApiPutPrayerItemRequest {
 	return r
 }
 
-func (r ApiPutPrayerItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPutPrayerItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PutPrayerItemExecute(r)
 }
 
@@ -666,20 +639,18 @@ func (a *PrayerApiService) PutPrayerItem(ctx _context.Context, prayerId string) 
 /*
  * Execute executes the request
  */
-func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PrayerApiService.PutPrayerItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/prayers/{prayerId}"
@@ -689,12 +660,10 @@ func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_ne
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 	if r.prayer == nil {
-		executionError.error = "prayer is required and must be specified"
-		return nil, executionError
+		return nil, reportError("prayer is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -719,22 +688,19 @@ func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_ne
 	localVarPostBody = r.prayer
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -752,5 +718,5 @@ func (a *PrayerApiService) PutPrayerItemExecute(r ApiPutPrayerItemRequest) (*_ne
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }

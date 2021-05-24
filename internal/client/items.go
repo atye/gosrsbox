@@ -41,47 +41,37 @@ func (c *client) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]api
 }
 
 func (c *client) GetItemsByQuery(ctx context.Context, query string) ([]api.Item, error) {
-	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query))
+	inline, err := c.doItemsRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
 
-	switch inline := resp.(type) {
-	case api.InlineResponse200:
-		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-		items := make([]api.Item, *inline.Meta.Total)
+	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+	items := make([]api.Item, *inline.Meta.Total)
 
-		_ = copy(items, inline.GetItems())
+	_ = copy(items, inline.GetItems())
 
-		if pages > 1 {
-			var eg errgroup.Group
-			for page := 2; page <= pages; page++ {
-				page := page
-				eg.Go(func() error {
-					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
-					if err != nil {
-						return err
-					}
+	if pages > 1 {
+		var eg errgroup.Group
+		for page := 2; page <= pages; page++ {
+			page := page
+			eg.Go(func() error {
+				inline, err := c.doItemsRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
+				if err != nil {
+					return err
+				}
 
-					switch inline := resp.(type) {
-					case api.InlineResponse200:
-						for i, item := range inline.GetItems() {
-							items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
-						}
-					default:
-						return fmt.Errorf("unexpected response type %T", inline)
-					}
+				for i, item := range inline.GetItems() {
+					items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
+				}
 
-					return nil
-				})
-			}
-			err := eg.Wait()
-			if err != nil {
-				return nil, err
-			}
+				return nil
+			})
 		}
-		return items, nil
-	default:
-		return nil, fmt.Errorf("unexpected response type %T", inline)
+		err := eg.Wait()
+		if err != nil {
+			return nil, err
+		}
 	}
+	return items, nil
 }

@@ -84,7 +84,7 @@ type Item struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewItem(id string, name string, lastUpdated string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon, ) *Item {
+func NewItem(id string, name string, lastUpdated string, incomplete bool, members bool, tradeable bool, tradeableOnGe bool, stackable bool, stacked NullableInt32, noted bool, noteable bool, linkedIdItem NullableInt32, linkedIdNoted NullableInt32, linkedIdPlaceholder NullableInt32, placeholder bool, equipable bool, equipableByPlayer bool, equipableWeapon bool, cost int32, lowalch NullableInt32, highalch NullableInt32, weight NullableFloat32, buyLimit NullableInt32, questItem bool, releaseDate NullableString, duplicate bool, examine NullableString, icon string, wikiName NullableString, wikiUrl NullableString, equipment NullableItemEquipment, weapon NullableItemWeapon) *Item {
 	this := Item{}
 	this.Id = id
 	this.Name = name
@@ -131,7 +131,7 @@ func NewItemWithDefaults() *Item {
 
 // GetId returns the Id field value
 func (o *Item) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -155,7 +155,7 @@ func (o *Item) SetId(v string) {
 
 // GetName returns the Name field value
 func (o *Item) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -179,7 +179,7 @@ func (o *Item) SetName(v string) {
 
 // GetLastUpdated returns the LastUpdated field value
 func (o *Item) GetLastUpdated() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -203,7 +203,7 @@ func (o *Item) SetLastUpdated(v string) {
 
 // GetIncomplete returns the Incomplete field value
 func (o *Item) GetIncomplete() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -227,7 +227,7 @@ func (o *Item) SetIncomplete(v bool) {
 
 // GetMembers returns the Members field value
 func (o *Item) GetMembers() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -251,7 +251,7 @@ func (o *Item) SetMembers(v bool) {
 
 // GetTradeable returns the Tradeable field value
 func (o *Item) GetTradeable() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -275,7 +275,7 @@ func (o *Item) SetTradeable(v bool) {
 
 // GetTradeableOnGe returns the TradeableOnGe field value
 func (o *Item) GetTradeableOnGe() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -299,7 +299,7 @@ func (o *Item) SetTradeableOnGe(v bool) {
 
 // GetStackable returns the Stackable field value
 func (o *Item) GetStackable() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -349,7 +349,7 @@ func (o *Item) SetStacked(v int32) {
 
 // GetNoted returns the Noted field value
 func (o *Item) GetNoted() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -373,7 +373,7 @@ func (o *Item) SetNoted(v bool) {
 
 // GetNoteable returns the Noteable field value
 func (o *Item) GetNoteable() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -475,7 +475,7 @@ func (o *Item) SetLinkedIdPlaceholder(v int32) {
 
 // GetPlaceholder returns the Placeholder field value
 func (o *Item) GetPlaceholder() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -499,7 +499,7 @@ func (o *Item) SetPlaceholder(v bool) {
 
 // GetEquipable returns the Equipable field value
 func (o *Item) GetEquipable() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -523,7 +523,7 @@ func (o *Item) SetEquipable(v bool) {
 
 // GetEquipableByPlayer returns the EquipableByPlayer field value
 func (o *Item) GetEquipableByPlayer() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -547,7 +547,7 @@ func (o *Item) SetEquipableByPlayer(v bool) {
 
 // GetEquipableWeapon returns the EquipableWeapon field value
 func (o *Item) GetEquipableWeapon() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -571,7 +571,7 @@ func (o *Item) SetEquipableWeapon(v bool) {
 
 // GetCost returns the Cost field value
 func (o *Item) GetCost() int32 {
-	if o == nil  {
+	if o == nil {
 		var ret int32
 		return ret
 	}
@@ -699,7 +699,7 @@ func (o *Item) SetBuyLimit(v int32) {
 
 // GetQuestItem returns the QuestItem field value
 func (o *Item) GetQuestItem() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -749,7 +749,7 @@ func (o *Item) SetReleaseDate(v string) {
 
 // GetDuplicate returns the Duplicate field value
 func (o *Item) GetDuplicate() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -799,7 +799,7 @@ func (o *Item) SetExamine(v string) {
 
 // GetIcon returns the Icon field value
 func (o *Item) GetIcon() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}

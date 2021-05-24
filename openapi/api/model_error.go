@@ -24,7 +24,7 @@ type Error struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewError(status string, error_ ErrorError, ) *Error {
+func NewError(status string, error_ ErrorError) *Error {
 	this := Error{}
 	this.Status = status
 	this.Error = error_
@@ -41,7 +41,7 @@ func NewErrorWithDefaults() *Error {
 
 // GetStatus returns the Status field value
 func (o *Error) GetStatus() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -65,7 +65,7 @@ func (o *Error) SetStatus(v string) {
 
 // GetError returns the Error field value
 func (o *Error) GetError() ErrorError {
-	if o == nil  {
+	if o == nil {
 		var ret ErrorError
 		return ret
 	}

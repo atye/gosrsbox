@@ -17,18 +17,6 @@ type client struct {
 	sem           *semaphore.Weighted
 }
 
-type ItemRequestExecutor interface {
-	Execute() (api.InlineResponse200, *http.Response, api.GenericOpenAPIError)
-}
-
-type MonsterRequestExecutor interface {
-	Execute() (api.InlineResponse2003, *http.Response, api.GenericOpenAPIError)
-}
-
-type PrayerRequestExecutor interface {
-	Execute() (api.InlineResponse2004, *http.Response, api.GenericOpenAPIError)
-}
-
 const (
 	jsonDocuments = "https://www.osrsbox.com/osrsbox-db/"
 )
@@ -48,41 +36,52 @@ func NewAPI(conf *api.Configuration) *client {
 	}
 }
 
-func (c *client) doOpenAPIRequest(ctx context.Context, req interface{}) (interface{}, error) {
+func (c *client) doItemsRequest(ctx context.Context, req api.ApiGetitemsRequest) (api.InlineResponse200, error) {
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return nil, err
+		return api.InlineResponse200{}, err
 	}
 	defer c.sem.Release(1)
 
-	switch r := req.(type) {
-	case ItemRequestExecutor:
-		inline, resp, openAPIErr := r.Execute()
-		err := checkError(openAPIErr)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
-		return inline, nil
-	case MonsterRequestExecutor:
-		inline, resp, openAPIErr := r.Execute()
-		err := checkError(openAPIErr)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
-		return inline, nil
-	case PrayerRequestExecutor:
-		inline, resp, openAPIErr := r.Execute()
-		err := checkError(openAPIErr)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
-		return inline, nil
-	default:
-		return nil, fmt.Errorf("request type %T not supported", r)
+	inline, _, err := req.Execute()
+	err = checkError(err)
+	if err != nil {
+		return api.InlineResponse200{}, err
 	}
+
+	return inline, nil
+}
+
+func (c *client) doMonstersRequest(ctx context.Context, req api.ApiGetmonstersRequest) (api.InlineResponse2003, error) {
+	err := c.sem.Acquire(ctx, 1)
+	if err != nil {
+		return api.InlineResponse2003{}, err
+	}
+	defer c.sem.Release(1)
+
+	inline, _, err := req.Execute()
+	err = checkError(err)
+	if err != nil {
+		return api.InlineResponse2003{}, err
+	}
+
+	return inline, nil
+}
+
+func (c *client) doPrayersRequest(ctx context.Context, req api.ApiGetprayersRequest) (api.InlineResponse2004, error) {
+	err := c.sem.Acquire(ctx, 1)
+	if err != nil {
+		return api.InlineResponse2004{}, err
+	}
+	defer c.sem.Release(1)
+
+	inline, _, err := req.Execute()
+	err = checkError(err)
+	if err != nil {
+		return api.InlineResponse2004{}, err
+	}
+
+	return inline, nil
 }
 
 func (c *client) doDocumentRequest(ctx context.Context, url string) (*http.Response, error) {
@@ -104,19 +103,24 @@ func (c *client) doDocumentRequest(ctx context.Context, url string) (*http.Respo
 	return resp, nil
 }
 
-func checkError(openAPIErr api.GenericOpenAPIError) error {
-	if openAPIErr.Error() == "" {
+func checkError(executeErr error) error {
+	if executeErr == nil {
 		return nil
 	}
 
+	var genericErr api.GenericOpenAPIError
+	if !errors.As(executeErr, &genericErr) {
+		return executeErr
+	}
+
 	var apiErr api.Error
-	err := json.Unmarshal(openAPIErr.Body(), &apiErr)
+	err := json.Unmarshal(genericErr.Body(), &apiErr)
 	if err != nil {
-		return openAPIErr
+		return err
 	}
 
 	if apiErr.Error.GetCode() == 0 && apiErr.Error.GetMessage() == "" {
-		return openAPIErr
+		return executeErr
 	}
 	return fmt.Errorf("code %d, message: %s", apiErr.Error.GetCode(), apiErr.Error.GetMessage())
 }

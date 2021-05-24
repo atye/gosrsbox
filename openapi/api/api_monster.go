@@ -39,7 +39,7 @@ func (r ApiDeleteMonsterItemRequest) IfMatch(ifMatch string) ApiDeleteMonsterIte
 	return r
 }
 
-func (r ApiDeleteMonsterItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeleteMonsterItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeleteMonsterItemExecute(r)
 }
 
@@ -60,20 +60,18 @@ func (a *MonsterApiService) DeleteMonsterItem(ctx _context.Context, monsterId st
 /*
  * Execute executes the request
  */
-func (a *MonsterApiService) DeleteMonsterItemExecute(r ApiDeleteMonsterItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) DeleteMonsterItemExecute(r ApiDeleteMonsterItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.DeleteMonsterItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters/{monsterId}"
@@ -83,8 +81,7 @@ func (a *MonsterApiService) DeleteMonsterItemExecute(r ApiDeleteMonsterItemReque
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,22 +104,19 @@ func (a *MonsterApiService) DeleteMonsterItemExecute(r ApiDeleteMonsterItemReque
 	localVarHeaderParams["If-Match"] = parameterToString(*r.ifMatch, "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -140,7 +134,7 @@ func (a *MonsterApiService) DeleteMonsterItemExecute(r ApiDeleteMonsterItemReque
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiDeletemonstersRequest struct {
@@ -149,7 +143,7 @@ type ApiDeletemonstersRequest struct {
 }
 
 
-func (r ApiDeletemonstersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiDeletemonstersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.DeletemonstersExecute(r)
 }
 
@@ -168,20 +162,18 @@ func (a *MonsterApiService) Deletemonsters(ctx _context.Context) ApiDeletemonste
 /*
  * Execute executes the request
  */
-func (a *MonsterApiService) DeletemonstersExecute(r ApiDeletemonstersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) DeletemonstersExecute(r ApiDeletemonstersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.Deletemonsters")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters"
@@ -209,22 +201,19 @@ func (a *MonsterApiService) DeletemonstersExecute(r ApiDeletemonstersRequest) (*
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -242,7 +231,7 @@ func (a *MonsterApiService) DeletemonstersExecute(r ApiDeletemonstersRequest) (*
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetMonsterItemRequest struct {
@@ -252,7 +241,7 @@ type ApiGetMonsterItemRequest struct {
 }
 
 
-func (r ApiGetMonsterItemRequest) Execute() (Monster, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetMonsterItemRequest) Execute() (Monster, *_nethttp.Response, error) {
 	return r.ApiService.GetMonsterItemExecute(r)
 }
 
@@ -274,21 +263,19 @@ func (a *MonsterApiService) GetMonsterItem(ctx _context.Context, monsterId strin
  * Execute executes the request
  * @return Monster
  */
-func (a *MonsterApiService) GetMonsterItemExecute(r ApiGetMonsterItemRequest) (Monster, *_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) GetMonsterItemExecute(r ApiGetMonsterItemRequest) (Monster, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  Monster
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.GetMonsterItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters/{monsterId}"
@@ -317,22 +304,19 @@ func (a *MonsterApiService) GetMonsterItemExecute(r ApiGetMonsterItemRequest) (M
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -359,7 +343,7 @@ func (a *MonsterApiService) GetMonsterItemExecute(r ApiGetMonsterItemRequest) (M
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiGetmonstersRequest struct {
@@ -393,7 +377,7 @@ func (r ApiGetmonstersRequest) MaxResults(maxResults int32) ApiGetmonstersReques
 	return r
 }
 
-func (r ApiGetmonstersRequest) Execute() (InlineResponse2003, *_nethttp.Response, GenericOpenAPIError) {
+func (r ApiGetmonstersRequest) Execute() (InlineResponse2003, *_nethttp.Response, error) {
 	return r.ApiService.GetmonstersExecute(r)
 }
 
@@ -413,21 +397,19 @@ func (a *MonsterApiService) Getmonsters(ctx _context.Context) ApiGetmonstersRequ
  * Execute executes the request
  * @return InlineResponse2003
  */
-func (a *MonsterApiService) GetmonstersExecute(r ApiGetmonstersRequest) (InlineResponse2003, *_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) GetmonstersExecute(r ApiGetmonstersRequest) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 		localVarReturnValue  InlineResponse2003
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.Getmonsters")
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters"
@@ -470,22 +452,19 @@ func (a *MonsterApiService) GetmonstersExecute(r ApiGetmonstersRequest) (InlineR
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, nil, executionError
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarReturnValue, localVarHTTPResponse, executionError
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -512,7 +491,7 @@ func (a *MonsterApiService) GetmonstersExecute(r ApiGetmonstersRequest) (InlineR
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHTTPResponse, executionError
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 type ApiPostmonstersRequest struct {
@@ -526,7 +505,7 @@ func (r ApiPostmonstersRequest) Monster(monster Monster) ApiPostmonstersRequest 
 	return r
 }
 
-func (r ApiPostmonstersRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPostmonstersRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PostmonstersExecute(r)
 }
 
@@ -545,20 +524,18 @@ func (a *MonsterApiService) Postmonsters(ctx _context.Context) ApiPostmonstersRe
 /*
  * Execute executes the request
  */
-func (a *MonsterApiService) PostmonstersExecute(r ApiPostmonstersRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) PostmonstersExecute(r ApiPostmonstersRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.Postmonsters")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters"
@@ -567,8 +544,7 @@ func (a *MonsterApiService) PostmonstersExecute(r ApiPostmonstersRequest) (*_net
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.monster == nil {
-		executionError.error = "monster is required and must be specified"
-		return nil, executionError
+		return nil, reportError("monster is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -592,22 +568,19 @@ func (a *MonsterApiService) PostmonstersExecute(r ApiPostmonstersRequest) (*_net
 	localVarPostBody = r.monster
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -625,7 +598,7 @@ func (a *MonsterApiService) PostmonstersExecute(r ApiPostmonstersRequest) (*_net
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }
 
 type ApiPutMonsterItemRequest struct {
@@ -645,7 +618,7 @@ func (r ApiPutMonsterItemRequest) Monster(monster Monster) ApiPutMonsterItemRequ
 	return r
 }
 
-func (r ApiPutMonsterItemRequest) Execute() (*_nethttp.Response, GenericOpenAPIError) {
+func (r ApiPutMonsterItemRequest) Execute() (*_nethttp.Response, error) {
 	return r.ApiService.PutMonsterItemExecute(r)
 }
 
@@ -666,20 +639,18 @@ func (a *MonsterApiService) PutMonsterItem(ctx _context.Context, monsterId strin
 /*
  * Execute executes the request
  */
-func (a *MonsterApiService) PutMonsterItemExecute(r ApiPutMonsterItemRequest) (*_nethttp.Response, GenericOpenAPIError) {
+func (a *MonsterApiService) PutMonsterItemExecute(r ApiPutMonsterItemRequest) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		executionError       GenericOpenAPIError
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MonsterApiService.PutMonsterItem")
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/monsters/{monsterId}"
@@ -689,12 +660,10 @@ func (a *MonsterApiService) PutMonsterItemExecute(r ApiPutMonsterItemRequest) (*
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 	if r.ifMatch == nil {
-		executionError.error = "ifMatch is required and must be specified"
-		return nil, executionError
+		return nil, reportError("ifMatch is required and must be specified")
 	}
 	if r.monster == nil {
-		executionError.error = "monster is required and must be specified"
-		return nil, executionError
+		return nil, reportError("monster is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -719,22 +688,19 @@ func (a *MonsterApiService) PutMonsterItemExecute(r ApiPutMonsterItemRequest) (*
 	localVarPostBody = r.monster
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		executionError.error = err.Error()
-		return nil, executionError
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		executionError.error = err.Error()
-		return localVarHTTPResponse, executionError
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -752,5 +718,5 @@ func (a *MonsterApiService) PutMonsterItemExecute(r ApiPutMonsterItemRequest) (*
 		return localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, executionError
+	return localVarHTTPResponse, nil
 }

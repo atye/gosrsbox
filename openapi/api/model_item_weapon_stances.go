@@ -27,7 +27,7 @@ type ItemWeaponStances struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewItemWeaponStances(combatStyle string, attackType NullableString, attackStyle NullableString, experience NullableString, boosts NullableString, ) *ItemWeaponStances {
+func NewItemWeaponStances(combatStyle string, attackType NullableString, attackStyle NullableString, experience NullableString, boosts NullableString) *ItemWeaponStances {
 	this := ItemWeaponStances{}
 	this.CombatStyle = combatStyle
 	this.AttackType = attackType
@@ -47,7 +47,7 @@ func NewItemWeaponStancesWithDefaults() *ItemWeaponStances {
 
 // GetCombatStyle returns the CombatStyle field value
 func (o *ItemWeaponStances) GetCombatStyle() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}

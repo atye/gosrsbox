@@ -22,7 +22,7 @@ func main() {
 	printItems(items)
 
 	// Get items in the Hands slot
-	items, err = api.GetItemsBySlot(context.Background(), slots.Hands)
+	items, err = api.GetItemsBySlot(context.Background(), slots.Ammo)
 	if err != nil {
 		log.Fatal(err)
 	}

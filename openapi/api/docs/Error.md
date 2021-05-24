@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Status** | **string** |  | 
-**Error** | [**ErrorError**](Error__error.md) |  | 
+**Error** | [**ErrorError**](ErrorError.md) |  | 
 
 ## Methods
 

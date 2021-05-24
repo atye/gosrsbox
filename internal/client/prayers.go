@@ -28,47 +28,37 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]api.P
 }
 
 func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]api.Prayer, error) {
-	resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query))
+	inline, err := c.doPrayersRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
 
-	switch inline := resp.(type) {
-	case api.InlineResponse2004:
-		pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-		prayers := make([]api.Prayer, *inline.Meta.Total)
+	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
+	prayers := make([]api.Prayer, *inline.Meta.Total)
 
-		_ = copy(prayers, inline.GetItems())
+	_ = copy(prayers, inline.GetItems())
 
-		if pages > 1 {
-			var eg errgroup.Group
-			for page := 2; page <= pages; page++ {
-				page := page
-				eg.Go(func() error {
-					resp, err := c.doOpenAPIRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
-					if err != nil {
-						return err
-					}
+	if pages > 1 {
+		var eg errgroup.Group
+		for page := 2; page <= pages; page++ {
+			page := page
+			eg.Go(func() error {
+				inline, err := c.doPrayersRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
+				if err != nil {
+					return err
+				}
 
-					switch inline := resp.(type) {
-					case api.InlineResponse2004:
-						for i, prayer := range inline.GetItems() {
-							prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
-						}
-					default:
-						return fmt.Errorf("unexpected response type %T", inline)
-					}
+				for i, prayer := range inline.GetItems() {
+					prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
+				}
 
-					return nil
-				})
-			}
-			err := eg.Wait()
-			if err != nil {
-				return nil, err
-			}
+				return nil
+			})
 		}
-		return prayers, nil
-	default:
-		return nil, fmt.Errorf("unexpected response type %T", inline)
+		err := eg.Wait()
+		if err != nil {
+			return nil, err
+		}
 	}
+	return prayers, nil
 }

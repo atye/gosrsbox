@@ -40,7 +40,7 @@ type Prayer struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPrayer(id string, name string, members bool, description string, drainPerMinute float32, wikiUrl string, requirements map[string]interface{}, bonuses map[string]interface{}, icon string, ) *Prayer {
+func NewPrayer(id string, name string, members bool, description string, drainPerMinute float32, wikiUrl string, requirements map[string]interface{}, bonuses map[string]interface{}, icon string) *Prayer {
 	this := Prayer{}
 	this.Id = id
 	this.Name = name
@@ -64,7 +64,7 @@ func NewPrayerWithDefaults() *Prayer {
 
 // GetId returns the Id field value
 func (o *Prayer) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -88,7 +88,7 @@ func (o *Prayer) SetId(v string) {
 
 // GetName returns the Name field value
 func (o *Prayer) GetName() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -112,7 +112,7 @@ func (o *Prayer) SetName(v string) {
 
 // GetMembers returns the Members field value
 func (o *Prayer) GetMembers() bool {
-	if o == nil  {
+	if o == nil {
 		var ret bool
 		return ret
 	}
@@ -136,7 +136,7 @@ func (o *Prayer) SetMembers(v bool) {
 
 // GetDescription returns the Description field value
 func (o *Prayer) GetDescription() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -160,7 +160,7 @@ func (o *Prayer) SetDescription(v string) {
 
 // GetDrainPerMinute returns the DrainPerMinute field value
 func (o *Prayer) GetDrainPerMinute() float32 {
-	if o == nil  {
+	if o == nil {
 		var ret float32
 		return ret
 	}
@@ -184,7 +184,7 @@ func (o *Prayer) SetDrainPerMinute(v float32) {
 
 // GetWikiUrl returns the WikiUrl field value
 func (o *Prayer) GetWikiUrl() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -208,7 +208,7 @@ func (o *Prayer) SetWikiUrl(v string) {
 
 // GetRequirements returns the Requirements field value
 func (o *Prayer) GetRequirements() map[string]interface{} {
-	if o == nil  {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -232,7 +232,7 @@ func (o *Prayer) SetRequirements(v map[string]interface{}) {
 
 // GetBonuses returns the Bonuses field value
 func (o *Prayer) GetBonuses() map[string]interface{} {
-	if o == nil  {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -256,7 +256,7 @@ func (o *Prayer) SetBonuses(v map[string]interface{}) {
 
 // GetIcon returns the Icon field value
 func (o *Prayer) GetIcon() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}

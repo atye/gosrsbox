@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Parent** | Pointer to [**ResponeLinksParent**](respone_links_parent.md) |  | [optional] 
-**Self** | Pointer to [**ResponeLinksParent**](respone_links_parent.md) |  | [optional] 
+**Parent** | Pointer to [**ResponeLinksParent**](ResponeLinksParent.md) |  | [optional] 
+**Self** | Pointer to [**ResponeLinksParent**](ResponeLinksParent.md) |  | [optional] 
 
 ## Methods
 

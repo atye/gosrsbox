@@ -2805,12 +2805,12 @@ components:
       type: object
     respone_metadata:
       example:
-        total: 9
-        max_results: 6
-        page: ""
+        total: 6
+        max_results: 3
+        page: 9
       properties:
         page:
-          type: int
+          type: integer
         total:
           type: integer
         max_results:
@@ -2840,9 +2840,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - equipable_weapon: true
           stacked: 0
@@ -2986,9 +2986,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - equipable_weapon: true
           stacked: 0
@@ -3132,9 +3132,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - equipable_weapon: true
           stacked: 0
@@ -3278,9 +3278,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - attack_bonus: 1
           attack_type:
@@ -3434,9 +3434,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - drain_per_minute: 0.8008282
           requirements: '{}'
@@ -3476,9 +3476,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - icon: icon
           id: id
@@ -3504,9 +3504,9 @@ components:
             href: https://openapi-generator.tech
             title: https://openapi-generator.tech
         _meta:
-          total: 9
-          max_results: 6
-          page: ""
+          total: 6
+          max_results: 3
+          page: 9
         _items:
         - icon: icon
           id: id

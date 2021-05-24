@@ -26,7 +26,7 @@ type IconsPrayer struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIconsPrayer(id string, icon string, ) *IconsPrayer {
+func NewIconsPrayer(id string, icon string) *IconsPrayer {
 	this := IconsPrayer{}
 	this.Id = id
 	this.Icon = icon
@@ -43,7 +43,7 @@ func NewIconsPrayerWithDefaults() *IconsPrayer {
 
 // GetId returns the Id field value
 func (o *IconsPrayer) GetId() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
@@ -67,7 +67,7 @@ func (o *IconsPrayer) SetId(v string) {
 
 // GetIcon returns the Icon field value
 func (o *IconsPrayer) GetIcon() string {
-	if o == nil  {
+	if o == nil {
 		var ret string
 		return ret
 	}
