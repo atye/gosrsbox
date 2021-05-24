@@ -1,6 +1,6 @@
 OPENAPI_DIR=openapi
  
- # openapi.yaml:
+ # openapi.json:
  # _id properties must be removed
  # id properties must be string, except for MonsterDrops
  # response meta page must be int
