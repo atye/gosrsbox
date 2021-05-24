@@ -1,4 +1,4 @@
-package api
+package client
 
 import (
 	"context"
@@ -10,21 +10,25 @@ import (
 	"strconv"
 	"testing"
 
-	openapi "github.com/atye/gosrsbox/internal/openapi/api"
+	"github.com/atye/gosrsbox/openapi/api"
 )
 
-func Test_GetJSONFiles(t *testing.T) {
+func TestGetDocument(t *testing.T) {
+	t.Run("testGetDocument", testGetDocument)
+	t.Run("testGetDocumentError", testGetDocumentError)
+
+}
+
+func testGetDocument(t *testing.T) {
 	type NPCSummary struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 	}
 
-	type checkFn func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error)
-
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
 
-	api := NewAPI(&openapi.Configuration{HTTPClient: http.DefaultClient})
+	api := NewAPI(&api.Configuration{HTTPClient: http.DefaultClient})
 	api.docsAddress = apiSvr.URL
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
@@ -65,6 +69,37 @@ func Test_GetJSONFiles(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			tc(t)()
 		})
+	}
+}
+
+func testGetDocumentError(t *testing.T) {
+	apiSvr := httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(`File not found`))
+	})))
+	defer apiSvr.Close()
+
+	api := NewAPI(&api.Configuration{
+		Scheme:     "http",
+		HTTPClient: http.DefaultClient,
+		Servers: []api.ServerConfiguration{
+			{
+				URL: "",
+			},
+		},
+	})
+	api.docsAddress = apiSvr.URL
+
+	err := api.GetDocument(context.Background(), "test", new(map[string]interface{}))
+
+	if err == nil {
+		t.Errorf("expected non-nil error")
+	}
+
+	want := fmt.Errorf("code: %d, message: %s", http.StatusNotFound, http.StatusText(http.StatusNotFound))
+	if want.Error() != err.Error() {
+		t.Errorf("expected %+v, got %+v", want, err)
 	}
 }
 

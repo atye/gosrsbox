@@ -1,4 +1,4 @@
-package api
+package client
 
 import (
 	"context"
@@ -10,8 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	openapi "github.com/atye/gosrsbox/internal/openapi/api"
-	"github.com/atye/gosrsbox/osrsbox"
+	"github.com/atye/gosrsbox/openapi/api"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
 )
@@ -23,15 +22,16 @@ func TestItems(t *testing.T) {
 	t.Run("GetItemsByName", testGetItemsByName)
 	t.Run("GetItemSet", testGetItemSet)
 	t.Run("GetItemsBySlot", testGetItemsBySlot)
+	t.Run("GetItemsError", testGetItemsAPIError)
 }
 
 func testGetItemsByID(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsbox.Item, expectedID []string, err error)
+	type checkFn func(t *testing.T, items []api.Item, expectedID []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemIDs := func(t *testing.T, items []osrsbox.Item, expectedIDs []string, err error) {
+	verifyItemIDs := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -47,18 +47,36 @@ func testGetItemsByID(t *testing.T) {
 		}
 	}
 
+	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+		if err == nil {
+			t.Errorf("expected an error")
+		}
+	}
+
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
 				},
 			})
 			return api, []string{"2"}, verifyItemIDs
+		},
+		"no IDs": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI(&api.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []api.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, []string{}, verifyError
 		},
 	}
 
@@ -72,12 +90,12 @@ func testGetItemsByID(t *testing.T) {
 }
 
 func testGetItemsByName(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -93,18 +111,36 @@ func testGetItemsByName(t *testing.T) {
 		}
 	}
 
+	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+		if err == nil {
+			t.Errorf("expected an error")
+		}
+	}
+
 	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
 		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
 				},
 			})
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
+		},
+		"no names": func(t *testing.T) (*client, []string, checkFn) {
+			api := NewAPI(&api.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []api.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, []string{}, verifyError
 		},
 	}
 
@@ -118,12 +154,12 @@ func testGetItemsByName(t *testing.T) {
 }
 
 func testGetItemSet(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -139,18 +175,36 @@ func testGetItemSet(t *testing.T) {
 		}
 	}
 
+	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+		if err == nil {
+			t.Errorf("expected an error")
+		}
+	}
+
 	tests := map[string]func(t *testing.T) (*client, sets.SetName, []string, checkFn){
 		"success": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
 				},
 			})
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
+		},
+		"no set": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
+			api := NewAPI(&api.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []api.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, nil, nil, verifyError
 		},
 	}
 
@@ -164,12 +218,12 @@ func testGetItemSet(t *testing.T) {
 }
 
 func testGetItemsBySlot(t *testing.T) {
-	type checkFn func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []osrsbox.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -185,18 +239,36 @@ func testGetItemsBySlot(t *testing.T) {
 		}
 	}
 
+	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+		if err == nil {
+			t.Errorf("expected an error")
+		}
+	}
+
 	tests := map[string]func(t *testing.T) (*client, slots.SlotName, []string, checkFn){
 		"success": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
 				},
 			})
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
+		},
+		"no slot": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
+			api := NewAPI(&api.Configuration{
+				Scheme:     "http",
+				HTTPClient: http.DefaultClient,
+				Servers: []api.ServerConfiguration{
+					{
+						URL: apiSvr.URL,
+					},
+				},
+			})
+			return api, "", nil, verifyError
 		},
 	}
 
@@ -206,6 +278,36 @@ func testGetItemsBySlot(t *testing.T) {
 			set, err := api.GetItemsBySlot(context.Background(), slotName)
 			checkFn(t, set, names, err)
 		})
+	}
+}
+
+func testGetItemsAPIError(t *testing.T) {
+	apiSvr := httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"_status": "ERR", "_error": {"code": 400, "message": "The browser (or proxy) sent a request that this server could not understand."}}`))
+	})))
+	defer apiSvr.Close()
+
+	api := NewAPI(&api.Configuration{
+		Scheme:     "http",
+		HTTPClient: http.DefaultClient,
+		Servers: []api.ServerConfiguration{
+			{
+				URL: apiSvr.URL,
+			},
+		},
+	})
+
+	_, err := api.GetItemsByQuery(context.Background(), `{test}`)
+
+	if err == nil {
+		t.Errorf("expected non-nil error")
+	}
+
+	want := fmt.Errorf("code %d, message: %s", http.StatusBadRequest, "The browser (or proxy) sent a request that this server could not understand.")
+	if want.Error() != err.Error() {
+		t.Errorf("expected %+v, got %+v", want, err)
 	}
 }
 
