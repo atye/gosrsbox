@@ -14,8 +14,6 @@ import (
 )
 
 func Test_Monsters(t *testing.T) {
-	apiSvr := setupMonstersAPISvr()
-	defer apiSvr.Close()
 	t.Run("GetMonstersByID", testGetMonstersByID)
 	t.Run("GetMonstersByName", testGetMonstersByName)
 	t.Run("GetMonstersThatDrop", testGetMonstersThatDrop)

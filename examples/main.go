@@ -8,6 +8,7 @@ import (
 	"github.com/atye/gosrsbox"
 	"github.com/atye/gosrsbox/openapi/api"
 	"github.com/atye/gosrsbox/sets"
+	"github.com/atye/gosrsbox/slots"
 )
 
 func main() {
@@ -15,6 +16,13 @@ func main() {
 
 	// Get items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
+	if err != nil {
+		log.Fatal(err)
+	}
+	printItems(items)
+
+	// Get items in the Hands slot
+	items, err = api.GetItemsBySlot(context.Background(), slots.Hands)
 	if err != nil {
 		log.Fatal(err)
 	}
