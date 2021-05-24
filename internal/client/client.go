@@ -124,7 +124,7 @@ func checkError(openAPIErr api.GenericOpenAPIError) error {
 func quoteStrings(elements ...string) []string {
 	quotedStrings := make([]string, len(elements))
 	for i, e := range elements {
-		quotedStrings[i] = fmt.Sprintf(`"%s"`, e)
+		quotedStrings[i] = fmt.Sprintf("%q", e)
 	}
 	return quotedStrings
 }

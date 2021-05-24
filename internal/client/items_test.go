@@ -16,8 +16,6 @@ import (
 )
 
 func TestItems(t *testing.T) {
-	apiSvr := setupItemsAPISvr()
-	defer apiSvr.Close()
 	t.Run("GetItemsByID", testGetItemsByID)
 	t.Run("GetItemsByName", testGetItemsByName)
 	t.Run("GetItemSet", testGetItemSet)

@@ -14,8 +14,6 @@ import (
 )
 
 func Test_Prayers(t *testing.T) {
-	apiSvr := setupPrayersAPISvr()
-	defer apiSvr.Close()
 	t.Run("GetPrayersByID", testGetPrayersByID)
 	t.Run("GetPrayersByName", testGetPrayersByName)
 }
