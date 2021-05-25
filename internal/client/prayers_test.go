@@ -10,7 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/openapi/api"
+	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/models"
 )
 
 func Test_Prayers(t *testing.T) {
@@ -19,12 +20,12 @@ func Test_Prayers(t *testing.T) {
 }
 
 func testGetPrayersByID(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []api.Prayer, expectedIDs []string, err error)
+	type checkFn func(t *testing.T, prayers []models.Prayer, expectedIDs []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerID := func(t *testing.T, prayers []api.Prayer, expectedIDs []string, err error) {
+	verifyPrayerID := func(t *testing.T, prayers []models.Prayer, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -40,18 +41,18 @@ func testGetPrayersByID(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, prayers []api.Prayer, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, prayers []models.Prayer, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -59,11 +60,11 @@ func testGetPrayersByID(t *testing.T) {
 			})
 			return api, []string{"2"}, verifyPrayerID
 		},
-		"no IDs": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -83,12 +84,12 @@ func testGetPrayersByID(t *testing.T) {
 }
 
 func testGetPrayersByName(t *testing.T) {
-	type checkFn func(t *testing.T, prayers []api.Prayer, expectedNames []string, err error)
+	type checkFn func(t *testing.T, prayers []models.Prayer, expectedNames []string, err error)
 
 	apiSvr := setupPrayersAPISvr()
 	defer apiSvr.Close()
 
-	verifyPrayerNames := func(t *testing.T, prayers []api.Prayer, expectedNames []string, err error) {
+	verifyPrayerNames := func(t *testing.T, prayers []models.Prayer, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -104,18 +105,18 @@ func testGetPrayersByName(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, prayers []api.Prayer, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, prayers []models.Prayer, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -123,11 +124,11 @@ func testGetPrayersByName(t *testing.T) {
 			})
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
-		"no names": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
