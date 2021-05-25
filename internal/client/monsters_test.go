@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/models"
 )
 
@@ -50,10 +50,10 @@ func testGetMonstersByID(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -62,10 +62,10 @@ func testGetMonstersByID(t *testing.T) {
 			return api, []string{"2"}, verifyMonsterID
 		},
 		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -114,10 +114,10 @@ func testGetMonstersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -126,10 +126,10 @@ func testGetMonstersByName(t *testing.T) {
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
 		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -178,10 +178,10 @@ func testGetMonstersThatDrop(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -190,10 +190,10 @@ func testGetMonstersThatDrop(t *testing.T) {
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 		"no drops": func(t *testing.T) (*apiClient, []string, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},

@@ -40,12 +40,6 @@ func (c *apiClient) GetMonstersByQuery(ctx context.Context, query string) ([]mod
 	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	monsters := make([]models.Monster, *inline.Meta.Total)
 
-	/*var tmpMonsters []models.Monster
-	err = convert(inline.GetItems(), &tmpMonsters)
-	if err != nil {
-		return nil, err
-	}*/
-
 	_ = copy(monsters, inline.GetItems())
 
 	if pages > 1 {
@@ -57,12 +51,6 @@ func (c *apiClient) GetMonstersByQuery(ctx context.Context, query string) ([]mod
 				if err != nil {
 					return err
 				}
-
-				/*var tmpMonsters []models.Monster
-				err = convert(inline.GetItems(), &tmpMonsters)
-				if err != nil {
-					return err
-				}*/
 
 				for i, monster := range inline.GetItems() {
 					monsters[int(*inline.Meta.MaxResults)*(page-1)+i] = monster

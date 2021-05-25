@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/api"
 	"golang.org/x/sync/semaphore"
 )
 
 type apiClient struct {
 	docsAddress   string
-	openAPIClient *openapi.APIClient
+	openAPIClient *api.APIClient
 	sem           *semaphore.Weighted
 }
 
@@ -28,57 +28,57 @@ var (
 	errNoSlot  = errors.New("no slot provided")
 )
 
-func NewAPI(conf *openapi.Configuration) *apiClient {
+func NewAPI(conf *api.Configuration) *apiClient {
 	return &apiClient{
 		docsAddress:   jsonDocuments,
-		openAPIClient: openapi.NewAPIClient(conf),
+		openAPIClient: api.NewAPIClient(conf),
 		sem:           semaphore.NewWeighted(int64(10)),
 	}
 }
 
-func (c *apiClient) doItemsRequest(ctx context.Context, req openapi.ApiGetitemsRequest) (openapi.InlineResponse200, error) {
+func (c *apiClient) doItemsRequest(ctx context.Context, req api.ApiGetitemsRequest) (api.InlineResponse200, error) {
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return openapi.InlineResponse200{}, err
+		return api.InlineResponse200{}, err
 	}
 	defer c.sem.Release(1)
 
 	inline, _, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
-		return openapi.InlineResponse200{}, err
+		return api.InlineResponse200{}, err
 	}
 
 	return inline, nil
 }
 
-func (c *apiClient) doMonstersRequest(ctx context.Context, req openapi.ApiGetmonstersRequest) (openapi.InlineResponse2003, error) {
+func (c *apiClient) doMonstersRequest(ctx context.Context, req api.ApiGetmonstersRequest) (api.InlineResponse2003, error) {
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return openapi.InlineResponse2003{}, err
+		return api.InlineResponse2003{}, err
 	}
 	defer c.sem.Release(1)
 
 	inline, _, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
-		return openapi.InlineResponse2003{}, err
+		return api.InlineResponse2003{}, err
 	}
 
 	return inline, nil
 }
 
-func (c *apiClient) doPrayersRequest(ctx context.Context, req openapi.ApiGetprayersRequest) (openapi.InlineResponse2004, error) {
+func (c *apiClient) doPrayersRequest(ctx context.Context, req api.ApiGetprayersRequest) (api.InlineResponse2004, error) {
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return openapi.InlineResponse2004{}, err
+		return api.InlineResponse2004{}, err
 	}
 	defer c.sem.Release(1)
 
 	inline, _, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
-		return openapi.InlineResponse2004{}, err
+		return api.InlineResponse2004{}, err
 	}
 
 	return inline, nil
@@ -108,12 +108,12 @@ func checkError(executeErr error) error {
 		return nil
 	}
 
-	var genericErr openapi.GenericOpenAPIError
+	var genericErr api.GenericOpenAPIError
 	if !errors.As(executeErr, &genericErr) {
 		return executeErr
 	}
 
-	var apiErr openapi.Error
+	var apiErr api.Error
 	err := json.Unmarshal(genericErr.Body(), &apiErr)
 	if err != nil {
 		return err
@@ -123,20 +123,6 @@ func checkError(executeErr error) error {
 		return executeErr
 	}
 	return fmt.Errorf("code %d, message: %s", apiErr.Error.GetCode(), apiErr.Error.GetMessage())
-}
-
-// internal openAPI models to public models, inefficient
-func convert(source interface{}, dest interface{}) error {
-	b, err := json.Marshal(source)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(b, dest)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func quoteStrings(elements ...string) []string {

@@ -1,9 +1,9 @@
 package models
 
-import "github.com/atye/gosrsbox/internal/openapi"
+import "github.com/atye/gosrsbox/internal/api"
 
-type Item = openapi.Item
+type Item = api.Item
 
-type Monster = openapi.Monster
+type Monster = api.Monster
 
-type Prayer = openapi.Prayer
+type Prayer = api.Prayer

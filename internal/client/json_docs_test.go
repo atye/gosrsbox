@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/api"
 )
 
 func TestGetDocument(t *testing.T) {
@@ -28,7 +28,7 @@ func testGetDocument(t *testing.T) {
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
 
-	api := NewAPI(&openapi.Configuration{HTTPClient: http.DefaultClient})
+	api := NewAPI(&api.Configuration{HTTPClient: http.DefaultClient})
 	api.docsAddress = apiSvr.URL
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
@@ -80,10 +80,10 @@ func testGetDocumentError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&openapi.Configuration{
+	api := NewAPI(&api.Configuration{
 		Scheme:     "http",
 		HTTPClient: http.DefaultClient,
-		Servers: []openapi.ServerConfiguration{
+		Servers: []api.ServerConfiguration{
 			{
 				URL: "",
 			},

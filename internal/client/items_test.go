@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
@@ -54,10 +54,10 @@ func testGetItemsByID(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -66,10 +66,10 @@ func testGetItemsByID(t *testing.T) {
 			return api, []string{"2"}, verifyItemIDs
 		},
 		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -118,10 +118,10 @@ func testGetItemsByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -130,10 +130,10 @@ func testGetItemsByName(t *testing.T) {
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
 		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -182,10 +182,10 @@ func testGetItemSet(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -194,10 +194,10 @@ func testGetItemSet(t *testing.T) {
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
 		"no set": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -246,10 +246,10 @@ func testGetItemsBySlot(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -258,10 +258,10 @@ func testGetItemsBySlot(t *testing.T) {
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
 		"no slot": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -288,10 +288,10 @@ func testGetItemsAPIError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&openapi.Configuration{
+	api := NewAPI(&api.Configuration{
 		Scheme:     "http",
 		HTTPClient: http.DefaultClient,
-		Servers: []openapi.ServerConfiguration{
+		Servers: []api.ServerConfiguration{
 			{
 				URL: apiSvr.URL,
 			},

@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/models"
 )
 
@@ -49,10 +49,10 @@ func testGetPrayersByID(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -61,10 +61,10 @@ func testGetPrayersByID(t *testing.T) {
 			return api, []string{"2"}, verifyPrayerID
 		},
 		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -113,10 +113,10 @@ func testGetPrayersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
 		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -125,10 +125,10 @@ func testGetPrayersByName(t *testing.T) {
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
 		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
-			api := NewAPI(&openapi.Configuration{
+			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []openapi.ServerConfiguration{
+				Servers: []api.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
