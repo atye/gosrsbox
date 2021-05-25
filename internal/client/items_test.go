@@ -10,7 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/openapi/api"
+	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
 )
@@ -24,12 +25,12 @@ func TestItems(t *testing.T) {
 }
 
 func testGetItemsByID(t *testing.T) {
-	type checkFn func(t *testing.T, items []api.Item, expectedID []string, err error)
+	type checkFn func(t *testing.T, items []models.Item, expectedID []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemIDs := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+	verifyItemIDs := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -45,18 +46,18 @@ func testGetItemsByID(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -64,11 +65,11 @@ func testGetItemsByID(t *testing.T) {
 			})
 			return api, []string{"2"}, verifyItemIDs
 		},
-		"no IDs": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -88,12 +89,12 @@ func testGetItemsByID(t *testing.T) {
 }
 
 func testGetItemsByName(t *testing.T) {
-	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -109,18 +110,18 @@ func testGetItemsByName(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -128,11 +129,11 @@ func testGetItemsByName(t *testing.T) {
 			})
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
-		"no names": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -152,12 +153,12 @@ func testGetItemsByName(t *testing.T) {
 }
 
 func testGetItemSet(t *testing.T) {
-	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -173,18 +174,18 @@ func testGetItemSet(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, sets.SetName, []string, checkFn){
-		"success": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -192,11 +193,11 @@ func testGetItemSet(t *testing.T) {
 			})
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
-		"no set": func(t *testing.T) (*client, sets.SetName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no set": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -216,12 +217,12 @@ func testGetItemSet(t *testing.T) {
 }
 
 func testGetItemsBySlot(t *testing.T) {
-	type checkFn func(t *testing.T, items []api.Item, expectedNames []string, err error)
+	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
 	apiSvr := setupItemsAPISvr()
 	defer apiSvr.Close()
 
-	verifyItemNames := func(t *testing.T, items []api.Item, expectedNames []string, err error) {
+	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -237,18 +238,18 @@ func testGetItemsBySlot(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, items []api.Item, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, slots.SlotName, []string, checkFn){
-		"success": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -256,11 +257,11 @@ func testGetItemsBySlot(t *testing.T) {
 			})
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
-		"no slot": func(t *testing.T) (*client, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no slot": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -287,10 +288,10 @@ func testGetItemsAPIError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{
+	api := NewAPI(&openapi.Configuration{
 		Scheme:     "http",
 		HTTPClient: http.DefaultClient,
-		Servers: []api.ServerConfiguration{
+		Servers: []openapi.ServerConfiguration{
 			{
 				URL: apiSvr.URL,
 			},

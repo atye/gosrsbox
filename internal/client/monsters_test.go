@@ -10,7 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/openapi/api"
+	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/models"
 )
 
 func Test_Monsters(t *testing.T) {
@@ -20,12 +21,12 @@ func Test_Monsters(t *testing.T) {
 }
 
 func testGetMonstersByID(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []api.Monster, expectedIDs []string, err error)
+	type checkFn func(t *testing.T, monsters []models.Monster, expectedIDs []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterID := func(t *testing.T, monsters []api.Monster, expectedIDs []string, err error) {
+	verifyMonsterID := func(t *testing.T, monsters []models.Monster, expectedIDs []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -41,18 +42,18 @@ func testGetMonstersByID(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, monsters []api.Monster, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, monsters []models.Monster, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -60,11 +61,11 @@ func testGetMonstersByID(t *testing.T) {
 			})
 			return api, []string{"2"}, verifyMonsterID
 		},
-		"no IDs": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -84,12 +85,12 @@ func testGetMonstersByID(t *testing.T) {
 }
 
 func testGetMonstersByName(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []api.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []models.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []api.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []models.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -105,18 +106,18 @@ func testGetMonstersByName(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, monsters []api.Monster, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, monsters []models.Monster, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -124,11 +125,11 @@ func testGetMonstersByName(t *testing.T) {
 			})
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
-		"no names": func(t *testing.T) (*client, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -148,12 +149,12 @@ func testGetMonstersByName(t *testing.T) {
 }
 
 func testGetMonstersThatDrop(t *testing.T) {
-	type checkFn func(t *testing.T, monsters []api.Monster, expectedNames []string, err error)
+	type checkFn func(t *testing.T, monsters []models.Monster, expectedNames []string, err error)
 
 	apiSvr := setupMonstersAPISvr()
 	defer apiSvr.Close()
 
-	verifyMonsterNames := func(t *testing.T, monsters []api.Monster, expectedNames []string, err error) {
+	verifyMonsterNames := func(t *testing.T, monsters []models.Monster, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
 		}
@@ -169,18 +170,18 @@ func testGetMonstersThatDrop(t *testing.T) {
 		}
 	}
 
-	verifyError := func(t *testing.T, monsters []api.Monster, expectedIDs []string, err error) {
+	verifyError := func(t *testing.T, monsters []models.Monster, expectedIDs []string, err error) {
 		if err == nil {
 			t.Errorf("expected an error")
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*client, []string, []string, checkFn){
-		"success": func(t *testing.T) (*client, []string, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+	tests := map[string]func(t *testing.T) (*apiClient, []string, []string, checkFn){
+		"success": func(t *testing.T) (*apiClient, []string, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},
@@ -188,11 +189,11 @@ func testGetMonstersThatDrop(t *testing.T) {
 			})
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
-		"no drops": func(t *testing.T) (*client, []string, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
+		"no drops": func(t *testing.T) (*apiClient, []string, []string, checkFn) {
+			api := NewAPI(&openapi.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
+				Servers: []openapi.ServerConfiguration{
 					{
 						URL: apiSvr.URL,
 					},

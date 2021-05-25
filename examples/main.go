@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/atye/gosrsbox"
-	"github.com/atye/gosrsbox/openapi/api"
+	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
 )
@@ -65,19 +65,19 @@ func main() {
 	fmt.Printf("%+v\n", out["wiki_name"])
 }
 
-func printItems(items []api.Item) {
+func printItems(items []models.Item) {
 	for _, item := range items {
 		fmt.Println(item.GetWikiName())
 	}
 }
 
-func printMonsters(monsters []api.Monster) {
+func printMonsters(monsters []models.Monster) {
 	for _, monster := range monsters {
 		fmt.Println(monster.GetWikiName())
 	}
 }
 
-func printPrayers(prayers []api.Prayer) {
+func printPrayers(prayers []models.Prayer) {
 	for _, prayer := range prayers {
 		fmt.Println(prayer.GetName())
 	}

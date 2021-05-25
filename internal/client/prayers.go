@@ -7,18 +7,18 @@ import (
 	"math"
 	"strings"
 
-	"github.com/atye/gosrsbox/openapi/api"
+	"github.com/atye/gosrsbox/models"
 	"golang.org/x/sync/errgroup"
 )
 
-func (c *client) GetPrayersByID(ctx context.Context, ids ...string) ([]api.Prayer, error) {
+func (c *apiClient) GetPrayersByID(ctx context.Context, ids ...string) ([]models.Prayer, error) {
 	if len(ids) == 0 {
 		return nil, errors.New("no ids provided")
 	}
 	return c.GetPrayersByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }}`, strings.Join(quoteStrings(ids...), ", ")))
 }
 
-func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]api.Prayer, error) {
+func (c *apiClient) GetPrayersByName(ctx context.Context, names ...string) ([]models.Prayer, error) {
 	if len(names) == 0 {
 		return nil, errors.New("no names provided")
 	}
@@ -27,16 +27,22 @@ func (c *client) GetPrayersByName(ctx context.Context, names ...string) ([]api.P
 	return c.GetPrayersByQuery(ctx, query)
 }
 
-func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]api.Prayer, error) {
+func (c *apiClient) GetPrayersByQuery(ctx context.Context, query string) ([]models.Prayer, error) {
 	inline, err := c.doPrayersRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query))
 	if err != nil {
 		return nil, err
 	}
 
 	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
-	prayers := make([]api.Prayer, *inline.Meta.Total)
+	prayers := make([]models.Prayer, *inline.Meta.Total)
 
-	_ = copy(prayers, inline.GetItems())
+	var tmpPrayers []models.Prayer
+	err = convert(inline.GetItems(), &tmpPrayers)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = copy(prayers, tmpPrayers)
 
 	if pages > 1 {
 		var eg errgroup.Group
@@ -48,7 +54,13 @@ func (c *client) GetPrayersByQuery(ctx context.Context, query string) ([]api.Pra
 					return err
 				}
 
-				for i, prayer := range inline.GetItems() {
+				var tmpPrayers []models.Prayer
+				err = convert(inline.GetItems(), &tmpPrayers)
+				if err != nil {
+					return err
+				}
+
+				for i, prayer := range tmpPrayers {
 					prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
 				}
 
