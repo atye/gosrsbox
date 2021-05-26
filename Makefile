@@ -17,7 +17,6 @@ openapi:
 	rm -rf ${OPENAPI}/api
 
 
-
 .PHONY: test
 test:
 	go test -count=1 -v -cover -race ./...
