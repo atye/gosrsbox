@@ -13,7 +13,7 @@ api := gosrsbox.NewAPI("my user agent")
 - supports MongoDB and Python queries as documented on [osrsbox-api](https://api.osrsbox.com)
 - get any document from the [Static JSON API](https://www.osrsbox.com/projects/osrsbox-db/#the-osrsbox-static-json-api) (good for dumping the database)
 # About
-Item, Monster, and Prayer models are generated via a modified [OpenAPI specification](openapi/openapi.yaml) with the original being https://api.osrsbox.com/api-docs.
+Item, Monster, and Prayer models are generated via a modified [OpenAPI specification](openapi.json) with the original being https://api.osrsbox.com/api-docs.
 The real API responses don't quite align with the original specification so some things are modified:
 
 - The `_id` property is removed as it conflicts with the `id` property.
