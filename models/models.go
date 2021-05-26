@@ -33,8 +33,8 @@ var (
 	NewMonsterDrops         = api.NewMonsterDrops
 	NewNullableMonsterDrops = api.NewNullableMonsterDrops
 
-	NewPrayer        = api.NewPrayer
-	NewNullablePraye = api.NewNullablePrayer
+	NewPrayer         = api.NewPrayer
+	NewNullablePrayer = api.NewNullablePrayer
 
 	PtrBool            = api.PtrBool
 	PtrInt             = api.PtrInt
