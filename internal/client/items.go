@@ -49,13 +49,7 @@ func (c *apiClient) GetItemsByQuery(ctx context.Context, query string) ([]models
 	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	items := make([]models.Item, *inline.Meta.Total)
 
-	var tmpItems []models.Item
-	err = convert(inline.GetItems(), &tmpItems)
-	if err != nil {
-		return nil, err
-	}
-
-	_ = copy(items, tmpItems)
+	_ = copy(items, inline.GetItems())
 
 	if pages > 1 {
 		var eg errgroup.Group
@@ -67,13 +61,7 @@ func (c *apiClient) GetItemsByQuery(ctx context.Context, query string) ([]models
 					return err
 				}
 
-				var tmpItems []models.Item
-				err = convert(inline.GetItems(), &tmpItems)
-				if err != nil {
-					return err
-				}
-
-				for i, item := range tmpItems {
+				for i, item := range inline.GetItems() {
 					items[int(*inline.Meta.MaxResults)*(page-1)+i] = item
 				}
 

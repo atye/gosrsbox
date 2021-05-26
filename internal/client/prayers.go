@@ -36,13 +36,7 @@ func (c *apiClient) GetPrayersByQuery(ctx context.Context, query string) ([]mode
 	pages := int(math.Ceil(float64(*inline.Meta.Total) / float64(*inline.Meta.MaxResults)))
 	prayers := make([]models.Prayer, *inline.Meta.Total)
 
-	var tmpPrayers []models.Prayer
-	err = convert(inline.GetItems(), &tmpPrayers)
-	if err != nil {
-		return nil, err
-	}
-
-	_ = copy(prayers, tmpPrayers)
+	_ = copy(prayers, inline.GetItems())
 
 	if pages > 1 {
 		var eg errgroup.Group
@@ -54,13 +48,7 @@ func (c *apiClient) GetPrayersByQuery(ctx context.Context, query string) ([]mode
 					return err
 				}
 
-				var tmpPrayers []models.Prayer
-				err = convert(inline.GetItems(), &tmpPrayers)
-				if err != nil {
-					return err
-				}
-
-				for i, prayer := range tmpPrayers {
+				for i, prayer := range inline.GetItems() {
 					prayers[int(*inline.Meta.MaxResults)*(page-1)+i] = prayer
 				}
 

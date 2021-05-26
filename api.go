@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/internal/client"
-	"github.com/atye/gosrsbox/internal/openapi"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
@@ -77,11 +77,11 @@ var (
 // NewAPI returns a osrsboxapi client.
 func NewAPI(userAgent string) API {
 	once.Do(func() {
-		conf := &openapi.Configuration{
+		conf := &api.Configuration{
 			Scheme:     "https",
 			HTTPClient: http.DefaultClient,
 			UserAgent:  userAgent,
-			Servers: []openapi.ServerConfiguration{
+			Servers: []api.ServerConfiguration{
 				{
 					URL: "api.osrsbox.com",
 				},

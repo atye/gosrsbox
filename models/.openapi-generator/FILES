@@ -1,8 +1,0 @@
-model_item.go
-model_item_equipment.go
-model_item_weapon.go
-model_item_weapon_stances.go
-model_monster.go
-model_monster_drops.go
-model_prayer.go
-utils.go
