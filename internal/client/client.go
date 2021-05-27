@@ -43,11 +43,12 @@ func (c *apiClient) doItemsRequest(ctx context.Context, req api.ApiGetitemsReque
 	}
 	defer c.sem.Release(1)
 
-	inline, _, err := req.Execute()
+	inline, resp, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse200{}, err
 	}
+	defer resp.Body.Close()
 
 	return inline, nil
 }
@@ -59,11 +60,12 @@ func (c *apiClient) doMonstersRequest(ctx context.Context, req api.ApiGetmonster
 	}
 	defer c.sem.Release(1)
 
-	inline, _, err := req.Execute()
+	inline, resp, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2003{}, err
 	}
+	defer resp.Body.Close()
 
 	return inline, nil
 }
@@ -75,11 +77,12 @@ func (c *apiClient) doPrayersRequest(ctx context.Context, req api.ApiGetprayersR
 	}
 	defer c.sem.Release(1)
 
-	inline, _, err := req.Execute()
+	inline, resp, err := req.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2004{}, err
 	}
+	defer resp.Body.Close()
 
 	return inline, nil
 }
