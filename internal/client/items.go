@@ -41,7 +41,7 @@ func (c *apiClient) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]
 }
 
 func (c *apiClient) GetItemsByQuery(ctx context.Context, query string) ([]models.Item, error) {
-	inline, err := c.doItemsRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query))
+	inline, err := c.executeItemsRequest(ctx, params{where: query})
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *apiClient) GetItemsByQuery(ctx context.Context, query string) ([]models
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				inline, err := c.doItemsRequest(ctx, c.openAPIClient.ItemApi.Getitems(ctx).Where(query).Page(int32(page)))
+				inline, err := c.executeItemsRequest(ctx, params{where: query, page: page})
 				if err != nil {
 					return err
 				}

@@ -7,7 +7,11 @@ import (
 	"fmt"
 	"net/http"
 
+	osrsboxapi "github.com/atye/gosrsbox/api"
 	"github.com/atye/gosrsbox/internal/api"
+
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -28,7 +32,7 @@ var (
 	errNoSlot  = errors.New("no slot provided")
 )
 
-func NewAPI(conf *api.Configuration) *apiClient {
+func NewAPI(conf *api.Configuration) osrsboxapi.API {
 	return &apiClient{
 		docsAddress:   jsonDocuments,
 		openAPIClient: api.NewAPIClient(conf),
@@ -36,14 +40,34 @@ func NewAPI(conf *api.Configuration) *apiClient {
 	}
 }
 
-func (c *apiClient) doItemsRequest(ctx context.Context, req api.ApiGetitemsRequest) (api.InlineResponse200, error) {
+type params struct {
+	where string
+	page  int
+}
+
+func (c *apiClient) executeItemsRequest(ctx context.Context, p params) (api.InlineResponse200, error) {
+	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_items_request")
+	defer span.End()
+
+	if p.where != "" {
+		span.SetAttributes(attribute.String("where", p.where))
+	}
+	if p.page != 0 {
+		span.SetAttributes(attribute.Int("page", p.page))
+	}
+
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return api.InlineResponse200{}, err
 	}
 	defer c.sem.Release(1)
 
-	inline, resp, err := req.Execute()
+	r := c.openAPIClient.ItemApi.Getitems(ctx).Where(p.where)
+	if p.page != 0 {
+		r = r.Page(int32(p.page))
+	}
+
+	inline, resp, err := r.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse200{}, err
@@ -53,14 +77,29 @@ func (c *apiClient) doItemsRequest(ctx context.Context, req api.ApiGetitemsReque
 	return inline, nil
 }
 
-func (c *apiClient) doMonstersRequest(ctx context.Context, req api.ApiGetmonstersRequest) (api.InlineResponse2003, error) {
+func (c *apiClient) doMonstersRequest(ctx context.Context, p params) (api.InlineResponse2003, error) {
+	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_monsters_request")
+	defer span.End()
+
+	if p.where != "" {
+		span.SetAttributes(attribute.String("where", p.where))
+	}
+	if p.page != 0 {
+		span.SetAttributes(attribute.Int("page", p.page))
+	}
+
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return api.InlineResponse2003{}, err
 	}
 	defer c.sem.Release(1)
 
-	inline, resp, err := req.Execute()
+	r := c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(p.where)
+	if p.page != 0 {
+		r = r.Page(int32(p.page))
+	}
+
+	inline, resp, err := r.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2003{}, err
@@ -70,14 +109,29 @@ func (c *apiClient) doMonstersRequest(ctx context.Context, req api.ApiGetmonster
 	return inline, nil
 }
 
-func (c *apiClient) doPrayersRequest(ctx context.Context, req api.ApiGetprayersRequest) (api.InlineResponse2004, error) {
+func (c *apiClient) doPrayersRequest(ctx context.Context, p params) (api.InlineResponse2004, error) {
+	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_prayers_request")
+	defer span.End()
+
+	if p.where != "" {
+		span.SetAttributes(attribute.String("where", p.where))
+	}
+	if p.page != 0 {
+		span.SetAttributes(attribute.Int("page", p.page))
+	}
+
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return api.InlineResponse2004{}, err
 	}
 	defer c.sem.Release(1)
 
-	inline, resp, err := req.Execute()
+	r := c.openAPIClient.PrayerApi.Getprayers(ctx).Where(p.where)
+	if p.page != 0 {
+		r = r.Page(int32(p.page))
+	}
+
+	inline, resp, err := r.Execute()
 	err = checkError(err)
 	if err != nil {
 		return api.InlineResponse2004{}, err
@@ -88,6 +142,11 @@ func (c *apiClient) doPrayersRequest(ctx context.Context, req api.ApiGetprayersR
 }
 
 func (c *apiClient) doDocumentRequest(ctx context.Context, url string) (*http.Response, error) {
+	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_document_request")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("url", url))
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err

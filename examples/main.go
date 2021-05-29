@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	api := gosrsbox.NewAPI("my user agent")
+	api := gosrsbox.NewAPI("my user agent", gosrsbox.WithTracing("http://localhost:9411/api/v2/spans"))
 
 	// Get items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
@@ -29,7 +29,7 @@ func main() {
 	printItems(items)
 
 	// Get monsters that drop the Bandos chestplate
-	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
+	monsters, err := api.GetMonstersThatDrop(context.Background(), "Uncut diamond")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,6 +63,8 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("%+v\n", out["wiki_name"])
+
+	select {}
 }
 
 func printItems(items []models.Item) {

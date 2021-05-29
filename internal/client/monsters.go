@@ -32,7 +32,7 @@ func (c *apiClient) GetMonstersThatDrop(ctx context.Context, names ...string) ([
 }
 
 func (c *apiClient) GetMonstersByQuery(ctx context.Context, query string) ([]models.Monster, error) {
-	inline, err := c.doMonstersRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query))
+	inline, err := c.doMonstersRequest(ctx, params{where: query})
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *apiClient) GetMonstersByQuery(ctx context.Context, query string) ([]mod
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				inline, err := c.doMonstersRequest(ctx, c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(query).Page(int32(page)))
+				inline, err := c.doMonstersRequest(ctx, params{where: query, page: page})
 				if err != nil {
 					return err
 				}

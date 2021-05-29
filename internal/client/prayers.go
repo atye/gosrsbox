@@ -28,7 +28,7 @@ func (c *apiClient) GetPrayersByName(ctx context.Context, names ...string) ([]mo
 }
 
 func (c *apiClient) GetPrayersByQuery(ctx context.Context, query string) ([]models.Prayer, error) {
-	inline, err := c.doPrayersRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query))
+	inline, err := c.doPrayersRequest(ctx, params{where: query})
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (c *apiClient) GetPrayersByQuery(ctx context.Context, query string) ([]mode
 		for page := 2; page <= pages; page++ {
 			page := page
 			eg.Go(func() error {
-				inline, err := c.doPrayersRequest(ctx, c.openAPIClient.PrayerApi.Getprayers(ctx).Where(query).Page(int32(page)))
+				inline, err := c.doPrayersRequest(ctx, params{where: query, page: page})
 				if err != nil {
 					return err
 				}

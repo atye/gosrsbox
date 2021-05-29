@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/atye/gosrsbox/internal/api"
+	"golang.org/x/sync/semaphore"
 )
 
 func TestGetDocument(t *testing.T) {
@@ -28,8 +29,11 @@ func testGetDocument(t *testing.T) {
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{HTTPClient: http.DefaultClient})
-	api.docsAddress = apiSvr.URL
+	api := &apiClient{
+		docsAddress:   apiSvr.URL,
+		openAPIClient: api.NewAPIClient(&api.Configuration{HTTPClient: http.DefaultClient}),
+		sem:           semaphore.NewWeighted(int64(10)),
+	}
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
 		if err != nil {
@@ -80,16 +84,11 @@ func testGetDocumentError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{
-		Scheme:     "http",
-		HTTPClient: http.DefaultClient,
-		Servers: []api.ServerConfiguration{
-			{
-				URL: "",
-			},
-		},
-	})
-	api.docsAddress = apiSvr.URL
+	api := &apiClient{
+		docsAddress:   apiSvr.URL,
+		openAPIClient: api.NewAPIClient(&api.Configuration{HTTPClient: http.DefaultClient}),
+		sem:           semaphore.NewWeighted(int64(10)),
+	}
 
 	err := api.GetDocument(context.Background(), "test", new(map[string]interface{}))
 

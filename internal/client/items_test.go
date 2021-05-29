@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	osrsboxapi "github.com/atye/gosrsbox/api"
 	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
@@ -52,8 +53,8 @@ func testGetItemsByID(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -65,7 +66,7 @@ func testGetItemsByID(t *testing.T) {
 			})
 			return api, []string{"2"}, verifyItemIDs
 		},
-		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
+		"no IDs": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -116,8 +117,8 @@ func testGetItemsByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -129,7 +130,7 @@ func testGetItemsByName(t *testing.T) {
 			})
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
-		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
+		"no names": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -180,8 +181,8 @@ func testGetItemSet(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -193,7 +194,7 @@ func testGetItemSet(t *testing.T) {
 			})
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
-		"no set": func(t *testing.T) (*apiClient, sets.SetName, []string, checkFn) {
+		"no set": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -244,8 +245,8 @@ func testGetItemsBySlot(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -257,7 +258,7 @@ func testGetItemsBySlot(t *testing.T) {
 			})
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
-		"no slot": func(t *testing.T) (*apiClient, slots.SlotName, []string, checkFn) {
+		"no slot": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,

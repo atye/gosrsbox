@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	osrsboxapi "github.com/atye/gosrsbox/api"
 	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/models"
 )
@@ -47,8 +48,8 @@ func testGetPrayersByID(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -60,7 +61,7 @@ func testGetPrayersByID(t *testing.T) {
 			})
 			return api, []string{"2"}, verifyPrayerID
 		},
-		"no IDs": func(t *testing.T) (*apiClient, []string, checkFn) {
+		"no IDs": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -111,8 +112,8 @@ func testGetPrayersByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (*apiClient, []string, checkFn){
-		"success": func(t *testing.T) (*apiClient, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
+		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
@@ -124,7 +125,7 @@ func testGetPrayersByName(t *testing.T) {
 			})
 			return api, []string{"Burst of Strength", "Thick Skin"}, verifyPrayerNames
 		},
-		"no names": func(t *testing.T) (*apiClient, []string, checkFn) {
+		"no names": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
 			api := NewAPI(&api.Configuration{
 				Scheme:     "http",
 				HTTPClient: http.DefaultClient,
