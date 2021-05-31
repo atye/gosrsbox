@@ -3,17 +3,16 @@ package client
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
-	"path/filepath"
 	"testing"
 
-	osrsboxapi "github.com/atye/gosrsbox/api"
+	"github.com/atye/gosrsbox/internal/common"
+	"github.com/atye/gosrsbox/internal/common/mocks"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
+	"github.com/golang/mock/gomock"
 )
 
 func TestItems(t *testing.T) {
@@ -26,9 +25,6 @@ func TestItems(t *testing.T) {
 
 func testGetItemsByID(t *testing.T) {
 	type checkFn func(t *testing.T, items []models.Item, expectedID []string, err error)
-
-	apiSvr := setupItemsAPISvr()
-	defer apiSvr.Close()
 
 	verifyItemIDs := func(t *testing.T, items []models.Item, expectedIDs []string, err error) {
 		if err != nil {
@@ -52,12 +48,28 @@ func testGetItemsByID(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
-		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (*APIClient, []string, checkFn){
+		"success": func(t *testing.T) (*APIClient, []string, checkFn) {
+			ctrl := gomock.NewController(t)
+
+			inline := mocks.NewMockItemsResponse(ctrl)
+			inline.EXPECT().GetTotal().Return(1)
+			inline.EXPECT().GetMaxResults().Return(25)
+			inline.EXPECT().GetItems().Return([]models.Item{
+				{
+					Id: "2",
+				},
+			})
+
+			executor := mocks.NewMockRequestExecutor(ctrl)
+			executor.EXPECT().ExecuteItemsRequest(gomock.Any(), common.Params{Where: `{ "id": { "$in": ["2"] }, "duplicate": false }`}).Return(inline, nil)
+
 			api := NewAPI("")
+			api.reqExecutor = executor
+
 			return api, []string{"2"}, verifyItemIDs
 		},
-		"no IDs": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
+		"no IDs": func(t *testing.T) (*APIClient, []string, checkFn) {
 			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
@@ -75,9 +87,6 @@ func testGetItemsByID(t *testing.T) {
 func testGetItemsByName(t *testing.T) {
 	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
-	apiSvr := setupItemsAPISvr()
-	defer apiSvr.Close()
-
 	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
@@ -100,12 +109,42 @@ func testGetItemsByName(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
-		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (*APIClient, []string, checkFn){
+		"success": func(t *testing.T) (*APIClient, []string, checkFn) {
+			ctrl := gomock.NewController(t)
+
+			inline := mocks.NewMockItemsResponse(ctrl)
+			inline.EXPECT().GetTotal().Return(4)
+			inline.EXPECT().GetMaxResults().Return(2)
+			inline.EXPECT().GetItems().Return([]models.Item{
+				{
+					Name: "Abyssal whip",
+				}, {
+					Name: "Abyssal dagger",
+				},
+			})
+
+			executor := mocks.NewMockRequestExecutor(ctrl)
+			query := `{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`
+			executor.EXPECT().ExecuteItemsRequest(gomock.Any(), common.Params{Where: query}).Return(inline, nil)
+
+			inlinePage2 := mocks.NewMockItemsResponse(ctrl)
+			inlinePage2.EXPECT().GetItems().Return([]models.Item{
+				{
+					Name: "Rune platebody",
+				},
+				{
+					Name: "Dragon scimitar",
+				},
+			})
+			executor.EXPECT().ExecuteItemsRequest(gomock.Any(), common.Params{Where: query, Page: 2}).Return(inlinePage2, nil)
+
 			api := NewAPI("")
+			api.reqExecutor = executor
+
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
-		"no names": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
+		"no names": func(t *testing.T) (*APIClient, []string, checkFn) {
 			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
@@ -123,9 +162,6 @@ func testGetItemsByName(t *testing.T) {
 func testGetItemSet(t *testing.T) {
 	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
-	apiSvr := setupItemsAPISvr()
-	defer apiSvr.Close()
-
 	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
@@ -148,12 +184,38 @@ func testGetItemSet(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn){
-		"success": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (*APIClient, sets.SetName, []string, checkFn){
+		"success": func(t *testing.T) (*APIClient, sets.SetName, []string, checkFn) {
+			ctrl := gomock.NewController(t)
+
+			inline := mocks.NewMockItemsResponse(ctrl)
+			inline.EXPECT().GetTotal().Return(4)
+			inline.EXPECT().GetMaxResults().Return(25)
+			inline.EXPECT().GetItems().Return([]models.Item{
+				{
+					Name: "Rune full helm",
+				},
+				{
+					Name: "Rune platebody",
+				},
+				{
+					Name: "Rune platelegs",
+				},
+				{
+					Name: "Rune kiteshield",
+				},
+			})
+
+			executor := mocks.NewMockRequestExecutor(ctrl)
+			query := `{ "wiki_name": { "$in": ["Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"] }, "duplicate": false }`
+			executor.EXPECT().ExecuteItemsRequest(gomock.Any(), common.Params{Where: query}).Return(inline, nil)
+
 			api := NewAPI("")
+			api.reqExecutor = executor
+
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
-		"no set": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
+		"no set": func(t *testing.T) (*APIClient, sets.SetName, []string, checkFn) {
 			api := NewAPI("")
 			return api, nil, nil, verifyError
 		},
@@ -171,9 +233,6 @@ func testGetItemSet(t *testing.T) {
 func testGetItemsBySlot(t *testing.T) {
 	type checkFn func(t *testing.T, items []models.Item, expectedNames []string, err error)
 
-	apiSvr := setupItemsAPISvr()
-	defer apiSvr.Close()
-
 	verifyItemNames := func(t *testing.T, items []models.Item, expectedNames []string, err error) {
 		if err != nil {
 			t.Errorf("expected no error, got %v", err)
@@ -196,12 +255,32 @@ func testGetItemsBySlot(t *testing.T) {
 		}
 	}
 
-	tests := map[string]func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn){
-		"success": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
+	tests := map[string]func(t *testing.T) (*APIClient, slots.SlotName, []string, checkFn){
+		"success": func(t *testing.T) (*APIClient, slots.SlotName, []string, checkFn) {
+			ctrl := gomock.NewController(t)
+
+			inline := mocks.NewMockItemsResponse(ctrl)
+			inline.EXPECT().GetTotal().Return(2)
+			inline.EXPECT().GetMaxResults().Return(25)
+			inline.EXPECT().GetItems().Return([]models.Item{
+				{
+					Name: "Longbow",
+				},
+				{
+					Name: "Shortbow",
+				},
+			})
+
+			executor := mocks.NewMockRequestExecutor(ctrl)
+			query := `{ "equipable_by_player": true, "equipment.slot": "2h", "duplicate": false }`
+			executor.EXPECT().ExecuteItemsRequest(gomock.Any(), common.Params{Where: query}).Return(inline, nil)
+
 			api := NewAPI("")
+			api.reqExecutor = executor
+
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
-		"no slot": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
+		"no slot": func(t *testing.T) (*APIClient, slots.SlotName, []string, checkFn) {
 			api := NewAPI("")
 			return api, "", nil, verifyError
 		},
@@ -236,61 +315,4 @@ func testGetItemsAPIError(t *testing.T) {
 	if want.Error() != err.Error() {
 		t.Errorf("expected %+v, got %+v", want, err)
 	}
-}
-
-func setupItemsAPISvr() *httptest.Server {
-	return httptest.NewServer((http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.String() {
-		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "items.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		case fmt.Sprintf("/items?page=2&where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"] }, "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "items_page2.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"] }, "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "full_rune.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "wiki_name": { "$in": ["Green d'hide body", "Green d'hide chaps", "Green d'hide vambraces"] }, "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "full_greendhide.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "equipable_by_player": true, "equipment.slot": "2h", "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "items_2h.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		case fmt.Sprintf("/items?where=%s", url.QueryEscape(`{ "id": { "$in": ["2"] }, "duplicate": false }`)):
-			data, err := ioutil.ReadFile(filepath.Join("testdata", "single_item.json"))
-			if err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(data)
-			return
-		default:
-			panic(fmt.Errorf("%s not supported", r.URL.String()))
-		}
-	})))
 }

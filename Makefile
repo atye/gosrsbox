@@ -1,20 +1,18 @@
-OPENAPI=internal/api
-MODELS=models
+OPENAPI=internal/openapi/api
  
  # openapi.json:
  # _id properties must be removed
  # id properties must be string, except for MonsterDrops
  # response meta page must be int
 
-# apis,apiDocs=false,models,modelDocs=false,supportingFiles=client.go:configuration.go:utils.go
  .PHONY: openapi
 openapi:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v5.1.1 generate \
     -i /local/openapi.json \
     -g go \
-	--package-name testapi \
-	--global-property apis,supportingFiles \
-    -o /local/testapi
+	--package-name api \
+	--global-property apis=Item:Monster:Prayer,apiDocs=false,models,modelDocs=false,supportingFiles=client.go:configuration.go:utils.go \
+    -o /local/${OPENAPI}
 	rm -rf ${OPENAPI}/api
 
 

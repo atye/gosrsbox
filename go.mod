@@ -3,6 +3,7 @@ module github.com/atye/gosrsbox
 go 1.16
 
 require (
+	github.com/golang/mock v1.5.0 // indirect
 	github.com/openzipkin/zipkin-go v0.2.5
 	go.opencensus.io v0.23.0
 	go.opentelemetry.io/otel v0.20.0

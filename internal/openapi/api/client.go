@@ -48,19 +48,11 @@ type APIClient struct {
 
 	// API Services
 
-	EquipmentApi *EquipmentApiService
-
-	IconsItemApi *IconsItemApiService
-
-	IconsPrayerApi *IconsPrayerApiService
-
 	ItemApi *ItemApiService
 
 	MonsterApi *MonsterApiService
 
 	PrayerApi *PrayerApiService
-
-	WeaponApi *WeaponApiService
 }
 
 type service struct {
@@ -79,13 +71,9 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.EquipmentApi = (*EquipmentApiService)(&c.common)
-	c.IconsItemApi = (*IconsItemApiService)(&c.common)
-	c.IconsPrayerApi = (*IconsPrayerApiService)(&c.common)
 	c.ItemApi = (*ItemApiService)(&c.common)
 	c.MonsterApi = (*MonsterApiService)(&c.common)
 	c.PrayerApi = (*PrayerApiService)(&c.common)
-	c.WeaponApi = (*WeaponApiService)(&c.common)
 
 	return c
 }
