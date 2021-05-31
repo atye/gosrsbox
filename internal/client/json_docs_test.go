@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"testing"
 
+	"go.opentelemetry.io/otel"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -31,6 +32,7 @@ func testGetDocument(t *testing.T) {
 	client := &APIClient{
 		docsAddress: apiSvr.URL,
 		sem:         semaphore.NewWeighted(int64(10)),
+		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
 	}
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
@@ -85,6 +87,7 @@ func testGetDocumentError(t *testing.T) {
 	api := &APIClient{
 		docsAddress: apiSvr.URL,
 		sem:         semaphore.NewWeighted(int64(10)),
+		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
 	}
 
 	err := api.GetDocument(context.Background(), "test", new(map[string]interface{}))
