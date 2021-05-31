@@ -1,7 +1,7 @@
 package gosrsbox
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"sync"
 
@@ -19,11 +19,14 @@ var (
 	apiClient osrsboxapi.API
 )
 
+// Option to configure the client
 type Option func(c *client.APIClient) *client.APIClient
 
-func WithTracing(url string) Option {
+// WithTracing enables Zipkin tracing.
+// Pass in the collector URL and a probablity to export traces
+func WithTracing(url string, probablity float64) Option {
 	return func(c *client.APIClient) *client.APIClient {
-		err := initTracing(url)
+		err := initTracing(url, probablity)
 		if err != nil {
 			panic(err)
 		}
@@ -43,21 +46,22 @@ func NewAPI(userAgent string, opts ...Option) osrsboxapi.API {
 	return apiClient
 }
 
-func initTracing(url string) error {
+func initTracing(url string, probability float64) error {
 	exporter, err := zipkin.NewRawExporter(
 		url,
-		zipkin.WithLogger(log.New(ioutil.Discard, "", log.LstdFlags)),
-		zipkin.WithSDKOptions(trace.WithSampler(trace.AlwaysSample())),
+		zipkin.WithLogger(log.New(io.Discard, "", log.LstdFlags)),
+		zipkin.WithSDKOptions(trace.WithSampler(trace.TraceIDRatioBased(probability))),
 	)
-
 	if err != nil {
 		return err
 	}
 
-	bsp := trace.NewBatchSpanProcessor(exporter)
-
 	tp := trace.NewTracerProvider(
-		trace.WithSpanProcessor(bsp),
+		trace.WithBatcher(exporter,
+			trace.WithMaxExportBatchSize(trace.DefaultMaxExportBatchSize),
+			trace.WithBatchTimeout(trace.DefaultBatchTimeout),
+			trace.WithMaxExportBatchSize(trace.DefaultMaxExportBatchSize),
+		),
 		trace.WithResource(resource.NewWithAttributes(
 			semconv.ServiceNameKey.String("gosrsbox"),
 		)),

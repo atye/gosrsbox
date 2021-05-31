@@ -10,7 +10,7 @@ type Prayer struct {
 	// The prayer description (as show in-game).
 	Description string `json:"description"`
 	// The prayer point drain rate per minute.
-	DrainPerMinute float32 `json:"drain_per_minute"`
+	DrainPerMinute float64 `json:"drain_per_minute"`
 	// The OSRS Wiki URL.
 	WikiUrl string `json:"wiki_url"`
 	// The stat requirements to use the prayer.

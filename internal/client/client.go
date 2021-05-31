@@ -50,10 +50,16 @@ func NewAPI(userAgent string) *APIClient {
 func (c *APIClient) doItemsRequest(ctx context.Context, p common.Params) (common.ItemsResponse, error) {
 	ctx, span := c.createSpan(ctx, "execute_items_request")
 	defer span.End()
-
 	setSpanAttributesFromParams(span, p)
 
-	err := c.sem.Acquire(ctx, 1)
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
+	err = c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -70,10 +76,16 @@ func (c *APIClient) doItemsRequest(ctx context.Context, p common.Params) (common
 func (c *APIClient) doMonstersRequest(ctx context.Context, p common.Params) (common.MonstersResponse, error) {
 	ctx, span := c.createSpan(ctx, "execute_monsters_request")
 	defer span.End()
-
 	setSpanAttributesFromParams(span, p)
 
-	err := c.sem.Acquire(ctx, 1)
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
+	err = c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -90,10 +102,16 @@ func (c *APIClient) doMonstersRequest(ctx context.Context, p common.Params) (com
 func (c *APIClient) doPrayersRequest(ctx context.Context, p common.Params) (common.PrayersResponse, error) {
 	ctx, span := c.createSpan(ctx, "execute_prayers_request")
 	defer span.End()
-
 	setSpanAttributesFromParams(span, p)
 
-	err := c.sem.Acquire(ctx, 1)
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
+	err = c.sem.Acquire(ctx, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -108,10 +126,16 @@ func (c *APIClient) doPrayersRequest(ctx context.Context, p common.Params) (comm
 }
 
 func (c *APIClient) doDocumentRequest(ctx context.Context, url string) (*http.Response, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_document_request")
+	ctx, span := c.createSpan(ctx, "execute_document_request")
 	defer span.End()
-
 	span.SetAttributes(attribute.String("url", url))
+
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -125,7 +149,8 @@ func (c *APIClient) doDocumentRequest(ctx context.Context, url string) (*http.Re
 
 	if resp.StatusCode != http.StatusOK {
 		defer resp.Body.Close()
-		return nil, fmt.Errorf("code: %d, message: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		err = fmt.Errorf("code: %d, message: %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+		return nil, err
 	}
 
 	return resp, nil

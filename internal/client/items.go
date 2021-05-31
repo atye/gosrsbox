@@ -17,14 +17,20 @@ func (c *APIClient) GetItemsByID(ctx context.Context, ids ...string) ([]models.I
 	ctx, span := c.createSpan(ctx, "get_items_by_id")
 	defer span.End()
 
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
 	if len(ids) == 0 {
-		setSpanErrorStatus(span, errNoIDs)
-		return nil, errNoIDs
+		err = errNoIDs
+		return nil, err
 	}
 
 	items, err := c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "id": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(ids...), ", ")))
 	if err != nil {
-		setSpanErrorStatus(span, err)
 		return nil, err
 	}
 	return items, nil
@@ -34,13 +40,20 @@ func (c *APIClient) GetItemsByName(ctx context.Context, names ...string) ([]mode
 	ctx, span := c.createSpan(ctx, "get_items_by_name")
 	defer span.End()
 
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
 	if len(names) == 0 {
-		setSpanErrorStatus(span, errNoNames)
-		return nil, errNoNames
+		err = errNoNames
+		return nil, err
 	}
+
 	items, err := c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "wiki_name": { "$in": [%s] }, "duplicate": false }`, strings.Join(quoteStrings(names...), ", ")))
 	if err != nil {
-		setSpanErrorStatus(span, err)
 		return nil, err
 	}
 	return items, nil
@@ -50,13 +63,19 @@ func (c *APIClient) GetItemSet(ctx context.Context, set sets.SetName) ([]models.
 	ctx, span := c.createSpan(ctx, "get_item_set")
 	defer span.End()
 
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
 	if set == nil || len(set) == 0 {
-		setSpanErrorStatus(span, errNoSet)
-		return nil, errNoSet
+		err = errNoSet
+		return nil, err
 	}
 	items, err := c.GetItemsByName(ctx, set...)
 	if err != nil {
-		setSpanErrorStatus(span, err)
 		return nil, err
 	}
 	return items, nil
@@ -66,13 +85,19 @@ func (c *APIClient) GetItemsBySlot(ctx context.Context, slot slots.SlotName) ([]
 	ctx, span := c.createSpan(ctx, "get_items_by_slot")
 	defer span.End()
 
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
 	if slot == "" {
-		setSpanErrorStatus(span, errNoSlot)
-		return nil, errNoSlot
+		err = errNoSlot
+		return nil, err
 	}
 	items, err := c.GetItemsByQuery(ctx, fmt.Sprintf(`{ "equipable_by_player": true, "equipment.slot": %s, "duplicate": false }`, slot))
 	if err != nil {
-		setSpanErrorStatus(span, err)
 		return nil, err
 	}
 	return items, nil
@@ -82,9 +107,15 @@ func (c *APIClient) GetItemsByQuery(ctx context.Context, query string) ([]models
 	ctx, span := c.createSpan(ctx, "get_items_by_query")
 	defer span.End()
 
+	var err error
+	defer func() {
+		if err != nil {
+			setSpanErrorStatus(span, err)
+		}
+	}()
+
 	inline, err := c.doItemsRequest(ctx, common.Params{Where: query})
 	if err != nil {
-		setSpanErrorStatus(span, err)
 		return nil, err
 	}
 
@@ -113,9 +144,8 @@ func (c *APIClient) GetItemsByQuery(ctx context.Context, query string) ([]models
 				return nil
 			})
 		}
-		err := eg.Wait()
+		err = eg.Wait()
 		if err != nil {
-			setSpanErrorStatus(span, err)
 			return nil, err
 		}
 	}

@@ -44,7 +44,7 @@ type Item struct {
 	// The high alchemy value of the item (cost * 0.6).
 	Highalch int `json:"highalch"`
 	// The weight (in kilograms) of the item.
-	Weight float32 `json:"weight"`
+	Weight float64 `json:"weight"`
 	// The Grand Exchange buy limit of the item.
 	BuyLimit int `json:"buy_limit"`
 	// If the item is associated with a quest.

@@ -44,7 +44,7 @@ type Monster struct {
 	// The slayer level required to kill the monster.
 	SlayerLevel int `json:"slayer_level"`
 	// The slayer XP rewarded for a monster kill.
-	SlayerXp float32 `json:"slayer_xp"`
+	SlayerXp float64 `json:"slayer_xp"`
 	// The slayer masters who can assign the monster.
 	SlayerMasters []string `json:"slayer_masters"`
 	// If the monster is a duplicate.
@@ -103,7 +103,7 @@ type MonsterDrops struct {
 	// If the item drop is noted, or not.
 	Noted bool `json:"noted"`
 	// The rarity of the item drop (as a float out of 1.0).
-	Rarity float32 `json:"rarity"`
+	Rarity float64 `json:"rarity"`
 	// Number of rolls from the drop.
 	Rolls int `json:"rolls"`
 }
