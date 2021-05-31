@@ -15,6 +15,10 @@ openapi:
     -o /local/${OPENAPI}
 	rm -rf ${OPENAPI}/api
 
+.PHONY:
+mocks:
+	mockgen -source internal/common/common.go -destination internal/common/mocks/mocks.go -package mocks
+
 
 .PHONY: test
 test:
