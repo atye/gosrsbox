@@ -3,11 +3,9 @@ package gosrsbox
 import (
 	"io/ioutil"
 	"log"
-	"net/http"
 	"sync"
 
 	osrsboxapi "github.com/atye/gosrsbox/api"
-	"github.com/atye/gosrsbox/internal/api"
 	"github.com/atye/gosrsbox/internal/client"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/trace/zipkin"
@@ -21,36 +19,26 @@ var (
 	apiClient osrsboxapi.API
 )
 
-type Option func(osrsboxapi.API) osrsboxapi.API
+type Option func(c *client.APIClient) *client.APIClient
 
 func WithTracing(url string) Option {
-	return func(c osrsboxapi.API) osrsboxapi.API {
+	return func(c *client.APIClient) *client.APIClient {
 		err := initTracing(url)
 		if err != nil {
 			panic(err)
 		}
-		return client.NewTracingMW(c)
+		return c
 	}
 }
 
 // NewAPI returns a osrsboxapi client.
 func NewAPI(userAgent string, opts ...Option) osrsboxapi.API {
 	once.Do(func() {
-		conf := &api.Configuration{
-			Scheme:     "https",
-			HTTPClient: http.DefaultClient,
-			UserAgent:  userAgent,
-			Servers: []api.ServerConfiguration{
-				{
-					URL: "api.osrsbox.com",
-				},
-			},
-		}
-		apiClient = client.NewAPI(conf)
-
+		c := client.NewAPI(userAgent)
 		for _, o := range opts {
-			apiClient = o(apiClient)
+			c = o(c)
 		}
+		apiClient = c
 	})
 	return apiClient
 }

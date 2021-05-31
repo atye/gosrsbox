@@ -7,18 +7,19 @@ import (
 
 	"github.com/atye/gosrsbox"
 	"github.com/atye/gosrsbox/models"
-	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
 )
 
 func main() {
+	// gosrsbox.WithTracing("http://localhost:9411/api/v2/spans")
 	api := gosrsbox.NewAPI("my user agent", gosrsbox.WithTracing("http://localhost:9411/api/v2/spans"))
 
 	// Get items in the Ahrims set
-	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
+	items, err := api.GetItemsByQuery(context.Background(), `{sgesg}`)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
+	select {}
 	printItems(items)
 
 	// Get items in the Hands slot
@@ -29,7 +30,7 @@ func main() {
 	printItems(items)
 
 	// Get monsters that drop the Bandos chestplate
-	monsters, err := api.GetMonstersThatDrop(context.Background(), "Uncut diamond")
+	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
 	if err != nil {
 		log.Fatal(err)
 	}

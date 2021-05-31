@@ -2,24 +2,29 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
-	osrsboxapi "github.com/atye/gosrsbox/api"
-	"github.com/atye/gosrsbox/internal/api"
+	"github.com/atye/gosrsbox/api"
+	"github.com/atye/gosrsbox/internal/common"
+	open "github.com/atye/gosrsbox/internal/openapi"
 
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/sync/semaphore"
 )
 
-type apiClient struct {
-	docsAddress   string
-	openAPIClient *api.APIClient
-	sem           *semaphore.Weighted
+type APIClient struct {
+	docsAddress string
+	reqExecutor common.RequestExecutor
+	sem         *semaphore.Weighted
+	tracer      trace.Tracer
 }
+
+var _ api.API = &APIClient{}
 
 const (
 	jsonDocuments = "https://www.osrsbox.com/osrsbox-db/"
@@ -32,11 +37,12 @@ var (
 	errNoSlot  = errors.New("no slot provided")
 )
 
-func NewAPI(conf *api.Configuration) osrsboxapi.API {
-	return &apiClient{
-		docsAddress:   jsonDocuments,
-		openAPIClient: api.NewAPIClient(conf),
-		sem:           semaphore.NewWeighted(int64(10)),
+func NewAPI(userAgent string) *APIClient {
+	return &APIClient{
+		docsAddress: jsonDocuments,
+		reqExecutor: open.NewClient(userAgent),
+		sem:         semaphore.NewWeighted(int64(10)),
+		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
 	}
 }
 
@@ -45,103 +51,67 @@ type params struct {
 	page  int
 }
 
-func (c *apiClient) executeItemsRequest(ctx context.Context, p params) (api.InlineResponse200, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_items_request")
+func (c *APIClient) doItemsRequest(ctx context.Context, p common.Params) (common.ItemsResponse, error) {
+	ctx, span := c.createSpan(ctx, "execute_items_request")
 	defer span.End()
 
-	if p.where != "" {
-		span.SetAttributes(attribute.String("where", p.where))
-	}
-	if p.page != 0 {
-		span.SetAttributes(attribute.Int("page", p.page))
-	}
+	setSpanAttributesFromParams(span, p)
 
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return api.InlineResponse200{}, err
+		return nil, err
 	}
 	defer c.sem.Release(1)
 
-	r := c.openAPIClient.ItemApi.Getitems(ctx).Where(p.where)
-	if p.page != 0 {
-		r = r.Page(int32(p.page))
-	}
-
-	inline, resp, err := r.Execute()
-	err = checkError(err)
+	resp, err := c.reqExecutor.ExecuteItemsRequest(ctx, p)
 	if err != nil {
-		return api.InlineResponse200{}, err
+		return nil, err
 	}
-	defer resp.Body.Close()
 
-	return inline, nil
+	return resp, nil
 }
 
-func (c *apiClient) doMonstersRequest(ctx context.Context, p params) (api.InlineResponse2003, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_monsters_request")
+func (c *APIClient) doMonstersRequest(ctx context.Context, p common.Params) (common.MonstersResponse, error) {
+	ctx, span := c.createSpan(ctx, "execute_monsters_request")
 	defer span.End()
 
-	if p.where != "" {
-		span.SetAttributes(attribute.String("where", p.where))
-	}
-	if p.page != 0 {
-		span.SetAttributes(attribute.Int("page", p.page))
-	}
+	setSpanAttributesFromParams(span, p)
 
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return api.InlineResponse2003{}, err
+		return nil, err
 	}
 	defer c.sem.Release(1)
 
-	r := c.openAPIClient.MonsterApi.Getmonsters(ctx).Where(p.where)
-	if p.page != 0 {
-		r = r.Page(int32(p.page))
-	}
-
-	inline, resp, err := r.Execute()
-	err = checkError(err)
+	resp, err := c.reqExecutor.ExecuteMonstersRequest(ctx, p)
 	if err != nil {
-		return api.InlineResponse2003{}, err
+		return nil, err
 	}
-	defer resp.Body.Close()
 
-	return inline, nil
+	return resp, nil
 }
 
-func (c *apiClient) doPrayersRequest(ctx context.Context, p params) (api.InlineResponse2004, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_prayers_request")
+func (c *APIClient) doPrayersRequest(ctx context.Context, p common.Params) (common.PrayersResponse, error) {
+	ctx, span := c.createSpan(ctx, "execute_prayers_request")
 	defer span.End()
 
-	if p.where != "" {
-		span.SetAttributes(attribute.String("where", p.where))
-	}
-	if p.page != 0 {
-		span.SetAttributes(attribute.Int("page", p.page))
-	}
+	setSpanAttributesFromParams(span, p)
 
 	err := c.sem.Acquire(ctx, 1)
 	if err != nil {
-		return api.InlineResponse2004{}, err
+		return nil, err
 	}
 	defer c.sem.Release(1)
 
-	r := c.openAPIClient.PrayerApi.Getprayers(ctx).Where(p.where)
-	if p.page != 0 {
-		r = r.Page(int32(p.page))
-	}
-
-	inline, resp, err := r.Execute()
-	err = checkError(err)
+	resp, err := c.reqExecutor.ExecutePrayersRequest(ctx, p)
 	if err != nil {
-		return api.InlineResponse2004{}, err
+		return nil, err
 	}
-	defer resp.Body.Close()
 
-	return inline, nil
+	return resp, nil
 }
 
-func (c *apiClient) doDocumentRequest(ctx context.Context, url string) (*http.Response, error) {
+func (c *APIClient) doDocumentRequest(ctx context.Context, url string) (*http.Response, error) {
 	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "execute_document_request")
 	defer span.End()
 
@@ -165,32 +135,31 @@ func (c *apiClient) doDocumentRequest(ctx context.Context, url string) (*http.Re
 	return resp, nil
 }
 
-func checkError(executeErr error) error {
-	if executeErr == nil {
-		return nil
-	}
-
-	var genericErr api.GenericOpenAPIError
-	if !errors.As(executeErr, &genericErr) {
-		return executeErr
-	}
-
-	var apiErr api.Error
-	err := json.Unmarshal(genericErr.Body(), &apiErr)
-	if err != nil {
-		return err
-	}
-
-	if apiErr.Error.GetCode() == 0 && apiErr.Error.GetMessage() == "" {
-		return executeErr
-	}
-	return fmt.Errorf("code %d, message: %s", apiErr.Error.GetCode(), apiErr.Error.GetMessage())
-}
-
 func quoteStrings(elements ...string) []string {
 	quotedStrings := make([]string, len(elements))
 	for i, e := range elements {
 		quotedStrings[i] = fmt.Sprintf("%q", e)
 	}
 	return quotedStrings
+}
+
+func (c *APIClient) createSpan(ctx context.Context, name string) (context.Context, trace.Span) {
+	if trace.SpanFromContext(ctx).SpanContext().HasSpanID() {
+		return trace.SpanFromContext(ctx).Tracer().Start(ctx, name)
+	}
+	return c.tracer.Start(ctx, name)
+}
+
+func setSpanAttributesFromParams(span trace.Span, p common.Params) {
+	if p.Where != "" {
+		span.SetAttributes(attribute.String("where", p.Where))
+	}
+	if p.Page != 0 {
+		span.SetAttributes(attribute.Int("page", p.Page))
+	}
+}
+
+func setSpanErrorStatus(span trace.Span, err error) {
+	span.RecordError(err)
+	span.SetStatus(codes.Error, err.Error())
 }

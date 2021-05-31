@@ -1,4 +1,4 @@
-package client
+package openapi
 
 import (
 	"context"

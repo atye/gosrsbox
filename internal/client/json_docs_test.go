@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/api"
 	"golang.org/x/sync/semaphore"
 )
 
@@ -29,10 +28,9 @@ func testGetDocument(t *testing.T) {
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
 
-	api := &apiClient{
-		docsAddress:   apiSvr.URL,
-		openAPIClient: api.NewAPIClient(&api.Configuration{HTTPClient: http.DefaultClient}),
-		sem:           semaphore.NewWeighted(int64(10)),
+	client := &APIClient{
+		docsAddress: apiSvr.URL,
+		sem:         semaphore.NewWeighted(int64(10)),
 	}
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
@@ -59,7 +57,7 @@ func testGetDocument(t *testing.T) {
 		"npcs-summary": func(t *testing.T) func() {
 			return func() {
 				var data map[string]NPCSummary
-				err := api.GetDocument(context.Background(), "testdata/json-docs/npcs-summary.json", &data)
+				err := client.GetDocument(context.Background(), "testdata/json-docs/npcs-summary.json", &data)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -84,10 +82,9 @@ func testGetDocumentError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := &apiClient{
-		docsAddress:   apiSvr.URL,
-		openAPIClient: api.NewAPIClient(&api.Configuration{HTTPClient: http.DefaultClient}),
-		sem:           semaphore.NewWeighted(int64(10)),
+	api := &APIClient{
+		docsAddress: apiSvr.URL,
+		sem:         semaphore.NewWeighted(int64(10)),
 	}
 
 	err := api.GetDocument(context.Background(), "test", new(map[string]interface{}))
