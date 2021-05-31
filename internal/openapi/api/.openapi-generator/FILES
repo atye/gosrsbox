@@ -1,10 +1,6 @@
-api_equipment.go
-api_icons_item.go
-api_icons_prayer.go
 api_item.go
 api_monster.go
 api_prayer.go
-api_weapon.go
 client.go
 configuration.go
 model_equipment.go

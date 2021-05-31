@@ -10,7 +10,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/api"
+	"go.opentelemetry.io/otel"
+	"golang.org/x/sync/semaphore"
 )
 
 func TestGetDocument(t *testing.T) {
@@ -28,8 +29,11 @@ func testGetDocument(t *testing.T) {
 	apiSvr := setupJsonAPISvr()
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{HTTPClient: http.DefaultClient})
-	api.docsAddress = apiSvr.URL
+	client := &APIClient{
+		docsAddress: apiSvr.URL,
+		sem:         semaphore.NewWeighted(int64(10)),
+		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
+	}
 
 	verifyNpcNames := func(t *testing.T, summaries map[string]NPCSummary, expectedNames []string, err error) {
 		if err != nil {
@@ -55,7 +59,7 @@ func testGetDocument(t *testing.T) {
 		"npcs-summary": func(t *testing.T) func() {
 			return func() {
 				var data map[string]NPCSummary
-				err := api.GetDocument(context.Background(), "testdata/json-docs/npcs-summary.json", &data)
+				err := client.GetDocument(context.Background(), "testdata/json-docs/npcs-summary.json", &data)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -80,16 +84,11 @@ func testGetDocumentError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{
-		Scheme:     "http",
-		HTTPClient: http.DefaultClient,
-		Servers: []api.ServerConfiguration{
-			{
-				URL: "",
-			},
-		},
-	})
-	api.docsAddress = apiSvr.URL
+	api := &APIClient{
+		docsAddress: apiSvr.URL,
+		sem:         semaphore.NewWeighted(int64(10)),
+		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
+	}
 
 	err := api.GetDocument(context.Background(), "test", new(map[string]interface{}))
 

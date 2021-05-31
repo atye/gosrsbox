@@ -1,5 +1,4 @@
-OPENAPI=internal/api
-MODELS=models
+OPENAPI=internal/openapi/api
  
  # openapi.json:
  # _id properties must be removed
@@ -12,7 +11,7 @@ openapi:
     -i /local/openapi.json \
     -g go \
 	--package-name api \
-	--global-property apis,apiDocs=false,models,modelDocs=false,supportingFiles=client.go:configuration.go:utils.go \
+	--global-property apis=Item:Monster:Prayer,apiDocs=false,models,modelDocs=false,supportingFiles=client.go:configuration.go:utils.go \
     -o /local/${OPENAPI}
 	rm -rf ${OPENAPI}/api
 

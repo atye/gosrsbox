@@ -1,12 +1,8 @@
-package gosrsbox
+package api
 
 import (
 	"context"
-	"net/http"
-	"sync"
 
-	"github.com/atye/gosrsbox/internal/api"
-	"github.com/atye/gosrsbox/internal/client"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
@@ -67,27 +63,4 @@ type API interface {
 	// api.GetDocument(context.Background(), "items-json/0.json", &out)
 	// api.GetDocument(context.Background(), "npcs-summary.json", &out)
 	GetDocument(ctx context.Context, file string, destination interface{}) error
-}
-
-var (
-	once      sync.Once
-	apiClient API
-)
-
-// NewAPI returns a osrsboxapi client.
-func NewAPI(userAgent string) API {
-	once.Do(func() {
-		conf := &api.Configuration{
-			Scheme:     "https",
-			HTTPClient: http.DefaultClient,
-			UserAgent:  userAgent,
-			Servers: []api.ServerConfiguration{
-				{
-					URL: "api.osrsbox.com",
-				},
-			},
-		}
-		apiClient = client.NewAPI(conf)
-	})
-	return apiClient
 }

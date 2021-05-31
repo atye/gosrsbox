@@ -13,46 +13,47 @@ import (
 
 func main() {
 	api := gosrsbox.NewAPI("my user agent")
+	//api := gosrsbox.NewAPI("my user agent", gosrsbox.WithTracing("http://localhost:9411/api/v2/spans", 1))
 
 	// Get items in the Ahrims set
 	items, err := api.GetItemSet(context.Background(), sets.Ahrims)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printItems(items)
 
 	// Get items in the Hands slot
 	items, err = api.GetItemsBySlot(context.Background(), slots.Ammo)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printItems(items)
 
 	// Get monsters that drop the Bandos chestplate
 	monsters, err := api.GetMonstersThatDrop(context.Background(), "Bandos chestplate")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printMonsters(monsters)
 
 	// Get items with negative prayer bonus using MongoDB query
 	items, err = api.GetItemsByQuery(context.Background(), `{ "equipment.prayer": { "$lt": 0 }, "duplicate": false }`)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printItems(items)
 
 	// Get items with negative prayer bonus using Python query
 	items, err = api.GetItemsByQuery(context.Background(), `equipment.prayer<0`)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printItems(items)
 
 	// Get the Thick Skin prayer
 	prayers, err := api.GetPrayersByName(context.Background(), "Thick Skin")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	printPrayers(prayers)
 
@@ -60,25 +61,25 @@ func main() {
 	var out map[string]interface{}
 	err = api.GetDocument(context.Background(), "items-json/0.json", &out)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	fmt.Printf("%+v\n", out["wiki_name"])
 }
 
 func printItems(items []models.Item) {
 	for _, item := range items {
-		fmt.Println(item.GetWikiName())
+		fmt.Println(item.WikiName)
 	}
 }
 
 func printMonsters(monsters []models.Monster) {
 	for _, monster := range monsters {
-		fmt.Println(monster.GetWikiName())
+		fmt.Println(monster.WikiName)
 	}
 }
 
 func printPrayers(prayers []models.Prayer) {
 	for _, prayer := range prayers {
-		fmt.Println(prayer.GetName())
+		fmt.Println(prayer.Name)
 	}
 }
