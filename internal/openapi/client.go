@@ -16,14 +16,14 @@ type client struct {
 	openAPIClient *api.APIClient
 }
 
-func NewClient(userAgent string) *client {
+func NewClient(userAgent string, scheme string, url string) *client {
 	conf := &api.Configuration{
-		Scheme:     "https",
+		Scheme:     scheme,
 		HTTPClient: http.DefaultClient,
 		UserAgent:  userAgent,
 		Servers: []api.ServerConfiguration{
 			{
-				URL: "api.osrsbox.com",
+				URL: url,
 			},
 		},
 	}

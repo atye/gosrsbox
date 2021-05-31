@@ -15,15 +15,15 @@ func main() {
 	api := gosrsbox.NewAPI("my user agent", gosrsbox.WithTracing("http://localhost:9411/api/v2/spans"))
 
 	// Get items in the Ahrims set
-	items, err := api.GetItemsByQuery(context.Background(), `{sgesg}`)
+	/*items, err := api.GetItemsByQuery(context.Background(), `{sgesg}`)
 	if err != nil {
 		log.Println(err)
 	}
 	select {}
-	printItems(items)
+	printItems(items)*/
 
 	// Get items in the Hands slot
-	items, err = api.GetItemsBySlot(context.Background(), slots.Ammo)
+	items, err := api.GetItemsBySlot(context.Background(), slots.Ammo)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,18 +70,18 @@ func main() {
 
 func printItems(items []models.Item) {
 	for _, item := range items {
-		fmt.Println(item.GetWikiName())
+		fmt.Println(item.Equipment)
 	}
 }
 
 func printMonsters(monsters []models.Monster) {
 	for _, monster := range monsters {
-		fmt.Println(monster.GetWikiName())
+		fmt.Println(monster.WikiName)
 	}
 }
 
 func printPrayers(prayers []models.Prayer) {
 	for _, prayer := range prayers {
-		fmt.Println(prayer.GetName())
+		fmt.Println(prayer.Name)
 	}
 }

@@ -1,40 +1,6 @@
 package models
 
-import "github.com/atye/gosrsbox/internal/api"
-
-type Item = api.Item
-
-type NullableItem = api.NullableItem
-
-type ItemEquipment = api.ItemEquipment
-
-type NullableItemEquipment = api.NullableItemEquipment
-
-type ItemWeapon = api.ItemWeapon
-
-type NullableItemWeapon = api.NullableItemWeapon
-
-type ItemWeaponStances = api.ItemWeaponStances
-
-type NullableItemWeaponStances = api.NullableItemWeaponStances
-
-func NewNullableItem(val *Item) NullableItem {
-	return *api.NewNullableItem(val)
-}
-
-func NewNullableItemEquipment(val *ItemEquipment) NullableItemEquipment {
-	return *api.NewNullableItemEquipment(val)
-}
-
-func NewNullableItemWeapon(val *ItemWeapon) NullableItemWeapon {
-	return *api.NewNullableItemWeapon(val)
-}
-
-func NewNullableItemWeaponStances(val *ItemWeaponStances) NullableItemWeaponStances {
-	return *api.NewNullableItemWeaponStances(val)
-}
-
-/*type Item struct {
+type Item struct {
 	// Unique OSRS item ID number.
 	Id string `json:"id"`
 	// The name of the item.
@@ -94,9 +60,9 @@ func NewNullableItemWeaponStances(val *ItemWeaponStances) NullableItemWeaponStan
 	// The OSRS Wiki name for the item.
 	WikiName string `json:"wiki_name"`
 	// The OSRS Wiki URL (possibly including anchor link).
-	WikiUrl   string                `json:"wiki_url"`
-	Equipment NullableItemEquipment `json:"equipment"`
-	Weapon    NullableItemWeapon    `json:"weapon"`
+	WikiUrl   string    `json:"wiki_url"`
+	Equipment Equipment `json:"equipment"`
+	Weapon    Weapon    `json:"weapon"`
 }
 
 type Equipment struct {
@@ -132,4 +98,21 @@ type Equipment struct {
 	Slot string `json:"slot"`
 	// An object of requirements {skill: level}.
 	Requirements map[string]int `json:"requirements"`
-}*/
+}
+
+type Weapon struct {
+	// The attack speed of a weapon (in game ticks).
+	AttackSpeed int `json:"attack_speed"`
+	// The weapon classification (e.g., axes)
+	WeaponType string `json:"weapon_type"`
+	// An array of weapon stance information.
+	Stances []WeaponStances `json:"stances"`
+}
+
+type WeaponStances struct {
+	CombatStyle string `json:"combat_style"`
+	AttackType  string `json:"attack_type"`
+	AttackStyle string `json:"attack_style"`
+	Experience  string `json:"experience"`
+	Boosts      string `json:"boosts"`
+}

@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	osrsboxapi "github.com/atye/gosrsbox/api"
-	"github.com/atye/gosrsbox/internal/api"
+
 	"github.com/atye/gosrsbox/models"
 )
 
@@ -51,27 +51,11 @@ func testGetMonstersByID(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{"2"}, verifyMonsterID
 		},
 		"no IDs": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
 	}
@@ -115,27 +99,11 @@ func testGetMonstersByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{"Molanisk", "Aberrant spectre", "Chaos Elemental"}, verifyMonsterNames
 		},
 		"no names": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
 	}
@@ -179,27 +147,11 @@ func testGetMonstersThatDrop(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, []string, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{"Grimy ranarr weed"}, []string{"Molanisk", "Aberrant spectre"}, verifyMonsterNames
 		},
 		"no drops": func(t *testing.T) (osrsboxapi.API, []string, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{}, nil, verifyError
 		},
 	}

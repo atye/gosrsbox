@@ -11,7 +11,6 @@ import (
 	"testing"
 
 	osrsboxapi "github.com/atye/gosrsbox/api"
-	"github.com/atye/gosrsbox/internal/openapi/api"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"
@@ -55,27 +54,11 @@ func testGetItemsByID(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{"2"}, verifyItemIDs
 		},
 		"no IDs": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
 	}
@@ -119,27 +102,11 @@ func testGetItemsByName(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{"Abyssal whip", "Abyssal dagger", "Rune platebody", "Dragon scimitar"}, verifyItemNames
 		},
 		"no names": func(t *testing.T) (osrsboxapi.API, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, []string{}, verifyError
 		},
 	}
@@ -183,27 +150,11 @@ func testGetItemSet(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, sets.RuneLg, []string{"Rune full helm", "Rune platebody", "Rune platelegs", "Rune kiteshield"}, verifyItemNames
 		},
 		"no set": func(t *testing.T) (osrsboxapi.API, sets.SetName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, nil, nil, verifyError
 		},
 	}
@@ -247,27 +198,11 @@ func testGetItemsBySlot(t *testing.T) {
 
 	tests := map[string]func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn){
 		"success": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, slots.TwoHanded, []string{"Longbow", "Shortbow"}, verifyItemNames
 		},
 		"no slot": func(t *testing.T) (osrsboxapi.API, slots.SlotName, []string, checkFn) {
-			api := NewAPI(&api.Configuration{
-				Scheme:     "http",
-				HTTPClient: http.DefaultClient,
-				Servers: []api.ServerConfiguration{
-					{
-						URL: apiSvr.URL,
-					},
-				},
-			})
+			api := NewAPI("")
 			return api, "", nil, verifyError
 		},
 	}
@@ -289,15 +224,7 @@ func testGetItemsAPIError(t *testing.T) {
 	})))
 	defer apiSvr.Close()
 
-	api := NewAPI(&api.Configuration{
-		Scheme:     "http",
-		HTTPClient: http.DefaultClient,
-		Servers: []api.ServerConfiguration{
-			{
-				URL: apiSvr.URL,
-			},
-		},
-	})
+	api := NewAPI("")
 
 	_, err := api.GetItemsByQuery(context.Background(), `{test}`)
 

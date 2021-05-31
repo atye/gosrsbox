@@ -8,7 +8,7 @@ import (
 
 	"github.com/atye/gosrsbox/api"
 	"github.com/atye/gosrsbox/internal/common"
-	open "github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/openapi"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -28,6 +28,7 @@ var _ api.API = &APIClient{}
 
 const (
 	jsonDocuments = "https://www.osrsbox.com/osrsbox-db/"
+	osrsboxpi     = "api.osrsbox.com"
 )
 
 var (
@@ -40,15 +41,10 @@ var (
 func NewAPI(userAgent string) *APIClient {
 	return &APIClient{
 		docsAddress: jsonDocuments,
-		reqExecutor: open.NewClient(userAgent),
+		reqExecutor: openapi.NewClient(userAgent, "https", osrsboxpi),
 		sem:         semaphore.NewWeighted(int64(10)),
 		tracer:      otel.GetTracerProvider().Tracer("gosrsbox"),
 	}
-}
-
-type params struct {
-	where string
-	page  int
 }
 
 func (c *APIClient) doItemsRequest(ctx context.Context, p common.Params) (common.ItemsResponse, error) {
