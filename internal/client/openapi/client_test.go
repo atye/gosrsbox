@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/common"
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/client/common"
+	"github.com/atye/gosrsbox/internal/client/openapi"
 )
 
 func TestExecuteItemsRequest(t *testing.T) {

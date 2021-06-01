@@ -17,7 +17,7 @@ openapi:
 
 .PHONY:
 mocks:
-	mockgen -source internal/common/common.go -destination internal/common/mocks/mocks.go -package mocks
+	mockgen -source internal/client/common/common.go -destination internal/client/common/mocks/mocks.go -package mocks
 
 
 .PHONY: test

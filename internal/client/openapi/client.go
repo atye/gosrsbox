@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/atye/gosrsbox/internal/common"
-	"github.com/atye/gosrsbox/internal/openapi/api"
+	"github.com/atye/gosrsbox/internal/client/common"
+	"github.com/atye/gosrsbox/internal/client/openapi/api"
 	"github.com/atye/gosrsbox/models"
 )
 
