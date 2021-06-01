@@ -1,4 +1,4 @@
-OPENAPI=internal/openapi/api
+OPENAPI=internal/client/openapi/api
  
  # openapi.json:
  # _id properties must be removed
