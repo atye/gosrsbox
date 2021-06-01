@@ -6,7 +6,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/atye/gosrsbox/internal/common"
+	"github.com/atye/gosrsbox/internal/client/common"
 	"github.com/atye/gosrsbox/models"
 	"github.com/atye/gosrsbox/sets"
 	"github.com/atye/gosrsbox/slots"

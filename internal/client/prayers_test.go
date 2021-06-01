@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/atye/gosrsbox/internal/common"
-	"github.com/atye/gosrsbox/internal/common/mocks"
+	"github.com/atye/gosrsbox/internal/client/common"
+	"github.com/atye/gosrsbox/internal/client/common/mocks"
 	"github.com/golang/mock/gomock"
 
 	"github.com/atye/gosrsbox/models"

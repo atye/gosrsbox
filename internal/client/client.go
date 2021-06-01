@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/atye/gosrsbox/api"
-	"github.com/atye/gosrsbox/internal/common"
-	"github.com/atye/gosrsbox/internal/openapi"
+	"github.com/atye/gosrsbox/internal/client/common"
+	"github.com/atye/gosrsbox/internal/client/openapi"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
